@@ -1,11 +1,11 @@
 import { Space } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import React from 'react';
-import { useModel, SelectLang } from 'umi';
+import { useModel } from 'umi';
 import Avatar from './AvatarDropdown';
 import styles from './index.less';
 
-const GlobalHeaderRight: React.FC = () => {
+const LMenu: React.FC = () => {
   const { initialState } = useModel('@@initialState');
 
   if (!initialState || !initialState.settings) {
@@ -18,10 +18,6 @@ const GlobalHeaderRight: React.FC = () => {
   if ((navTheme === 'dark' && layout === 'top') || layout === 'mix') {
     className = `${styles.right}  ${styles.dark}`;
   }
-  return (
-    <Space className={className}>
-      <Avatar />
-    </Space>
-  );
+  return <Space className={className}>left m</Space>;
 };
-export default GlobalHeaderRight;
+export default LMenu;

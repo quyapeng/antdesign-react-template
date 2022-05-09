@@ -15,15 +15,14 @@
   },
   {
     path: '/welcome',
-    name: 'welcome',
+    name: '欢迎页',
     icon: 'smile',
     component: './Welcome',
   },
   {
     path: '/admin',
-    name: 'admin',
+    name: '菜单',
     icon: 'crown',
-    access: 'canAdmin',
     component: './Admin',
     routes: [
       {
@@ -38,7 +37,7 @@
     ],
   },
   {
-    name: 'list.table-list',
+    name: '列表',
     icon: 'table',
     path: '/list',
     component: './TableList',

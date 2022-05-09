@@ -1,4 +1,5 @@
 import { Settings as LayoutSettings } from '@ant-design/pro-layout';
+import logo from '@/';
 
 const Settings: LayoutSettings & {
   pwa?: boolean;
@@ -14,7 +15,7 @@ const Settings: LayoutSettings & {
   colorWeak: false,
   title: '后台管理系统',
   pwa: false,
-  logo: 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg',
+  logo: 'https://dev-mng.qlion.com/static/img/logo.0eb67960.png',
   iconfontUrl: '',
 };
 

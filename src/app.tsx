@@ -4,7 +4,7 @@ import type { RunTimeLayoutConfig } from 'umi';
 import { history, Link } from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
-import { currentUser as queryCurrentUser } from './services/api';
+import { currentUser as queryCurrentUser, currentMenu } from './services/api';
 import { BookOutlined, LinkOutlined } from '@ant-design/icons';
 import defaultSettings from '../config/defaultSettings';
 
@@ -28,6 +28,8 @@ export async function getInitialState(): Promise<{
   const fetchUserInfo = async () => {
     try {
       const msg = await queryCurrentUser();
+      const { data: menu } = await currentMenu();
+      data.menu = menu;
       return msg.data;
     } catch (error) {
       history.push(loginPath);

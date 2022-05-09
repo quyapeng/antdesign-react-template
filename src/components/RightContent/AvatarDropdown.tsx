@@ -5,14 +5,19 @@ import { history, useModel } from 'umi';
 import { stringify } from 'querystring';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
-import { outLogin } from '@/services/api';
 import type { MenuInfo } from 'rc-menu/lib/interface';
 import avatar from '@/assets/images/avatar.jpg';
+import { xsrfHeaderName } from '@/constant';
 
 export type GlobalHeaderRightProps = {
   menu?: boolean;
 };
-
+/**
+ * 退出
+ */
+const outLogin = () => {
+  localStorage.removeItem(xsrfHeaderName);
+};
 /**
  * 退出登录，并且将当前的 url 保存
  */
@@ -65,7 +70,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
 
   const { currentUser } = initialState;
 
-  if (!currentUser || !currentUser.name) {
+  if (!currentUser || !currentUser.username) {
     return loading;
   }
 
@@ -89,7 +94,9 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
     <HeaderDropdown overlay={menuHeaderDropdown}>
       <span className={`${styles.action} ${styles.account}`}>
         <Avatar size="small" className={styles.avatar} src={avatar} alt="avatar" />
-        <span className={`${styles.name} anticon`}>{currentUser.name}</span>
+        <span
+          className={`${styles.name} anticon`}
+        >{`${currentUser.username}-${currentUser.realName}`}</span>
       </span>
     </HeaderDropdown>
   );

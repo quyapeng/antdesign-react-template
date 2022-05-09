@@ -8,7 +8,6 @@ import {
   ProFormRadio,
   ProFormDateTimePicker,
 } from '@ant-design/pro-form';
-import { useIntl, FormattedMessage } from 'umi';
 
 export type FormValueType = {
   target?: string;
@@ -26,7 +25,6 @@ export type UpdateFormProps = {
 };
 
 const UpdateForm: React.FC<UpdateFormProps> = (props) => {
-  const intl = useIntl();
   return (
     <StepsForm
       stepsProps={{

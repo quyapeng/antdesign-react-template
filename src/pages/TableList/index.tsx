@@ -16,7 +16,7 @@ import { rule, addRule, updateRule, removeRule } from '@/services/api';
  * @zh-CN 添加节点
  * @param fields
  */
-const handleAdd = async (fields: API.RuleListItem) => {
+const handleAdd = async (fields: any) => {
   const hide = message.loading('正在添加');
   try {
     await addRule({ ...fields });
@@ -60,12 +60,12 @@ const handleUpdate = async (fields: FormValueType) => {
  *
  * @param selectedRows
  */
-const handleRemove = async (selectedRows: API.RuleListItem[]) => {
+const handleRemove = async (selectedRows: []) => {
   const hide = message.loading('正在删除');
   if (!selectedRows) return true;
   try {
     await removeRule({
-      key: selectedRows.map((row) => row.key),
+      key: selectedRows.map((row: any) => row.key),
     });
     hide();
     message.success('Deleted successfully and will refresh soon');
@@ -92,15 +92,15 @@ const TableList: React.FC = () => {
   const [showDetail, setShowDetail] = useState<boolean>(false);
 
   const actionRef = useRef<ActionType>();
-  const [currentRow, setCurrentRow] = useState<API.RuleListItem>();
-  const [selectedRowsState, setSelectedRows] = useState<API.RuleListItem[]>([]);
+  const [currentRow, setCurrentRow]: any = useState();
+  const [selectedRowsState, setSelectedRows] = useState<[]>([]);
 
   /**
    * @en-US International configuration
    * @zh-CN 国际化配置
    * */
 
-  const columns: ProColumns<API.RuleListItem>[] = [
+  const columns: ProColumns[] = [
     {
       title: 'Rule name',
       dataIndex: 'name',
@@ -189,7 +189,7 @@ const TableList: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable<API.RuleListItem, API.PageParams>
+      <ProTable<any, API.PageParams>
         headerTitle={'Enquiry form'}
         actionRef={actionRef}
         rowKey="key"
@@ -210,7 +210,7 @@ const TableList: React.FC = () => {
         request={rule}
         columns={columns}
         rowSelection={{
-          onChange: (_, selectedRows) => {
+          onChange: (_, selectedRows: any) => {
             setSelectedRows(selectedRows);
           },
         }}
@@ -222,7 +222,7 @@ const TableList: React.FC = () => {
               选择 <a style={{ fontWeight: 600 }}>{selectedRowsState.length}</a> 项 &nbsp;&nbsp;
               <span>
                 Total number of service calls{' '}
-                {selectedRowsState.reduce((pre, item) => pre + item.callNo!, 0)} 万
+                {selectedRowsState.reduce((pre, item: any) => pre + item.callNo!, 0)} 万
               </span>
             </div>
           }
@@ -245,7 +245,7 @@ const TableList: React.FC = () => {
         visible={createModalVisible}
         onVisibleChange={handleModalVisible}
         onFinish={async (value) => {
-          const success = await handleAdd(value as API.RuleListItem);
+          const success = await handleAdd(value as any);
           if (success) {
             handleModalVisible(false);
             if (actionRef.current) {
@@ -297,7 +297,7 @@ const TableList: React.FC = () => {
         closable={false}
       >
         {currentRow?.name && (
-          <ProDescriptions<API.RuleListItem>
+          <ProDescriptions<any>
             column={2}
             title={currentRow?.name}
             request={async () => ({
@@ -306,7 +306,7 @@ const TableList: React.FC = () => {
             params={{
               id: currentRow?.name,
             }}
-            columns={columns as ProDescriptionsItemProps<API.RuleListItem>[]}
+            columns={columns as ProDescriptionsItemProps[]}
           />
         )}
       </Drawer>

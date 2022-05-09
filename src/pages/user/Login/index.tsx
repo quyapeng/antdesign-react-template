@@ -9,7 +9,7 @@ import {
 import { Alert, message, Tabs } from 'antd';
 import React, { useState } from 'react';
 import { ProFormCaptcha, ProFormCheckbox, ProFormText, LoginForm } from '@ant-design/pro-form';
-import { history, FormattedMessage, useModel } from 'umi';
+import { history, useModel } from 'umi';
 import Footer from '@/components/Footer';
 import { login } from '@/services/api';
 import { setLocaleInfo } from '@/utils/index';
@@ -30,7 +30,7 @@ const LoginMessage: React.FC<{
 );
 
 const Login: React.FC = () => {
-  const [userLoginState, setUserLoginState]: any = useState({});
+  const [userLoginState, setUserLoginState]: any = useState({ code: '200' });
   const { initialState, setInitialState } = useModel('@@initialState');
 
   const fetchUserInfo = async () => {
@@ -61,15 +61,13 @@ const Login: React.FC = () => {
         if (!history) return;
         const { query } = history.location;
         const { redirect } = query as { redirect: string };
-        history.push(redirect || '/');
+        history.push(redirect || '/welcome');
         return;
       }
-      console.log(msg);
-      // // 如果失败去设置用户错误信息
     } catch (error: any) {
-      let { msg, code } = error.response.data;
+      // let { msg, code } = error.response.data;
       console.log(error.response.data.msg);
-      message.error('登录失败，请重试！' + code + msg);
+      message.error('登录失败，请重试！');
       setUserLoginState(error.response.data);
     }
   };

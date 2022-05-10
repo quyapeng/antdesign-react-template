@@ -5,7 +5,6 @@ declare namespace API {
   type CurrentUser = {
     username?: string;
     id: number;
-    isDelete?: boolean;
     isFirst?: boolean;
     lastLoginTime?: string;
     realName?: string;
@@ -23,6 +22,7 @@ declare namespace API {
     }[];
     status: string;
     updateTime?: string;
+    menu?: {}[];
   };
 
   type LoginResult = {

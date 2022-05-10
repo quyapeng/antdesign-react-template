@@ -1,14 +1,13 @@
 import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { PageLoading } from '@ant-design/pro-layout';
 import type { RunTimeLayoutConfig } from 'umi';
-import { history, Link } from 'umi';
+import { history } from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import { currentUser as queryCurrentUser, currentMenu } from './services/api';
-import { BookOutlined, LinkOutlined } from '@ant-design/icons';
 import defaultSettings from '../config/defaultSettings';
+import LMenu from '@/components/LMenu';
 
-const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
 /** 获取用户信息比较慢的时候会展示一个 loading */
@@ -29,7 +28,7 @@ export async function getInitialState(): Promise<{
     try {
       const msg: any = await queryCurrentUser();
       const { data: menu } = await currentMenu();
-      msg.menu = menu;
+      msg.data.menu = menu;
       return msg.data;
     } catch (error) {
       history.push(loginPath);
@@ -69,7 +68,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     },
     links: [],
     menuHeaderRender: undefined,
-    // 自定义 403 页面
+    // 自定义 403 页面 () => <LMenu onClick={({ key }: any) => history.push(key)} />
     // unAccessible: <div>unAccessible</div>,
     // 增加一个 loading 的状态
     childrenRender: (children, props) => {

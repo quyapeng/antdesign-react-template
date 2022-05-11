@@ -2,10 +2,10 @@ import React from 'react';
 import { Card } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 
-const Admin: React.FC = () => {
+const Admin: React.FC = (props) => {
   return (
-    <PageHeaderWrapper content={'This page can only be viewed by admin'}>
-      <Card>admin</Card>
+    <PageHeaderWrapper>
+      <Card>{props.children}</Card>
     </PageHeaderWrapper>
   );
 };

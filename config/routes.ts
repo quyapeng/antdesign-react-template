@@ -19,23 +19,22 @@
   //   icon: 'smile',
   //   component: './Welcome',
   // },
-  // {
-  //   path: '/admin',
-  //   name: '菜单',
-  //   icon: 'crown',
-  //   component: './Admin',
-  //   routes: [
-  //     {
-  //       path: '/admin/sub-page',
-  //       name: 'sub-page',
-  //       icon: 'smile',
-  //       component: './Welcome',
-  //     },
-  //     {
-  //       component: './404',
-  //     },
-  //   ],
-  // },
+  {
+    path: '/system',
+    name: '菜单',
+    icon: 'crown',
+    component: './Admin',
+    routes: [
+      {
+        path: '/system/menu',
+        name: 'menu',
+        component: './system/menu',
+      },
+      {
+        component: './404',
+      },
+    ],
+  },
   // {
   //   name: '列表',
   //   icon: 'table',

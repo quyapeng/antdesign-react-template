@@ -31,6 +31,11 @@
         component: './system/menu',
       },
       {
+        path: '/system/role',
+        name: 'role',
+        component: './system/role',
+      },
+      {
         component: './404',
       },
     ],

@@ -9,7 +9,7 @@ import type { ProDescriptionsItemProps } from '@ant-design/pro-descriptions';
 import ProDescriptions from '@ant-design/pro-descriptions';
 import type { FormValueType } from './components/UpdateForm';
 import UpdateForm from '../components/UpdateForm';
-import { role, addRule, updateRule, removeRule } from '@/services/api';
+import { role } from '@/services/api';
 import styles from './index.less';
 
 const Menu: React.FC = () => {
@@ -37,9 +37,8 @@ const Menu: React.FC = () => {
  
    const columns: ProColumns[] = [
      {
-       title: 'Rule name',
+       title: '角色名称',
        dataIndex: 'name',
-       tip: 'The rule name is the unique key',
        render: (dom, entity) => {
          return (
            <a
@@ -54,58 +53,30 @@ const Menu: React.FC = () => {
        },
      },
      {
-       title: 'Description',
-       dataIndex: 'desc',
-       valueType: 'textarea',
+       title: '角色编码',
+       dataIndex: 'code',
+       hideInSearch: true,
+       valueType: 'code',
      },
+    
      {
-       title: 'Number of service calls',
-       dataIndex: 'callNo',
-       sorter: true,
-       hideInForm: true,
-       renderText: (val: string) => `${val}' 万 '`,
-     },
-     {
-       title: 'Status',
+       title: '状态',
+       hideInSearch: true,
        dataIndex: 'status',
-       hideInForm: true,
        valueEnum: {
          0: {
-           text: 'Shut down',
-           status: 'Default',
+           text: '正常',
+           status: 'NORMAL',
          },
          1: {
            text: 'Running',
            status: 'Processing',
          },
-         2: {
-           text: 'Online',
-           status: 'Success',
-         },
-         3: {
-           text: 'Abnormal',
-           status: 'Error',
-         },
        },
      },
+     
      {
-       title: 'Last scheduled time',
-       sorter: true,
-       dataIndex: 'updatedAt',
-       valueType: 'dateTime',
-       renderFormItem: (item, { defaultRender, ...rest }, form) => {
-         const status = form.getFieldValue('status');
-         if (`${status}` === '0') {
-           return false;
-         }
-         if (`${status}` === '3') {
-           return <Input {...rest} placeholder={'Please enter the reason for the exception!'} />;
-         }
-         return defaultRender(item);
-       },
-     },
-     {
-       title: 'Operating',
+       title: '操作',
        dataIndex: 'option',
        valueType: 'option',
        render: (_, record) => [
@@ -116,7 +87,7 @@ const Menu: React.FC = () => {
              setCurrentRow(record);
            }}
          >
-           配置
+           编辑
          </a>,
        ],
      },
@@ -125,8 +96,7 @@ const Menu: React.FC = () => {
    return (
      <div>
        <ProTable<any, API.PageParams>
-         headerTitle={'Enquiry form'}
-         actionRef={actionRef}
+        //  actionRef={actionRef}
          rowKey="key"
          search={{
            labelWidth: 120,
@@ -142,15 +112,11 @@ const Menu: React.FC = () => {
              <PlusOutlined /> 新增
            </Button>,
          ]}
-         request={role}
+        //  request={role}
          columns={columns}
-         rowSelection={{
-           onChange: (_, selectedRows: any) => {
-             setSelectedRows(selectedRows);
-           },
-         }}
+         
        />
-       {selectedRowsState?.length > 0 && (
+       {/* {selectedRowsState?.length > 0 && (
          <FooterToolbar
            extra={
              <div>
@@ -173,8 +139,8 @@ const Menu: React.FC = () => {
            </Button>
            <Button type="primary">Batch approval</Button>
          </FooterToolbar>
-       )}
-       <ModalForm
+       )} */}
+       {/* <ModalForm
          title={'New rule'}
          width="400px"
          visible={createModalVisible}
@@ -200,8 +166,8 @@ const Menu: React.FC = () => {
            name="name"
          />
          <ProFormTextArea width="md" name="desc" />
-       </ModalForm>
-       <UpdateForm
+       </ModalForm> */}
+       {/* <UpdateForm
          onSubmit={async (value) => {
            const success = await handleUpdate(value);
            if (success) {
@@ -220,9 +186,9 @@ const Menu: React.FC = () => {
          }}
          updateModalVisible={updateModalVisible}
          values={currentRow || {}}
-       />
+       /> */}
  
-       <Drawer
+       {/* <Drawer
          width={600}
          visible={showDetail}
          onClose={() => {
@@ -244,7 +210,7 @@ const Menu: React.FC = () => {
              columns={columns as ProDescriptionsItemProps[]}
            />
          )}
-       </Drawer>
+       </Drawer> */}
      </div>
    );
 };

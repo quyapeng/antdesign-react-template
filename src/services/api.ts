@@ -36,18 +36,18 @@ export async function getNotices(options?: { [key: string]: any }) {
   });
 }
 
-/** 获取规则列表 GET /api/rule */
-export async function rule(
+/** /login/role?page=0&size=10 */
+export async function role(
   params: {
     // query
     /** 当前的页码 */
-    current?: number;
+    page?: number;
     /** 页面的容量 */
-    pageSize?: number;
+    size?: number;
   },
   options?: { [key: string]: any },
 ) {
-  return request('/api/rule', {
+  return request('login/role', {
     method: 'GET',
     params: {
       ...params,

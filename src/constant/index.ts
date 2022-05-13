@@ -15,3 +15,8 @@ export const operateMap: stringObject = {
   modify: '编辑',
   delete: '删除',
 };
+
+export const pagination = {
+  page: 0,
+  size: 10,
+};

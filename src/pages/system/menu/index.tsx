@@ -9,7 +9,8 @@ import type { ProDescriptionsItemProps } from '@ant-design/pro-descriptions';
 import ProDescriptions from '@ant-design/pro-descriptions';
 import type { FormValueType } from './components/UpdateForm';
 import UpdateForm from '../components/UpdateForm';
-import { role, addRule, updateRule, removeRule } from '@/services/api';
+import { rule, addRule, updateRule, removeRule } from '@/services/api';
+import { commonRequestList } from '@/utils/index';
 import styles from './index.less';
 
 const Menu: React.FC = () => {
@@ -30,6 +31,7 @@ const Menu: React.FC = () => {
    const [currentRow, setCurrentRow]: any = useState();
    const [selectedRowsState, setSelectedRows] = useState<[]>([]);
  
+   console.log('rule', commonRequestList);
    /**
     * @en-US International configuration
     * @zh-CN 国际化配置
@@ -142,7 +144,9 @@ const Menu: React.FC = () => {
              <PlusOutlined /> 新增
            </Button>,
          ]}
-         request={role}
+         request={(params)=>{
+          (rule,params)
+         }}
          columns={columns}
          rowSelection={{
            onChange: (_, selectedRows: any) => {

@@ -37,6 +37,25 @@ export async function getNotices(options?: { [key: string]: any }) {
 }
 
 /** /login/role?page=0&size=10 */
+export async function rule(
+  params: {
+    // query
+    /** 当前的页码 */
+    current?: number;
+    /** 页面的容量 */
+    pageSize?: number;
+  },
+  options?: { [key: string]: any },
+) {
+  return request('/api/rule', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+/** /login/role?page=0&size=10 */
 export async function role(
   params: {
     // query
@@ -47,7 +66,7 @@ export async function role(
   },
   options?: { [key: string]: any },
 ) {
-  return request('login/role', {
+  return request('/login/role', {
     method: 'GET',
     params: {
       ...params,

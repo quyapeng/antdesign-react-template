@@ -31,6 +31,8 @@ const Menu: React.FC = () => {
   const [selectedRowsState, setSelectedRows] = useState<[]>([]);
   const [page, setPage] = useState(pagination);
 
+  const [title, setTitle] = useState('');
+
   const columns: ProColumns[] = [
     {
       title: 'id',
@@ -70,6 +72,7 @@ const Menu: React.FC = () => {
         <a
           key="config"
           onClick={() => {
+            setTitle('编辑角色');
             handleUpdateModalVisible(true);
             setCurrentRow(record);
           }}
@@ -83,14 +86,12 @@ const Menu: React.FC = () => {
   return (
     <div>
       <ProTable<any, API.PageParams>
-        //  actionRef={actionRef}
         rowKey="id"
         search={{
           labelWidth: 120,
         }}
         request={(params) => commonRequestList(role, params)}
         columns={columns}
-        // pagination={page}
         pagination={{
           showSizeChanger: true,
           defaultPageSize: page.size,
@@ -100,6 +101,7 @@ const Menu: React.FC = () => {
             type="primary"
             key="primary"
             onClick={() => {
+              setTitle('新增角色');
               handleModalVisible(true);
             }}
           >
@@ -108,33 +110,34 @@ const Menu: React.FC = () => {
         ]}
       />
 
-      {/* <ModalForm
-         title={'New rule'}
-         width="400px"
-         visible={createModalVisible}
-         onVisibleChange={handleModalVisible}
-         onFinish={async (value) => {
-           const success = await handleAdd(value as any);
-           if (success) {
-             handleModalVisible(false);
-             if (actionRef.current) {
-               actionRef.current.reload();
-             }
-           }
-         }}
-       >
-         <ProFormText
-           rules={[
-             {
-               required: true,
-               message: '必填',
-             },
-           ]}
-           width="md"
-           name="name"
-         />
-         <ProFormTextArea width="md" name="desc" />
-       </ModalForm> */}
+      <ModalForm
+        title={title}
+        width="400px"
+        visible={createModalVisible}
+        onVisibleChange={handleModalVisible}
+        onFinish={async (value) => {
+          console.log(value);
+          // const success = await handleAdd(value as any);
+          // if (success) {
+          //   handleModalVisible(false);
+          //   if (actionRef.current) {
+          //     actionRef.current.reload();
+          //   }
+          // }
+        }}
+      >
+        <ProFormText
+          label="角色名称"
+          rules={[
+            {
+              required: true,
+              message: '必填',
+            },
+          ]}
+          width="md"
+          name="name"
+        />
+      </ModalForm>
       {/* <UpdateForm
          onSubmit={async (value) => {
            const success = await handleUpdate(value);

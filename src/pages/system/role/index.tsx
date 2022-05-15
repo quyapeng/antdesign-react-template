@@ -20,10 +20,6 @@ const Menu: React.FC = () => {
    * @zh-CN 新建窗口的弹窗
    *  */
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
-  /**
-   * @en-US The pop-up window of the distribution update window
-   * @zh-CN 分布更新窗口的弹窗
-   * */
   const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
   const [showDetail, setShowDetail] = useState<boolean>(false);
   const actionRef = useRef<ActionType>();
@@ -137,27 +133,60 @@ const Menu: React.FC = () => {
           width="md"
           name="name"
         />
+        <ProFormText
+          label="角色编码"
+          rules={[
+            {
+              required: true,
+              message: '必填',
+            },
+          ]}
+          width="md"
+          name="code"
+        />
+        <ProFormText
+          label="角色前缀"
+          rules={[
+            {
+              required: true,
+              message: '必填',
+            },
+          ]}
+          width="md"
+          name="accPrefix"
+        />
+        <ProFormText
+          label="角色权重"
+          rules={[
+            {
+              required: true,
+              message: '必填',
+            },
+          ]}
+          width="md"
+          name="weight"
+        />
       </ModalForm>
-      {/* <UpdateForm
-         onSubmit={async (value) => {
-           const success = await handleUpdate(value);
-           if (success) {
-             handleUpdateModalVisible(false);
-             setCurrentRow(undefined);
-             if (actionRef.current) {
-               actionRef.current.reload();
-             }
-           }
-         }}
-         onCancel={() => {
-           handleUpdateModalVisible(false);
-           if (!showDetail) {
-             setCurrentRow(undefined);
-           }
-         }}
-         updateModalVisible={updateModalVisible}
-         values={currentRow || {}}
-       /> */}
+      <UpdateForm
+        onSubmit={async (value) => {
+          // const success = await handleUpdate(value);
+          // if (success) {
+          //   handleUpdateModalVisible(false);
+          //   setCurrentRow(undefined);
+          //   if (actionRef.current) {
+          //     actionRef.current.reload();
+          //   }
+          // }
+        }}
+        onCancel={() => {
+          handleUpdateModalVisible(false);
+          if (!showDetail) {
+            setCurrentRow(undefined);
+          }
+        }}
+        updateModalVisible={updateModalVisible}
+        values={currentRow || {}}
+      />
 
       {/* <Drawer
          width={600}

@@ -4,7 +4,7 @@ import React, { useState, useRef } from 'react';
 import { PageContainer, FooterToolbar } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { ModalForm, ProFormText, ProFormTextArea } from '@ant-design/pro-form';
+import { ModalForm, ProFormText, ProFormRadio } from '@ant-design/pro-form';
 import type { ProDescriptionsItemProps } from '@ant-design/pro-descriptions';
 import ProDescriptions from '@ant-design/pro-descriptions';
 // import type { FormValueType } from './components/UpdateForm';
@@ -165,6 +165,13 @@ const Menu: React.FC = () => {
           ]}
           width="md"
           name="weight"
+        />
+        <ProFormRadio.Group
+          label="角色类型"
+          fieldProps={{
+            value: {},
+          }}
+          options={['系统角色', '业务角色']}
         />
       </ModalForm>
       <UpdateForm

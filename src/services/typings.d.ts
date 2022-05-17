@@ -39,4 +39,8 @@ declare namespace API {
     current?: number;
     pageSize?: number;
   };
+  // 角色
+  type RoleItem = {
+    name: string;
+  };
 }

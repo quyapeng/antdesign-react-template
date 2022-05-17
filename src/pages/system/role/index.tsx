@@ -4,22 +4,20 @@ import React, { useState, useRef } from 'react';
 import { PageContainer, FooterToolbar } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { ModalForm, ProFormText, ProFormRadio } from '@ant-design/pro-form';
+import { ModalForm, ProFormText, ProFormRadio, ProFormTextArea } from '@ant-design/pro-form';
 import type { ProDescriptionsItemProps } from '@ant-design/pro-descriptions';
 import ProDescriptions from '@ant-design/pro-descriptions';
 // import type { FormValueType } from './components/UpdateForm';
 import UpdateForm from '../components/UpdateForm';
+import AddRoleForm from '../components/AddRoleForm';
+
 import { role } from '@/services/api';
 import { commonRequestList } from '@/utils/index';
 import { pagination } from '@/constant/index';
 import styles from './index.less';
 
-const Menu: React.FC = () => {
-  /**
-   * @en-US Pop-up window of new window
-   * @zh-CN 新建窗口的弹窗
-   *  */
-  const [createModalVisible, handleModalVisible] = useState<boolean>(false);
+const Role: React.FC = () => {
+  const [createModalVisible, handleModalVisible] = useState<boolean>(true);
   const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
   const [showDetail, setShowDetail] = useState<boolean>(false);
   const actionRef = useRef<ActionType>();
@@ -92,25 +90,33 @@ const Menu: React.FC = () => {
           showSizeChanger: true,
           defaultPageSize: page.size,
         }}
-        toolBarRender={() => [
-          <Button
-            type="primary"
-            key="primary"
-            onClick={() => {
-              setTitle('新增角色');
-              handleModalVisible(true);
-            }}
-          >
-            <PlusOutlined /> 新增
-          </Button>,
-        ]}
+        toolbar={{
+          actions: [
+            <Button
+              type="primary"
+              key="primary"
+              onClick={() => {
+                setTitle('新增角色');
+                handleModalVisible(true);
+              }}
+            >
+              <PlusOutlined /> 新增
+            </Button>,
+          ],
+          settings: [],
+        }}
       />
 
-      <ModalForm
+      {/* <ModalForm
         title={title}
-        width="400px"
+        width="500px"
         visible={createModalVisible}
         onVisibleChange={handleModalVisible}
+        {...{
+          labelCol: { span: 6 },
+          wrapperCol: { span: 14 },
+        }}
+        layout="horizontal"
         onFinish={async (value) => {
           console.log(value);
           // const success = await handleAdd(value as any);
@@ -167,13 +173,75 @@ const Menu: React.FC = () => {
           name="weight"
         />
         <ProFormRadio.Group
+          name="type"
           label="角色类型"
-          fieldProps={{
-            value: {},
-          }}
-          options={['系统角色', '业务角色']}
+          rules={[
+            {
+              required: true,
+              message: '必填',
+            },
+          ]}
+          options={[
+            {
+              value: '0',
+              label: '系统角色',
+            },
+            {
+              value: '1',
+              label: '业务角色',
+            },
+          ]}
         />
-      </ModalForm>
+        <ProFormRadio.Group
+          label="状态"
+          name="status"
+          rules={[
+            {
+              required: true,
+              message: '必填',
+            },
+          ]}
+          options={[
+            {
+              value: '0',
+              label: '待激活',
+            },
+            {
+              value: '1',
+              label: '正常',
+            },
+            {
+              value: '2',
+              label: '禁用',
+            },
+          ]}
+        />
+        <ProFormTextArea name="desc" width="md" label={'备注'} placeholder={'请输入备注'} />
+      </ModalForm> */}
+      <AddRoleForm
+        title={title}
+        visible={createModalVisible}
+        // onVisibleChange={handleModalVisible}
+        onSubmit={async (value) => {
+          // const success = await handleUpdate(value);
+          // if (success) {
+          //   handleUpdateModalVisible(false);
+          //   setCurrentRow(undefined);
+          //   if (actionRef.current) {
+          //     actionRef.current.reload();
+          //   }
+          // }
+        }}
+        onCancel={() => {
+          handleUpdateModalVisible(false);
+          if (!showDetail) {
+            setCurrentRow(undefined);
+          }
+        }}
+        values={currentRow || {}}
+        updateModalVisible={false}
+      />
+
       <UpdateForm
         onSubmit={async (value) => {
           // const success = await handleUpdate(value);
@@ -192,7 +260,7 @@ const Menu: React.FC = () => {
           }
         }}
         updateModalVisible={updateModalVisible}
-        values={currentRow || {}}
+        // values={currentRow || {}}
       />
 
       {/* <Drawer
@@ -222,4 +290,4 @@ const Menu: React.FC = () => {
   );
 };
 
-export default Menu;
+export default Role;

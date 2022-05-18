@@ -6,18 +6,18 @@ import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import { currentUser as queryCurrentUser, currentMenu } from './services/api';
 import defaultSettings from '../config/defaultSettings';
-import { IconData } from '@/constant/icon';
 import React from 'react';
-import * as allIcons from '@ant-design/icons'
+import * as allIcons from '@ant-design/icons';
 
 const loginPath = '/user/login';
-const toHump = (name: string) => name.replace(/-(\w)/g, (all: string, letter: any) => letter.toUpperCase());
+const toHump = (name: string) =>
+  name.replace(/-(\w)/g, (all: string, letter: any) => letter.toUpperCase());
 
 const formatMenu = (list: any) => {
   let menu: any = [];
   if (list && list.length > 0) {
     list.filter((i: any) => {
-      let {icon} = i;
+      let { icon } = i;
       if (i.status == 'ENABLED') {
         let c: any = [];
         if (i.subMenus && i.subMenus.length > 0) {
@@ -32,8 +32,8 @@ const formatMenu = (list: any) => {
           });
         }
         const v4IconName = toHump(icon.replace(icon[0], icon[0].toUpperCase()));
-      const NewIcon = allIcons[icon] || allIcons[''.concat(v4IconName, 'Outlined')]
-      menu.push({
+        const NewIcon = allIcons[icon] || allIcons[''.concat(v4IconName, 'Outlined')];
+        menu.push({
           path: `/${i.path}`,
           routes: c,
           icon: React.createElement(NewIcon),

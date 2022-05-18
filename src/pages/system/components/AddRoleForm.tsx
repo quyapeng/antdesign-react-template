@@ -1,5 +1,4 @@
 import React from 'react';
-import { Modal } from 'antd';
 import { ModalForm, ProFormText, ProFormRadio, ProFormTextArea } from '@ant-design/pro-form';
 
 export type UpdateFormProps = {
@@ -7,7 +6,7 @@ export type UpdateFormProps = {
   visible: boolean;
   onCancel: (flag?: boolean, formVals?: FormValueType) => void;
   onSubmit: (values: FormValueType) => Promise<void>;
-  updateModalVisible: boolean;
+  // updateModalVisible: boolean;
   values: Partial<API.RoleItem>;
 };
 
@@ -20,21 +19,17 @@ const UpdateForm: React.FC<UpdateFormProps> = (props: any) => {
       title={props.title}
       width="500px"
       visible={props.visible}
-      onVisibleChange={props.handleModalVisible}
+      onVisibleChange={() => {}}
       {...{
         labelCol: { span: 6 },
         wrapperCol: { span: 14 },
       }}
       layout="horizontal"
       onFinish={async (value) => {
-        console.log(value);
-        // const success = await handleAdd(value as any);
-        // if (success) {
-        //   handleModalVisible(false);
-        //   if (actionRef.current) {
-        //     actionRef.current.reload();
-        //   }
-        // }
+        props.onSubmit(value);
+      }}
+      modalProps={{
+        onCancel: () => props.onCancel(),
       }}
     >
       <ProFormText

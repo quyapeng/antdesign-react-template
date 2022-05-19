@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { message } from 'antd';
-import { xsrfHeaderName, REACT_APP_ENV, AUTH_TYPE } from '@/constant/index';
+import { xsrfHeaderName, AUTH_TYPE } from '@/constant/index';
 
 const request = axios.create({
   baseURL: 'https://dev-api.qlion.com',

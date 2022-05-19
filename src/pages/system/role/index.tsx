@@ -67,7 +67,7 @@ const Role: React.FC = () => {
           key="config"
           onClick={() => {
             setTitle('编辑角色');
-            handleUpdateModalVisible(true);
+            handleModalVisible(true);
             setCurrentRow(record);
           }}
         >
@@ -97,6 +97,7 @@ const Role: React.FC = () => {
               key="primary"
               onClick={() => {
                 setTitle('新增角色');
+                setCurrentRow({});
                 handleModalVisible(true);
               }}
             >
@@ -130,51 +131,6 @@ const Role: React.FC = () => {
         values={currentRow || {}}
         // updateModalVisible={false}
       />
-
-      <UpdateForm
-        onSubmit={async (value) => {
-          // const success = await handleUpdate(value);
-          // if (success) {
-          //   handleUpdateModalVisible(false);
-          //   setCurrentRow(undefined);
-          //   if (actionRef.current) {
-          //     actionRef.current.reload();
-          //   }
-          // }
-        }}
-        onCancel={() => {
-          handleUpdateModalVisible(false);
-          if (!showDetail) {
-            setCurrentRow(undefined);
-          }
-        }}
-        updateModalVisible={updateModalVisible}
-        // values={currentRow || {}}
-      />
-
-      {/* <Drawer
-         width={600}
-         visible={showDetail}
-         onClose={() => {
-           setCurrentRow(undefined);
-           setShowDetail(false);
-         }}
-         closable={false}
-       >
-         {currentRow?.name && (
-           <ProDescriptions<any>
-             column={2}
-             title={currentRow?.name}
-             request={async () => ({
-               data: currentRow || {},
-             })}
-             params={{
-               id: currentRow?.name,
-             }}
-             columns={columns as ProDescriptionsItemProps[]}
-           />
-         )}
-       </Drawer> */}
     </div>
   );
 };

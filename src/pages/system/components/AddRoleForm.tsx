@@ -1,5 +1,6 @@
 import React from 'react';
 import { ModalForm, ProFormText, ProFormRadio, ProFormTextArea } from '@ant-design/pro-form';
+import { STATUS_CODE, ROLE_CODE } from '@/constant/index';
 
 export type UpdateFormProps = {
   title: string;
@@ -18,6 +19,7 @@ const UpdateForm: React.FC<UpdateFormProps> = (props: any) => {
     <ModalForm
       title={props.title}
       width="500px"
+      initialValues={props}
       visible={props.visible}
       onVisibleChange={() => {}}
       {...{
@@ -32,6 +34,8 @@ const UpdateForm: React.FC<UpdateFormProps> = (props: any) => {
         onCancel: () => props.onCancel(),
       }}
     >
+      {/* <ProForm initialValues={props.value} ></ProForm> */}
+
       <ProFormText
         label="角色名称"
         rules={[
@@ -85,16 +89,7 @@ const UpdateForm: React.FC<UpdateFormProps> = (props: any) => {
             message: '必填',
           },
         ]}
-        options={[
-          {
-            value: '0',
-            label: '系统角色',
-          },
-          {
-            value: '1',
-            label: '业务角色',
-          },
-        ]}
+        options={ROLE_CODE}
       />
       <ProFormRadio.Group
         label="状态"
@@ -105,20 +100,7 @@ const UpdateForm: React.FC<UpdateFormProps> = (props: any) => {
             message: '必填',
           },
         ]}
-        options={[
-          {
-            value: '0',
-            label: '待激活',
-          },
-          {
-            value: '1',
-            label: '正常',
-          },
-          {
-            value: '2',
-            label: '禁用',
-          },
-        ]}
+        options={STATUS_CODE}
       />
       <ProFormTextArea name="desc" width="md" label={'备注'} placeholder={'请输入备注'} />
     </ModalForm>

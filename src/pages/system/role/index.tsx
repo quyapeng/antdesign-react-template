@@ -22,7 +22,6 @@ const Role: React.FC = () => {
   const [showDetail, setShowDetail] = useState<boolean>(false);
   const actionRef = useRef<ActionType>();
   const [currentRow, setCurrentRow]: any = useState();
-  const [selectedRowsState, setSelectedRows] = useState<[]>([]);
   const [page, setPage] = useState(pagination);
 
   const [title, setTitle] = useState('');

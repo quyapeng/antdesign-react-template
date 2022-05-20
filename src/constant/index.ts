@@ -20,3 +20,29 @@ export const pagination = {
   page: 0,
   size: 10,
 };
+
+export const STATUS_CODE = [
+  {
+    value: '0',
+    label: '待激活',
+  },
+  {
+    value: '1',
+    label: '正常',
+  },
+  {
+    value: '2',
+    label: '禁用',
+  },
+];
+
+export const ROLE_CODE = [
+  {
+    value: '0',
+    label: '系统角色',
+  },
+  {
+    value: '1',
+    label: '业务角色',
+  },
+];

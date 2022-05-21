@@ -1,14 +1,8 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, message, Input, Drawer, Tag, TablePaginationConfig } from 'antd';
+import { Button, Tag } from 'antd';
 import React, { useState, useRef } from 'react';
-import { PageContainer, FooterToolbar } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { ModalForm, ProFormText, ProFormRadio, ProFormTextArea } from '@ant-design/pro-form';
-import type { ProDescriptionsItemProps } from '@ant-design/pro-descriptions';
-import ProDescriptions from '@ant-design/pro-descriptions';
-// import type { FormValueType } from './components/UpdateForm';
-import UpdateForm from '../components/UpdateForm';
 import AddRoleForm from '../components/AddRoleForm';
 
 import { role } from '@/services/api';
@@ -19,7 +13,7 @@ import styles from './index.less';
 const Role: React.FC = () => {
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
   const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
-  const [showDetail, setShowDetail] = useState<boolean>(false);
+  const [type, setType] = useState<string>('new');
   const actionRef = useRef<ActionType>();
   const [currentRow, setCurrentRow]: any = useState();
   const [page, setPage] = useState(pagination);
@@ -66,6 +60,7 @@ const Role: React.FC = () => {
           key="config"
           onClick={() => {
             setTitle('编辑角色');
+            setType('edit');
             handleModalVisible(true);
             setCurrentRow(record);
           }}
@@ -97,6 +92,7 @@ const Role: React.FC = () => {
               onClick={() => {
                 setTitle('新增角色');
                 setCurrentRow({});
+                setType('new');
                 handleModalVisible(true);
               }}
             >
@@ -110,6 +106,7 @@ const Role: React.FC = () => {
       <AddRoleForm
         title={title}
         visible={createModalVisible}
+        type={type}
         onSubmit={async (value) => {
           console.log('onSubmit', value);
           // const success = await handleUpdate(value);

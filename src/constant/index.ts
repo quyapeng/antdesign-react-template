@@ -23,26 +23,26 @@ export const pagination = {
 
 export const STATUS_CODE = [
   {
-    value: '0',
+    value: 'PENDING',
     label: '待激活',
   },
   {
-    value: '1',
+    value: 'NORMAL',
     label: '正常',
   },
   {
-    value: '2',
+    value: 'SUSPENDED',
     label: '禁用',
   },
 ];
 
 export const ROLE_CODE = [
   {
-    value: '0',
+    value: 'SYSTEM',
     label: '系统角色',
   },
   {
-    value: '1',
+    value: 'BUSINESS',
     label: '业务角色',
   },
 ];

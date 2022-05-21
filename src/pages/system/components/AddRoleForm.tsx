@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ModalForm, ProFormText, ProFormRadio, ProFormTextArea } from '@ant-design/pro-form';
+import type { ProFormInstance } from '@ant-design/pro-form';
 import { STATUS_CODE, ROLE_CODE } from '@/constant/index';
 
 export type UpdateFormProps = {
@@ -7,20 +8,36 @@ export type UpdateFormProps = {
   visible: boolean;
   onCancel: (flag?: boolean, formVals?: FormValueType) => void;
   onSubmit: (values: FormValueType) => Promise<void>;
-  // updateModalVisible: boolean;
+  type: string;
   values: Partial<API.RoleItem>;
 };
 
 export type FormValueType = {};
 
-const UpdateForm: React.FC<UpdateFormProps> = (props: any) => {
-  console.log(props);
+const UpdateForm: React.FC<UpdateFormProps> = ({
+  title,
+  values,
+  visible,
+  onSubmit,
+  onCancel,
+  type,
+}: any) => {
+  useEffect(() => {
+    if (type == 'edit') {
+      formRef?.current?.setFieldsValue(values);
+    } else {
+      formRef?.current?.resetFields();
+    }
+    console.log('values', formRef);
+  }, [values]);
+  const formRef = useRef<ProFormInstance>();
   return (
     <ModalForm
-      title={props.title}
+      title={title}
       width="500px"
-      initialValues={props}
-      visible={props.visible}
+      formRef={formRef}
+      // initialValues={type == 'edit' ? props.values : {}}
+      visible={visible}
       onVisibleChange={() => {}}
       {...{
         labelCol: { span: 6 },
@@ -28,15 +45,16 @@ const UpdateForm: React.FC<UpdateFormProps> = (props: any) => {
       }}
       layout="horizontal"
       onFinish={async (value) => {
-        props.onSubmit(value);
+        onSubmit(value);
       }}
       modalProps={{
-        onCancel: () => props.onCancel(),
+        onCancel: () => onCancel(),
       }}
     >
-      {/* <ProForm initialValues={props.value} ></ProForm> */}
+      {/* <ProForm initialValues={props.values} ></ProForm> */}
 
       <ProFormText
+        name="name"
         label="角色名称"
         rules={[
           {
@@ -45,9 +63,9 @@ const UpdateForm: React.FC<UpdateFormProps> = (props: any) => {
           },
         ]}
         width="md"
-        name="name"
       />
       <ProFormText
+        name="code"
         label="角色编码"
         rules={[
           {
@@ -56,9 +74,9 @@ const UpdateForm: React.FC<UpdateFormProps> = (props: any) => {
           },
         ]}
         width="md"
-        name="code"
       />
       <ProFormText
+        name="accPrefix"
         label="角色前缀"
         rules={[
           {
@@ -67,9 +85,9 @@ const UpdateForm: React.FC<UpdateFormProps> = (props: any) => {
           },
         ]}
         width="md"
-        name="accPrefix"
       />
       <ProFormText
+        name="weight"
         label="角色权重"
         rules={[
           {
@@ -78,7 +96,6 @@ const UpdateForm: React.FC<UpdateFormProps> = (props: any) => {
           },
         ]}
         width="md"
-        name="weight"
       />
       <ProFormRadio.Group
         name="type"
@@ -92,8 +109,8 @@ const UpdateForm: React.FC<UpdateFormProps> = (props: any) => {
         options={ROLE_CODE}
       />
       <ProFormRadio.Group
-        label="状态"
         name="status"
+        label="状态"
         rules={[
           {
             required: true,

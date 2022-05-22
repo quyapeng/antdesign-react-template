@@ -10,7 +10,6 @@ const request = axios.create({
 });
 
 request.interceptors.response.use((option: any) => {
-  //
   let { status, statusText, data } = option;
   if (status == '200') {
     return data;

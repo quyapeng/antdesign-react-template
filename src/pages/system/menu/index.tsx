@@ -8,7 +8,7 @@ import { ModalForm, ProFormText, ProFormTextArea } from '@ant-design/pro-form';
 import type { ProDescriptionsItemProps } from '@ant-design/pro-descriptions';
 import ProDescriptions from '@ant-design/pro-descriptions';
 // import type { FormValueType } from './components/UpdateForm';
-import UpdateForm from '../components/UpdateForm';
+import UpdateForm from '../components/SetForm';
 import { rule, addRule, updateRule, removeRule } from '@/services/api';
 import { commonRequestList } from '@/utils/index';
 import styles from './index.less';

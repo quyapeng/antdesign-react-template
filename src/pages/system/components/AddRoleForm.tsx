@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, memo } from 'react';
 import { ModalForm, ProFormText, ProFormRadio, ProFormTextArea } from '@ant-design/pro-form';
 import type { ProFormInstance } from '@ant-design/pro-form';
 import { STATUS_CODE, ROLE_CODE } from '@/constant/index';
@@ -28,7 +28,6 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
     } else {
       formRef?.current?.resetFields();
     }
-    console.log('values', formRef);
   }, [values]);
   const formRef = useRef<ProFormInstance>();
   return (
@@ -124,4 +123,4 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
   );
 };
 
-export default UpdateForm;
+export default memo(UpdateForm);

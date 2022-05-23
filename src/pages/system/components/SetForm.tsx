@@ -20,72 +20,45 @@ export type UpdateFormProps = {
 
   // values: Partial<API.RuleListItem>;
 };
-
+const fieldNames = {
+  title: 'name',
+  key: 'id',
+  children: 'subMenus',
+};
 const UpdateForm: React.FC<UpdateFormProps> = ({ title, visible, onSubmit, onCancel, values }) => {
   useEffect(() => {
     // formRef?.current?.setFieldsValue(values);
-    console.log(values);
+    console.log(values?.menus?.map((i: any) => i.id));
+    setCheckedKeys(values?.menus?.map((i: any) => i.id));
   }, [visible]);
   const formRef = useRef<ProFormInstance>();
-  const treeData: DataNode[] = [
+  const treeData: [any] = [
     {
-      title: '0-0',
-      key: '0-0',
-      children: [
+      name: '系统管理',
+      id: 18,
+      subMenus: [
         {
-          title: '0-0-0',
-          key: '0-0-0',
-          children: [
-            { title: '0-0-0-0', key: '0-0-0-0' },
-            { title: '0-0-0-1', key: '0-0-0-1' },
-            { title: '0-0-0-2', key: '0-0-0-2' },
+          name: '菜单管理',
+          id: 2,
+          subMenus: [
+            { name: '0-0-0-0', id: 3 },
+            { name: '0-0-0-1', id: 4 },
+            { name: '0-0-0-2', id: 5 },
           ],
         },
         {
-          title: '0-0-1',
-          key: '0-0-1',
-          children: [
-            { title: '0-0-1-0', key: '0-0-1-0' },
-            { title: '0-0-1-1', key: '0-0-1-1' },
-            { title: '0-0-1-2', key: '0-0-1-2' },
-          ],
-        },
-        {
-          title: '0-0-2',
-          key: '0-0-2',
+          name: '角色管理',
+          id: 6,
         },
       ],
-    },
-    {
-      title: '0-1',
-      key: '0-1',
-      children: [
-        { title: '0-1-0-0', key: '0-1-0-0' },
-        { title: '0-1-0-1', key: '0-1-0-1' },
-        { title: '0-1-0-2', key: '0-1-0-2' },
-      ],
-    },
-    {
-      title: '0-2',
-      key: '0-2',
     },
   ];
-  const [expandedKeys, setExpandedKeys] = useState<React.Key[]>(['0-0-0', '0-0-1']);
-  const [checkedKeys, setCheckedKeys] = useState<React.Key[]>(['0-0-0']);
+  const [checkedKeys, setCheckedKeys] = useState<React.Key[]>([]);
   const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
-  const [autoExpandParent, setAutoExpandParent] = useState<boolean>(true);
 
-  const onExpand = (expandedKeysValue: React.Key[]) => {
-    console.log('onExpand', expandedKeysValue);
-    // if not set autoExpandParent to false, if children expanded, parent can not collapse.
-    // or, you can remove all expanded children keys.
-    setExpandedKeys(expandedKeysValue);
-    setAutoExpandParent(false);
-  };
-
-  const onCheck = (checkedKeysValue: React.Key[]) => {
-    console.log('onCheck', checkedKeysValue);
-    setCheckedKeys(checkedKeysValue);
+  const onCheck = (checkedKeysValue: any, e: any, event: any) => {
+    console.log('onCheck', checkedKeysValue.checked);
+    setCheckedKeys(checkedKeysValue.checked);
   };
 
   const onSelect = (selectedKeysValue: React.Key[], info: any) => {
@@ -114,14 +87,14 @@ const UpdateForm: React.FC<UpdateFormProps> = ({ title, visible, onSubmit, onCan
     >
       <Tree
         checkable
-        onExpand={onExpand}
-        expandedKeys={expandedKeys}
-        autoExpandParent={autoExpandParent}
-        // onCheck={onCheck}
+        checkStrictly
+        defaultExpandAll
+        onCheck={onCheck}
         checkedKeys={checkedKeys}
         onSelect={onSelect}
         selectedKeys={selectedKeys}
         treeData={treeData}
+        fieldNames={fieldNames}
       />
     </ModalForm>
   );

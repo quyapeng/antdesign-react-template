@@ -2,8 +2,8 @@ export const xsrfHeaderName = 'authorization';
 
 // 认证类型
 export const AUTH_TYPE = {
-  BEARER: 'bearer',
-  BASIC: 'basic',
+  BEARER: 'Bearer',
+  BASIC: 'Basic',
 };
 
 export type stringObject = {

@@ -6,6 +6,7 @@ import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import { currentUser as queryCurrentUser, currentMenu } from './services/api';
 import defaultSettings from '../config/defaultSettings';
+import { getLocaleInfo } from '@/utils/index';
 import React from 'react';
 import * as allIcons from '@ant-design/icons';
 
@@ -24,7 +25,7 @@ const formatMenu = (list: any) => {
           i.subMenus.filter((j: any) => {
             c.push({
               name: j.name,
-              hideInMenu: !j.isShow,
+              hideInMenu: !j.show,
               path: `/${i.path}/${j.path}`,
               parentKeys: [i.path],
               type: j.type,
@@ -38,7 +39,7 @@ const formatMenu = (list: any) => {
           routes: c,
           icon: React.createElement(NewIcon),
           name: i.name,
-          hideInMenu: !i.isShow,
+          hideInMenu: !i.show,
           type: i.type,
         });
       }
@@ -57,16 +58,20 @@ export const initialStateConfig = {
  * */
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
-  currentUser?: API.CurrentUser;
+  currentUser?: any;
   loading?: boolean;
-  fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
+  fetchUserInfo?: () => Promise<any>;
 }> {
   const fetchUserInfo = async () => {
     try {
-      const msg: any = await queryCurrentUser();
+      const msg: any = getLocaleInfo('userinfo');
       const { data: menu } = await currentMenu();
-      msg.data.menu = formatMenu(menu);
-      return msg.data;
+      const list = formatMenu(menu);
+      console.log(list);
+      return {
+        ...JSON.parse(msg),
+        menu: list,
+      };
     } catch (error) {
       history.push(loginPath);
     }
@@ -96,6 +101,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     onPageChange: () => {
       const { location } = history;
       // 如果没有登录，重定向到 login
+      console.log();
       if (!initialState?.currentUser && location.pathname !== loginPath) {
         history.push(loginPath);
       }

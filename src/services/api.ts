@@ -13,16 +13,16 @@ export async function currentUser(options?: { [key: string]: any }) {
 
 /** 登录 */
 export async function login(body: API.LoginParams, options?: { [key: string]: any }) {
-  return request('/login/oauth/token', {
+  return request('/struggle/authenticate', {
     method: 'POST',
-    data: `${qs.stringify(body)}`,
+    data: body,
     ...(options || {}),
   });
 }
 
 /** 菜单 */
 export async function currentMenu(options?: { [key: string]: any }) {
-  return request('/login/menu', {
+  return request('/struggle/menu/me', {
     method: 'GET',
     ...(options || {}),
   });
@@ -36,26 +36,6 @@ export async function getNotices(options?: { [key: string]: any }) {
   });
 }
 
-/** /login/role?page=0&size=10 */
-export async function rule(
-  params: {
-    // query
-    /** 当前的页码 */
-    current?: number;
-    /** 页面的容量 */
-    pageSize?: number;
-  },
-  options?: { [key: string]: any },
-) {
-  return request('/api/rule', {
-    method: 'GET',
-    params: {
-      ...params,
-    },
-    ...(options || {}),
-  });
-}
-/** /login/role?page=0&size=10 */
 export async function role(
   params: {
     // query
@@ -66,7 +46,7 @@ export async function role(
   },
   options?: { [key: string]: any },
 ) {
-  return request('/login/role', {
+  return request('/struggle/authority', {
     method: 'GET',
     params: {
       ...params,

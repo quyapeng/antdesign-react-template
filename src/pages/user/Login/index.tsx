@@ -6,7 +6,7 @@ import { history, useModel } from 'umi';
 import Footer from '@/components/Footer';
 import { login } from '@/services/api';
 import { setLocaleInfo } from '@/utils/index';
-import { xsrfHeaderName } from '@/constant/index';
+import { AUTH_TYPE, xsrfHeaderName } from '@/constant/index';
 import styles from './index.less';
 
 const LoginMessage: React.FC<{
@@ -29,7 +29,7 @@ const Login: React.FC = () => {
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
     if (userInfo) {
-      await setInitialState((s) => ({
+      await setInitialState((s: any) => ({
         ...s,
         currentUser: userInfo,
       }));
@@ -39,14 +39,15 @@ const Login: React.FC = () => {
   const handleSubmit = async (values: API.LoginParams) => {
     try {
       // 登录
-      const msg: any = await login({ ...values, grant_type: 'password', scope: 'client' });
+      const msg: any = await login({ ...values, rememberMe: true });
       if (msg) {
         message.success('登录成功！');
-        let { token_type, access_token } = msg;
+        let { data } = msg;
         setLocaleInfo([
+          { name: 'userinfo', value: JSON.stringify(data) },
           {
             name: xsrfHeaderName,
-            value: `${token_type} ${access_token}`,
+            value: `${AUTH_TYPE.BEARER} ${data.token}`,
           },
         ]);
         await fetchUserInfo();
@@ -64,7 +65,6 @@ const Login: React.FC = () => {
       setUserLoginState(error.response.data);
     }
   };
-  // const { code: any } = userLoginState;
 
   return (
     <div className={styles.container}>

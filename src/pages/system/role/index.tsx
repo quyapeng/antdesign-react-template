@@ -22,9 +22,6 @@ const Role: React.FC = () => {
 
   const [title, setTitle] = useState('');
 
-    
-  
-
   const columns: ProColumns[] = [
     {
       title: 'id',
@@ -33,12 +30,12 @@ const Role: React.FC = () => {
     },
     {
       title: '角色名称',
-      dataIndex: 'name',
+      dataIndex: 'title',
       hideInSearch: false,
     },
     {
       title: '角色编码',
-      dataIndex: 'code',
+      dataIndex: 'name',
       hideInSearch: true,
     },
     {

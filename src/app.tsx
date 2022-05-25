@@ -4,7 +4,7 @@ import type { RunTimeLayoutConfig } from 'umi';
 import { history } from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
-import { currentUser as queryCurrentUser, currentMenu } from './services/api';
+import { currentMenu } from './services/api';
 import defaultSettings from '../config/defaultSettings';
 import { getLocaleInfo } from '@/utils/index';
 import React from 'react';

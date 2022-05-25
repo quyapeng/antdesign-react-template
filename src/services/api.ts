@@ -1,15 +1,6 @@
 // @ts-ignore
 /* eslint-disable */
 import request from '@/utils/request';
-import qs from 'qs';
-
-/** 获取当前的用户 */
-export async function currentUser(options?: { [key: string]: any }) {
-  return request('/login/user/admin/me', {
-    method: 'GET',
-    ...(options || {}),
-  });
-}
 
 /** 登录 */
 export async function login(body: API.LoginParams, options?: { [key: string]: any }) {
@@ -27,15 +18,7 @@ export async function currentMenu(options?: { [key: string]: any }) {
     ...(options || {}),
   });
 }
-
-/** 此处后端没有提供注释 GET /api/notices */
-export async function getNotices(options?: { [key: string]: any }) {
-  return request('/api/notices', {
-    method: 'GET',
-    ...(options || {}),
-  });
-}
-
+const role_url = '/struggle/authority';
 export async function role(
   params: {
     // query
@@ -46,7 +29,7 @@ export async function role(
   },
   options?: { [key: string]: any },
 ) {
-  return request('/struggle/authority', {
+  return request(role_url, {
     method: 'GET',
     params: {
       ...params,
@@ -55,25 +38,27 @@ export async function role(
   });
 }
 
-/** 新建规则 PUT /api/rule */
-export async function updateRule(options?: { [key: string]: any }) {
-  return request('/api/rule', {
-    method: 'PUT',
+/** 新建规则 PATCH /api/rule */
+export async function updateRole(options?: { [key: string]: any }) {
+  return request(`${role_url}/${options?.id}`, {
+    method: 'PATCH',
+    data: options,
     ...(options || {}),
   });
 }
 
-/** 新建规则 POST /api/rule */
-export async function addRule(options?: { [key: string]: any }) {
-  return request('/api/rule', {
+/** 新建规则 POST */
+export async function addRole(options?: { [key: string]: any }) {
+  return request(role_url, {
     method: 'POST',
+    data: options,
     ...(options || {}),
   });
 }
 
-/** 删除规则 DELETE /api/rule */
-export async function removeRule(options?: { [key: string]: any }) {
-  return request('/api/rule', {
+/** 删除规则 DELETE */
+export async function removeRole(options?: { [key: string]: any }) {
+  return request(role_url, {
     method: 'DELETE',
     ...(options || {}),
   });

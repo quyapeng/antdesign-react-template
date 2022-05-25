@@ -38,11 +38,15 @@ export const STATUS_CODE = [
 
 export const ROLE_CODE = [
   {
-    value: 'SYSTEM',
-    label: '系统角色',
+    value: 'SYS',
+    label: '系统',
   },
   {
-    value: 'BUSINESS',
-    label: '业务角色',
+    value: 'STAFF',
+    label: '员工',
+  },
+  {
+    value: 'USER',
+    label: '用户',
   },
 ];

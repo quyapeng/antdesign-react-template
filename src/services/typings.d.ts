@@ -40,6 +40,7 @@ declare namespace API {
   type PageParams = {
     current?: number;
     pageSize?: number;
+    name?: string;
   };
   // 角色
   type RoleItem = {

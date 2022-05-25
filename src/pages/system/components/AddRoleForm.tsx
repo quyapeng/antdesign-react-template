@@ -23,7 +23,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
   type,
 }: any) => {
   useEffect(() => {
-    if (type == 'edit') {
+    if (values.id) {
       formRef?.current?.setFieldsValue(values);
     } else {
       formRef?.current?.resetFields();
@@ -35,7 +35,6 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
       title={title}
       width="500px"
       formRef={formRef}
-      // initialValues={type == 'edit' ? props.values : {}}
       visible={visible}
       onVisibleChange={() => {}}
       {...{
@@ -50,10 +49,8 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
         onCancel: () => onCancel(),
       }}
     >
-      {/* <ProForm initialValues={props.values} ></ProForm> */}
-
       <ProFormText
-        name="name"
+        name="title"
         label="角色名称"
         rules={[
           {
@@ -64,7 +61,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
         width="md"
       />
       <ProFormText
-        name="code"
+        name="name"
         label="角色编码"
         rules={[
           {
@@ -74,7 +71,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
         ]}
         width="md"
       />
-      <ProFormText
+      {/* <ProFormText
         name="accPrefix"
         label="角色前缀"
         rules={[
@@ -95,7 +92,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
           },
         ]}
         width="md"
-      />
+      /> */}
       <ProFormRadio.Group
         name="type"
         label="角色类型"
@@ -107,7 +104,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
         ]}
         options={ROLE_CODE}
       />
-      <ProFormRadio.Group
+      {/* <ProFormRadio.Group
         name="status"
         label="状态"
         rules={[
@@ -117,8 +114,8 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
           },
         ]}
         options={STATUS_CODE}
-      />
-      <ProFormTextArea name="desc" width="md" label={'备注'} placeholder={'请输入备注'} />
+      /> */}
+      {/* <ProFormTextArea name="desc" width="md" label={'备注'} placeholder={'请输入备注'} /> */}
     </ModalForm>
   );
 };

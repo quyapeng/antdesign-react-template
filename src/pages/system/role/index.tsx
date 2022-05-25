@@ -1,16 +1,17 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Tag } from 'antd';
+import { Button, message, Tag } from 'antd';
 import React, { useState, useRef } from 'react';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import AddRoleForm from '../components/AddRoleForm';
 import SetForm from '../components/SetForm';
 
-import { role } from '@/services/api';
+import { role, addRole, updateRole } from '@/services/api';
 import { commonRequestList } from '@/utils/index';
 import { pagination } from '@/constant/index';
+import { Message } from '@/constant/common';
 import styles from './index.less';
-import { useRequest } from 'umi';
+import { ProFormInstance } from '@ant-design/pro-form';
 
 const Role: React.FC = () => {
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
@@ -18,6 +19,7 @@ const Role: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const [currentRow, setCurrentRow]: any = useState();
   const [setModalVisible, handleSetModalVisible] = useState<boolean>(true);
+  const formRef = useRef<ProFormInstance>();
   // const [currentRecord, setCurrentRecord]: any = useState();
 
   const [title, setTitle] = useState('');
@@ -95,6 +97,8 @@ const Role: React.FC = () => {
           showSizeChanger: true,
           defaultPageSize: pagination.size,
         }}
+        actionRef={actionRef}
+        formRef={formRef}
         toolbar={{
           actions: [
             <Button
@@ -119,15 +123,23 @@ const Role: React.FC = () => {
         visible={createModalVisible}
         type={type}
         onSubmit={async (value) => {
-          console.log('onSubmit', value);
-          // const success = await handleUpdate(value);
-          // if (success) {
-          //   handleUpdateModalVisible(false);
-          //   setCurrentRow(undefined);
-          //   if (actionRef.current) {
-          //     actionRef.current.reload();
-          //   }
-          // }
+          console.log('onSubmit', currentRow);
+          const success =
+            type == 'new'
+              ? await addRole(value)
+              : await updateRole({ ...value, id: currentRow.id });
+          console.log(success);
+          if (success) {
+            message.success({
+              content: type == 'new' ? Message.New : Message.Edit,
+            });
+            handleModalVisible(false);
+            setCurrentRow(undefined);
+            if (actionRef.current) {
+              //手动
+              actionRef.current.reload();
+            }
+          }
         }}
         onCancel={() => {
           handleModalVisible(false);
@@ -136,7 +148,6 @@ const Role: React.FC = () => {
           // }
         }}
         values={currentRow || {}}
-        // updateModalVisible={false}
       />
 
       <SetForm

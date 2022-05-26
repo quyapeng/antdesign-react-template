@@ -6,22 +6,23 @@ import ProTable from '@ant-design/pro-table';
 import AddRoleForm from '../components/AddRoleForm';
 import SetForm from '../components/SetForm';
 
-import { role, addRole, updateRole } from '@/services/api';
+import { role, addRole, updateRole, menuList } from '@/services/api';
 import { commonRequestList } from '@/utils/index';
 import { pagination } from '@/constant/index';
 import { Message } from '@/constant/common';
-import styles from './index.less';
+
 import { ProFormInstance } from '@ant-design/pro-form';
+import { useRequest } from 'umi';
 
 const Role: React.FC = () => {
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
   const [type, setType] = useState<string>('new');
   const actionRef = useRef<ActionType>();
   const [currentRow, setCurrentRow]: any = useState();
-  const [setModalVisible, handleSetModalVisible] = useState<boolean>(true);
+  const [setModalVisible, handleSetModalVisible] = useState<boolean>(false);
   const formRef = useRef<ProFormInstance>();
   // const [currentRecord, setCurrentRecord]: any = useState();
-
+  const { data } = useRequest(menuList);
   const [title, setTitle] = useState('');
 
   const columns: ProColumns[] = [
@@ -152,6 +153,7 @@ const Role: React.FC = () => {
 
       <SetForm
         title={'权限分配'}
+        menu={data}
         visible={setModalVisible}
         onSubmit={async (value) => {
           console.log('onSubmit', value);

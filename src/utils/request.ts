@@ -78,7 +78,7 @@ request.interceptors.response.use(async (response) => {
     });
     return;
   }
-  return res;
+  return res.data;
 });
 
 export default request;

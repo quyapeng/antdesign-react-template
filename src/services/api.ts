@@ -1,6 +1,7 @@
 // @ts-ignore
 /* eslint-disable */
 import request from '@/utils/request';
+const role_url = '/struggle/authority';
 
 /** 登录 */
 export async function login(body: API.LoginParams, options?: { [key: string]: any }) {
@@ -18,7 +19,6 @@ export async function currentMenu(options?: { [key: string]: any }) {
     ...(options || {}),
   });
 }
-const role_url = '/struggle/authority';
 export async function role(
   params: {
     // query
@@ -37,8 +37,7 @@ export async function role(
     ...(options || {}),
   });
 }
-
-/** 新建规则 PATCH /api/rule */
+/** update PATCH  */
 export async function updateRole(options?: { [key: string]: any }) {
   return request(`${role_url}/${options?.id}`, {
     method: 'PATCH',
@@ -46,8 +45,7 @@ export async function updateRole(options?: { [key: string]: any }) {
     ...(options || {}),
   });
 }
-
-/** 新建规则 POST */
+/** add POST */
 export async function addRole(options?: { [key: string]: any }) {
   return request(role_url, {
     method: 'POST',
@@ -56,10 +54,12 @@ export async function addRole(options?: { [key: string]: any }) {
   });
 }
 
-/** 删除规则 DELETE */
-export async function removeRole(options?: { [key: string]: any }) {
-  return request(role_url, {
-    method: 'DELETE',
+export async function menuList(options?: { [key: string]: any }) {
+  return request('/struggle/menu/all', {
+    method: 'GET',
+    params: {
+      ...options,
+    },
     ...(options || {}),
   });
 }

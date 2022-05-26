@@ -39,10 +39,9 @@ const Login: React.FC = () => {
   const handleSubmit = async (values: API.LoginParams) => {
     try {
       // 登录
-      const msg: any = await login({ ...values, rememberMe: true });
-      if (msg) {
+      const data: any = await login({ ...values, rememberMe: true });
+      if (data) {
         message.success('登录成功！');
-        let { data } = msg;
         setLocaleInfo([
           { name: 'userinfo', value: JSON.stringify(data) },
           {

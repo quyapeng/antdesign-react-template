@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ModalForm, ProFormInstance } from '@ant-design/pro-form';
 import Tree, { DataNode } from 'antd/lib/tree';
+import { formatMenu } from '@/utils/index';
 
 export type FormValueType = {
   target?: string;
@@ -15,8 +16,9 @@ export type UpdateFormProps = {
   title: string;
   visible: boolean;
   values: any;
+  menu: [];
   onCancel: (flag?: boolean, formVals?: FormValueType) => void;
-  onSubmit: (values: FormValueType) => Promise<void>;
+  onSubmit: ([]) => Promise<void>;
 
   // values: Partial<API.RuleListItem>;
 };
@@ -25,35 +27,23 @@ const fieldNames = {
   key: 'id',
   children: 'subMenus',
 };
-const UpdateForm: React.FC<UpdateFormProps> = ({ title, visible, onSubmit, onCancel, values }) => {
+
+const UpdateForm: React.FC<UpdateFormProps> = ({
+  title,
+  visible,
+  onSubmit,
+  onCancel,
+  values,
+  menu,
+}) => {
   useEffect(() => {
     // formRef?.current?.setFieldsValue(values);
     console.log(values?.menus?.map((i: any) => i.id));
     setCheckedKeys(values?.menus?.map((i: any) => i.id));
   }, [visible]);
   const formRef = useRef<ProFormInstance>();
-  const treeData: [any] = [
-    {
-      name: '系统管理',
-      id: 18,
-      subMenus: [
-        {
-          name: '菜单管理',
-          id: 2,
-          subMenus: [
-            { name: '0-0-0-0', id: 3 },
-            { name: '0-0-0-1', id: 4 },
-            { name: '0-0-0-2', id: 5 },
-          ],
-        },
-        {
-          name: '角色管理',
-          id: 6,
-        },
-      ],
-    },
-  ];
-  const [checkedKeys, setCheckedKeys] = useState<React.Key[]>([]);
+
+  const [checkedKeys, setCheckedKeys] = useState<[]>([]);
   const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
 
   const onCheck = (checkedKeysValue: any, e: any, event: any) => {
@@ -65,7 +55,31 @@ const UpdateForm: React.FC<UpdateFormProps> = ({ title, visible, onSubmit, onCan
     console.log('onSelect', info);
     setSelectedKeys(selectedKeysValue);
   };
-
+  const formatList = (list: any) => {
+    let menu: any = [];
+    if (list && list.length > 0) {
+      list.filter((i: any) => {
+        if (i.status == 'ENABLED') {
+          let c: any = [];
+          if (i.subMenus && i.subMenus.length > 0) {
+            i.subMenus.filter((j: any) => {
+              c.push({
+                name: j.name,
+                id: j.id,
+              });
+            });
+          }
+          menu.push({
+            subMenus: c,
+            name: i.name,
+            id: i.id,
+          });
+        }
+      });
+    }
+    return menu;
+  };
+  const treeData = formatList(menu);
   return (
     <ModalForm
       title={title}
@@ -78,8 +92,8 @@ const UpdateForm: React.FC<UpdateFormProps> = ({ title, visible, onSubmit, onCan
         wrapperCol: { span: 14 },
       }}
       layout="horizontal"
-      onFinish={async (value) => {
-        onSubmit(value);
+      onFinish={async () => {
+        onSubmit(checkedKeys);
       }}
       modalProps={{
         onCancel: () => onCancel(),

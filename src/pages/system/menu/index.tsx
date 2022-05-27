@@ -2,6 +2,9 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { menuList } from '@/services/api';
 import Tree, { DataNode } from 'antd/lib/tree';
 import useRequest from '@ahooksjs/use-request';
+import { Col, Row } from 'antd';
+import { TreeNode } from 'antd/lib/tree-select';
+import Icon from '@ant-design/icons';
 
 const Menu: React.FC = () => {
   /**
@@ -30,20 +33,52 @@ const Menu: React.FC = () => {
   useEffect(() => {}, []);
 
   return (
-    <div>
-      <Tree
-        onExpand={onExpand}
-        expandedKeys={expandedKeys}
-        // autoExpandParent={autoExpandParent}
-        defaultExpandAll={defaultExpandAll}
-        treeData={data}
-        fieldNames={{
-          title: 'name',
-          key: 'id',
-          children: 'subMenus',
-        }}
-      />
-    </div>
+    <Row>
+      <Col span={12}>
+        <Tree
+          onExpand={onExpand}
+          expandedKeys={expandedKeys}
+          // autoExpandParent={autoExpandParent}
+          defaultExpandAll={defaultExpandAll}
+          // treeData={data}
+          blockNode={defaultExpandAll}
+          fieldNames={{
+            title: 'name',
+            key: 'id',
+            children: 'subMenus',
+          }}
+        >
+          {/* <a-icon slot="icon" type="carry-out" /> */}
+          {data?.map((item: any) => {
+            return (
+              <TreeNode key={item.id} value={''}>
+                {/* <Icon slot="icon" type="carry-out" />
+                <span slot="title" style="{color: #1890ff}">
+                  {item.name}
+                </span>
+                {item.subMenus.map((i: any) => {
+                  return (
+                    <TreeNode key={i.id} title={i.name} value={''}>
+                      <Icon slot="icon" type="carry-out" />
+                      {i.subMenus.map((q: any) => {
+                        return (
+                          <TreeNode key={q.id} title={q.name} value={''}>
+                            <Icon slot="icon" type="carry-out" />
+                          </TreeNode>
+                        );
+                      })}
+                    </TreeNode>
+                  );
+                })} */}
+              </TreeNode>
+            );
+          })}
+        </Tree>
+      </Col>
+      <Col span={12}>
+        <form action="#">form</form>
+      </Col>
+    </Row>
   );
 };
 

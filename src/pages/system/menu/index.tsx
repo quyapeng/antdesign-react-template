@@ -22,9 +22,14 @@ const Menu: React.FC = () => {
 
   const treeData = [
     {
-      title: 'name',
-      key: 1,
-      children: [],
+      name: 'name',
+      id: 1,
+      subMenus: [
+        {
+          name: 'name2',
+          id: 2,
+        },
+      ],
     },
   ];
   let { data } = useRequest(menuList);
@@ -36,11 +41,11 @@ const Menu: React.FC = () => {
     <Row>
       <Col span={12}>
         <Tree
-          onExpand={onExpand}
+          onExpand={() => onExpand}
           expandedKeys={expandedKeys}
           // autoExpandParent={autoExpandParent}
           defaultExpandAll={defaultExpandAll}
-          // treeData={data}
+          treeData={data}
           blockNode={defaultExpandAll}
           fieldNames={{
             title: 'name',
@@ -49,10 +54,10 @@ const Menu: React.FC = () => {
           }}
         >
           {/* <a-icon slot="icon" type="carry-out" /> */}
-          {data?.map((item: any) => {
+          {/* {treeData?.map((item: any) => {
             return (
-              <TreeNode key={item.id} value={''}>
-                {/* <Icon slot="icon" type="carry-out" />
+              <TreeNode key={item.id} value={item.title} treeData=""> */}
+          {/* <Icon slot="icon" type="carry-out" />
                 <span slot="title" style="{color: #1890ff}">
                   {item.name}
                 </span>
@@ -70,9 +75,9 @@ const Menu: React.FC = () => {
                     </TreeNode>
                   );
                 })} */}
-              </TreeNode>
-            );
-          })}
+          {/* </TreeNode> */}
+          );
+          {/* })} */}
         </Tree>
       </Col>
       <Col span={12}>

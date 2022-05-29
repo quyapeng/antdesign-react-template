@@ -55,12 +55,10 @@ export async function addRole(options?: { [key: string]: any }) {
 }
 
 export async function menuList(options?: { [key: string]: any }) {
-  const res = request('/struggle/menu/all', {
+  return request('/struggle/menu/all', {
     method: 'GET',
     params: {
       ...options,
     },
   });
-  console.log('list', res);
-  return res;
 }

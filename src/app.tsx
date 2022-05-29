@@ -28,7 +28,7 @@ export async function getInitialState(): Promise<{
   const fetchUserInfo = async () => {
     try {
       const msg: any = getLocaleInfo('userinfo');
-      const data = await currentMenu();
+      const { data } = await currentMenu();
       const list = formatMenu(data);
       return {
         ...JSON.parse(msg),

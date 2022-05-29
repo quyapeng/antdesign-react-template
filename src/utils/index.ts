@@ -25,7 +25,7 @@ export const commonRequestList = (name: any, params: any) => {
       content,
       totalElements: total,
       pageable: { pageNumber, pageSize },
-    } = res;
+    } = res.data;
     return {
       data: content,
       total,

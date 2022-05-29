@@ -21,13 +21,7 @@ const Role: React.FC = () => {
   const [currentRow, setCurrentRow]: any = useState();
   const [setModalVisible, handleSetModalVisible] = useState<boolean>(false);
   const formRef = useRef<ProFormInstance>();
-  // const [currentRecord, setCurrentRecord]: any = useState();
-  const data = useRequest(async () => {
-    const res = await menuList();
-    console.log('res', res);
-    return res;
-  });
-  // console.log('menuList', data);
+  const { data } = useRequest(menuList);
   const [title, setTitle] = useState('');
 
   const columns: ProColumns[] = [
@@ -92,7 +86,6 @@ const Role: React.FC = () => {
 
   return (
     <div>
-      {JSON.stringify(data)}
       <ProTable<any, API.PageParams>
         rowKey="id"
         search={{

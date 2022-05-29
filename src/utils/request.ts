@@ -68,18 +68,13 @@ request.interceptors.request.use((url, options) => {
 });
 
 request.interceptors.response.use((response) => {
-  return new Promise(async (resolve, reject) => {
-    const { status, message: msg, data } = await response.clone().json();
-    if (status !== 200) {
-      console.log('error', status);
-      message.error({
-        content: `${status}: ${msg}`,
-      });
-      return;
-    }
-    console.log('response', data);
-    resolve(data);
-  });
+  const { status } = response;
+  if (status !== 200) {
+    message.error({
+      content: `${status}: 请求失败`,
+    });
+  }
+  return response;
 });
 
 export default request;

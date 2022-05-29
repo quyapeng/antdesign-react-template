@@ -40,7 +40,8 @@ const Menu: React.FC = () => {
   return (
     <Row>
       <Col span={12}>
-        <Tree
+        tree
+        {/* <Tree
           onExpand={() => onExpand}
           expandedKeys={expandedKeys}
           // autoExpandParent={autoExpandParent}
@@ -52,12 +53,12 @@ const Menu: React.FC = () => {
             key: 'id',
             children: 'subMenus',
           }}
-        >
-          {/* <a-icon slot="icon" type="carry-out" /> */}
-          {/* {treeData?.map((item: any) => {
+        > */}
+        {/* <a-icon slot="icon" type="carry-out" /> */}
+        {/* {treeData?.map((item: any) => {
             return (
               <TreeNode key={item.id} value={item.title} treeData=""> */}
-          {/* <Icon slot="icon" type="carry-out" />
+        {/* <Icon slot="icon" type="carry-out" />
                 <span slot="title" style="{color: #1890ff}">
                   {item.name}
                 </span>
@@ -75,10 +76,10 @@ const Menu: React.FC = () => {
                     </TreeNode>
                   );
                 })} */}
-          {/* </TreeNode> */}
-          );
-          {/* })} */}
-        </Tree>
+        {/* </TreeNode> */}
+        {/* ); */}
+        {/* })} */}
+        {/* </Tree> */}
       </Col>
       <Col span={12}>
         <form action="#">form</form>

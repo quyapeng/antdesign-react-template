@@ -7,6 +7,7 @@ import Footer from '@/components/Footer';
 import { currentMenu } from './services/api';
 import defaultSettings from '../config/defaultSettings';
 import { getLocaleInfo, formatMenu } from '@/utils/index';
+import 'antd/dist/antd.css';
 
 const loginPath = '/user/login';
 

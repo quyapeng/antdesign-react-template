@@ -33,7 +33,7 @@ const Menu: React.FC = () => {
     },
   ];
   let { data } = useRequest(menuList);
-  console.log(data);
+  console.log('data', data);
 
   useEffect(() => {}, []);
 

@@ -67,18 +67,19 @@ request.interceptors.request.use((url, options) => {
   };
 });
 
-request.interceptors.response.use(async (response) => {
-  const res = await response.clone().json();
-  const { status, message: msg } = res;
-
-  if (status !== 200) {
-    console.log('error', status);
-    message.error({
-      content: `${status}: ${msg}`,
-    });
-    return;
-  }
-  return res.data;
+request.interceptors.response.use((response) => {
+  return new Promise(async (resolve, reject) => {
+    const { status, message: msg, data } = await response.clone().json();
+    if (status !== 200) {
+      console.log('error', status);
+      message.error({
+        content: `${status}: ${msg}`,
+      });
+      return;
+    }
+    console.log('response', data);
+    resolve(data);
+  });
 });
 
 export default request;

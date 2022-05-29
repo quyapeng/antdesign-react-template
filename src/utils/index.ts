@@ -16,7 +16,7 @@ interface ArrayStorage {
 }
 
 export const commonRequestList = (name: any, params: any) => {
-  console.log(params);
+  // console.log(params);
   let { current: page, pageSize: size } = params;
   delete params.current;
   delete params.pageSize;

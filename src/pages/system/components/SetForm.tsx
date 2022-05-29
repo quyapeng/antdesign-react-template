@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ModalForm, ProFormInstance } from '@ant-design/pro-form';
 import Tree, { DataNode } from 'antd/lib/tree';
-import { formatMenu } from '@/utils/index';
 
 export type FormValueType = {
   target?: string;
@@ -38,7 +37,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
 }) => {
   useEffect(() => {
     // formRef?.current?.setFieldsValue(values);
-    console.log(values?.menus?.map((i: any) => i.id));
+    // console.log(values?.menus?.map((i: any) => i.id));
     setCheckedKeys(values?.menus?.map((i: any) => i.id));
   }, [visible]);
   const formRef = useRef<ProFormInstance>();

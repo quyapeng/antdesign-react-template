@@ -16,6 +16,7 @@ const Menu: React.FC = () => {
   const [defaultExpandAll] = useState(true);
 
   const onExpand = (newExpandedKeys: string[]) => {
+    console.log(newExpandedKeys);
     setExpandedKeys(newExpandedKeys);
     setAutoExpandParent(false);
   };
@@ -33,27 +34,25 @@ const Menu: React.FC = () => {
     },
   ];
   let { data } = useRequest(menuList);
-  console.log('data', data);
 
   useEffect(() => {}, []);
 
   return (
     <Row>
       <Col span={12}>
-        tree
-        {/* <Tree
+        <Tree
           onExpand={() => onExpand}
-          expandedKeys={expandedKeys}
-          // autoExpandParent={autoExpandParent}
+          // expandedKeys={expandedKeys}
+          autoExpandParent={autoExpandParent}
           defaultExpandAll={defaultExpandAll}
-          treeData={data}
+          treeData={data?.data}
           blockNode={defaultExpandAll}
           fieldNames={{
             title: 'name',
             key: 'id',
             children: 'subMenus',
           }}
-        > */}
+        />
         {/* <a-icon slot="icon" type="carry-out" /> */}
         {/* {treeData?.map((item: any) => {
             return (

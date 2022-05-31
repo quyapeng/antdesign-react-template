@@ -21,6 +21,31 @@ const Menu: React.FC = () => {
     setAutoExpandParent(false);
   };
 
+  const onSelect = (e: any) => {
+    console.log('onSelect', e);
+  };
+  const getDetail = (id: number, data: []) => {
+    let detail = {};
+    data.filter((item: any) => {
+      if (item.id == id) {
+        detail = item;
+        return;
+      }
+      item.subMenus?.filter((i: any) => {
+        if (i.id == id) {
+          detail = i;
+          return;
+        }
+        i.subMenus?.filter((j: any) => {
+          if (j.id == id) {
+            detail = j;
+            return detail;
+          }
+        });
+      });
+    });
+    console.log(detail);
+  };
   const treeData = [
     {
       name: 'name',
@@ -41,6 +66,7 @@ const Menu: React.FC = () => {
     <Row>
       <Col span={12}>
         <Tree
+          onSelect={onSelect}
           onExpand={() => onExpand}
           // expandedKeys={expandedKeys}
           autoExpandParent={autoExpandParent}

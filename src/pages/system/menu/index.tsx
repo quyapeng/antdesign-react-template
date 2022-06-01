@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { menuList } from '@/services/api';
 import Tree, { DataNode } from 'antd/lib/tree';
 import useRequest from '@ahooksjs/use-request';
-import { Col, Row } from 'antd';
+import { Button, Card, Col, Form, Input, Radio, Row } from 'antd';
 import { TreeNode } from 'antd/lib/tree-select';
 import Icon from '@ant-design/icons';
 
@@ -13,6 +13,8 @@ const Menu: React.FC = () => {
    *  */
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
   const [autoExpandParent, setAutoExpandParent] = useState(true);
+  const [title, setTitle] = useState('新增菜单');
+
   const [defaultExpandAll] = useState(true);
 
   const onExpand = (newExpandedKeys: string[]) => {
@@ -23,6 +25,7 @@ const Menu: React.FC = () => {
 
   const onSelect = (e: any) => {
     console.log('onSelect', e);
+    getDetail(e[0], data?.data);
   };
   const getDetail = (id: number, data: []) => {
     let detail = {};
@@ -45,6 +48,45 @@ const Menu: React.FC = () => {
       });
     });
     console.log(detail);
+    // this.detail = detail;
+    // this.id = detail.id;
+    // this.type = 'edit';
+    // this.title = '编辑菜单';
+    // const {
+    //   id: detailid,
+    //   parent,
+    //   authority,
+    //   name,
+    //   code,
+    //   path,
+    //   type,
+    //   icon,
+    //   seq,
+    //   isShow,
+    //   isDelete,
+    //   status,
+    // } = detail;
+    // this.form.setFieldsValue({
+    //   id: detailid,
+    //   parentId: parent,
+    //   authority: authority || undefined,
+    //   name,
+    //   code,
+    //   path,
+    //   type,
+    //   icon: icon ? icon : undefined,
+    //   seq,
+    //   isShow,
+    //   isDelete,
+    //   status,
+    // });
+  };
+  const onFinish = (values: any) => {
+    console.log('Success:', values);
+  };
+
+  const onFinishFailed = (errorInfo: any) => {
+    console.log('Failed:', errorInfo);
   };
   const treeData = [
     {
@@ -58,27 +100,31 @@ const Menu: React.FC = () => {
       ],
     },
   ];
+
   let { data } = useRequest(menuList);
 
   useEffect(() => {}, []);
 
   return (
-    <Row>
+    <Row className="menu">
       <Col span={12}>
-        <Tree
-          onSelect={onSelect}
-          onExpand={() => onExpand}
-          // expandedKeys={expandedKeys}
-          autoExpandParent={autoExpandParent}
-          defaultExpandAll={defaultExpandAll}
-          treeData={data?.data}
-          blockNode={defaultExpandAll}
-          fieldNames={{
-            title: 'name',
-            key: 'id',
-            children: 'subMenus',
-          }}
-        />
+        <Card title="菜单数据" bordered={false}>
+          <Tree
+            onSelect={onSelect}
+            onExpand={() => onExpand}
+            // expandedKeys={expandedKeys}
+            autoExpandParent={autoExpandParent}
+            defaultExpandAll={defaultExpandAll}
+            treeData={data?.data}
+            blockNode={defaultExpandAll}
+            fieldNames={{
+              title: 'name',
+              key: 'id',
+              children: 'subMenus',
+            }}
+          />
+        </Card>
+
         {/* <a-icon slot="icon" type="carry-out" /> */}
         {/* {treeData?.map((item: any) => {
             return (
@@ -107,7 +153,59 @@ const Menu: React.FC = () => {
         {/* </Tree> */}
       </Col>
       <Col span={12}>
-        <form action="#">form</form>
+        <Card title={title} bordered={false}></Card>
+        <Form
+          name="basic"
+          labelCol={{ span: 8 }}
+          wrapperCol={{ span: 16 }}
+          initialValues={{ remember: true }}
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+          autoComplete="off"
+        >
+          <Form.Item label="父级" name="username" rules={[{ required: false }]}>
+            <Input placeholder="请选择菜单父级" />
+          </Form.Item>
+          <Form.Item label="名称" name="username" rules={[{ required: true, message: '' }]}>
+            <Input placeholder="请输入名称" />
+          </Form.Item>
+          <Form.Item label="编号" name="code" rules={[{ required: true, message: '' }]}>
+            <Input placeholder="请输入名称" />
+          </Form.Item>
+          <Form.Item label="类型" name="code" rules={[{ required: true, message: '' }]}>
+            <Radio.Group>
+              <Radio value="0">菜单</Radio>
+              <Radio value="1">权限</Radio>
+            </Radio.Group>
+          </Form.Item>
+          <Form.Item label="路由" name="code" rules={[{ required: false }]}>
+            <Input placeholder="请输入路由" />
+          </Form.Item>
+          <Form.Item label="权限" name="code" rules={[{ required: false }]}>
+            <Input placeholder="请输入权限" />
+          </Form.Item>
+          <Form.Item label="图标" name="code" rules={[{ required: false }]}></Form.Item>
+          <Form.Item label="排序" name="code" rules={[{ required: true, message: '' }]}>
+            <Input placeholder="请输入菜单排序" />
+          </Form.Item>
+          <Form.Item label="是否展示" name="code" rules={[{ required: true, message: '' }]}>
+            <Radio.Group>
+              <Radio value="0">展示</Radio>
+              <Radio value="1">不展示</Radio>
+            </Radio.Group>
+          </Form.Item>
+          <Form.Item label="状态" name="code" rules={[{ required: true, message: '' }]}>
+            <Radio.Group>
+              <Radio value="0">有效</Radio>
+              <Radio value="1">无效</Radio>
+            </Radio.Group>
+          </Form.Item>
+          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+            <Button type="primary" htmlType="submit">
+              提交
+            </Button>
+          </Form.Item>
+        </Form>
       </Col>
     </Row>
   );

@@ -1,10 +1,11 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { menuList } from '@/services/api';
 import Tree, { DataNode } from 'antd/lib/tree';
 import useRequest from '@ahooksjs/use-request';
 import { Button, Card, Col, Form, Input, Radio, Row } from 'antd';
 import { TreeNode } from 'antd/lib/tree-select';
 import Icon from '@ant-design/icons';
+import { ProFormInstance } from '@ant-design/pro-form';
 
 const Menu: React.FC = () => {
   /**
@@ -14,8 +15,8 @@ const Menu: React.FC = () => {
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
   const [autoExpandParent, setAutoExpandParent] = useState(true);
   const [title, setTitle] = useState('新增菜单');
-
   const [defaultExpandAll] = useState(true);
+  const [detail, setDetail] = useState({});
 
   const onExpand = (newExpandedKeys: string[]) => {
     console.log(newExpandedKeys);
@@ -48,6 +49,8 @@ const Menu: React.FC = () => {
       });
     });
     console.log(detail);
+    setDetail(detail);
+    form?.setFieldsValue(detail);
     // this.detail = detail;
     // this.id = detail.id;
     // this.type = 'edit';
@@ -104,7 +107,7 @@ const Menu: React.FC = () => {
   let { data } = useRequest(menuList);
 
   useEffect(() => {}, []);
-
+  const [form] = Form.useForm();
   return (
     <Row className="menu">
       <Col span={12}>
@@ -158,7 +161,7 @@ const Menu: React.FC = () => {
           name="basic"
           labelCol={{ span: 8 }}
           wrapperCol={{ span: 16 }}
-          initialValues={{ remember: true }}
+          form={form}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
           autoComplete="off"

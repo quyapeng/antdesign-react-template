@@ -69,20 +69,6 @@ const Menu: React.FC = () => {
     //   isDelete,
     //   status,
     // } = detail;
-    // this.form.setFieldsValue({
-    //   id: detailid,
-    //   parentId: parent,
-    //   authority: authority || undefined,
-    //   name,
-    //   code,
-    //   path,
-    //   type,
-    //   icon: icon ? icon : undefined,
-    //   seq,
-    //   isShow,
-    //   isDelete,
-    //   status,
-    // });
   };
   const onFinish = (values: any) => {
     console.log('Success:', values);

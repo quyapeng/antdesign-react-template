@@ -11,37 +11,38 @@ import { pagination } from '@/constant/index';
 import { Message } from '@/constant/common';
 
 import { ProFormInstance } from '@ant-design/pro-form';
-import { useRequest } from 'umi';
+import { useParams } from 'umi';
 
-const CourseType: React.FC = () => {
+const Theme: React.FC = () => {
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
   const [type, setType] = useState<string>('new');
   const actionRef = useRef<ActionType>();
   const [currentRow, setCurrentRow]: any = useState();
   const formRef = useRef<ProFormInstance>();
   const [title, setTitle] = useState('');
-  
+
   const columns: ProColumns[] = [
     {
-      title: '课程分类名称',
+      title: '主题类型',
       dataIndex: 'title',
       hideInSearch: false,
     },
     {
-      title: '状态',
-      hideInSearch: true,
-      dataIndex: 'status',
-      valueEnum: {
-        NORMAL: {
-          text: <Tag color="green">正常</Tag>,
-          status: 'NORMAL',
-        },
-        SUSPENDED: {
-          text: <Tag color="red">禁用</Tag>,
-          status: 'SUSPENDED',
-        },
-      },
+      title: '主题内容',
+      dataIndex: 'title',
+      hideInSearch: false,
     },
+    {
+      title: '展示开始日期',
+      dataIndex: 'title',
+      hideInSearch: false,
+    },
+    {
+      title: '展示结束日期',
+      dataIndex: 'title',
+      hideInSearch: false,
+    },
+
     {
       title: '操作',
       dataIndex: 'option',
@@ -50,7 +51,7 @@ const CourseType: React.FC = () => {
         <a
           key="config"
           onClick={() => {
-            setTitle('编辑课程分类');
+            setTitle('编辑');
             setType('edit');
             handleModalVisible(true);
             setCurrentRow(record);
@@ -58,14 +59,7 @@ const CourseType: React.FC = () => {
         >
           编辑
         </a>,
-        <a
-          key="set"
-          onClick={() => {
-            //
-          }}
-        >
-          设置主题
-        </a>,
+
         <a
           key="delete"
           onClick={() => {
@@ -77,9 +71,11 @@ const CourseType: React.FC = () => {
       ],
     },
   ];
+  const params = useParams();
 
   return (
     <div>
+      {JSON.stringify(params)}
       <ProTable<any, API.PageParams>
         rowKey="id"
         search={{
@@ -99,7 +95,7 @@ const CourseType: React.FC = () => {
               type="primary"
               key="primary"
               onClick={() => {
-                setTitle('新增课程分类');
+                setTitle('新增');
                 setCurrentRow({});
                 setType('new');
                 handleModalVisible(true);
@@ -144,4 +140,4 @@ const CourseType: React.FC = () => {
   );
 };
 
-export default CourseType;
+export default Theme;

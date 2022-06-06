@@ -51,7 +51,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
     >
       <ProFormText
         name="title"
-        label="角色名称"
+        label="课程分类名称"
         rules={[
           {
             required: true,
@@ -60,10 +60,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
         ]}
         width="md"
       />
-      
-      
-      
-      {/* <ProFormRadio.Group
+      <ProFormRadio.Group
         name="status"
         label="状态"
         rules={[
@@ -73,7 +70,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
           },
         ]}
         options={STATUS_CODE}
-      /> */}
+      />
     </ModalForm>
   );
 };

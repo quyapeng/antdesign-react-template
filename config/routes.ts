@@ -35,21 +35,26 @@
         name: 'role',
         component: './system/role',
       },
+    ],
+  },
+  {
+    name: '课程管理',
+    icon: 'table',
+    path: '/Course',
+    component: './Admin',
+    routes: [
       {
-        component: './404',
+        path: '/Course/type',
+        name: '课程分类',
+        component: './Course/type',
+      },
+      {
+        path: '/Course/theme/:id',
+        name: '主题',
+        component: './Course/theme',
       },
     ],
   },
-  // {
-  //   name: '列表',
-  //   icon: 'table',
-  //   path: '/list',
-  //   component: './TableList',
-  // },
-  // {
-  //   path: '/',
-  //   redirect: '/welcome',
-  // },
   {
     component: './404',
   },

@@ -106,7 +106,7 @@ const Menu: React.FC = () => {
       <Col span={12}>
         <Card title={title} bordered={false}></Card>
         <Form
-          name="basic"
+          name="base"
           labelCol={{ span: 8 }}
           wrapperCol={{ span: 16 }}
           form={form}

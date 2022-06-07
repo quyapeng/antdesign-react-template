@@ -75,7 +75,7 @@ const Theme: React.FC = () => {
 
   return (
     <div>
-      {JSON.stringify(params)}
+      <p>{params.id}</p>
       <ProTable<any, API.PageParams>
         rowKey="id"
         search={{

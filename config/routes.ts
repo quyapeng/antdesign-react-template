@@ -23,7 +23,7 @@
     path: '/system',
     name: '菜单',
     icon: 'crown',
-    component: './Admin',
+    component: './App',
     routes: [
       {
         path: '/system/menu',
@@ -40,18 +40,18 @@
   {
     name: '课程管理',
     icon: 'table',
-    path: '/Course',
-    component: './Admin',
+    path: '/course',
+    component: './App',
     routes: [
       {
-        path: '/Course/type',
+        path: '/course/type',
         name: '课程分类',
-        component: './Course/type',
+        component: './course/type',
       },
       {
-        path: '/Course/theme/:id',
+        path: '/course/theme/:id',
         name: '主题',
-        component: './Course/theme',
+        component: './course/theme',
       },
     ],
   },

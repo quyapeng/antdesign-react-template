@@ -75,7 +75,7 @@ const Theme: React.FC = () => {
 
   return (
     <div>
-      <p>{params.id}</p>
+      {/* <p>{params?.id}</p> */}
       <ProTable<any, API.PageParams>
         rowKey="id"
         search={{

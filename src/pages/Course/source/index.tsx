@@ -1,48 +1,66 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, message } from 'antd';
+import { Button, Tag } from 'antd';
 import React, { useState, useRef } from 'react';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import AddModelForm from '../components/AddModelForm';
 
-import { type, addType, updateType } from '@/services/course';
+import { sourceList } from '@/services/course';
 import { commonRequestList } from '@/utils/index';
 import { pagination } from '@/constant/index';
 import { Message } from '@/constant/common';
 
 import { ProFormInstance } from '@ant-design/pro-form';
-import { useParams } from 'umi';
 
-const Theme: React.FC = () => {
+const Source: React.FC = () => {
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
   const [type, setType] = useState<string>('new');
-  const actionRef = useRef<ActionType>();
-  const [currentRow, setCurrentRow]: any = useState();
-  const formRef = useRef<ProFormInstance>();
   const [title, setTitle] = useState('');
+  const [currentRow, setCurrentRow]: any = useState();
+  const [setModalVisible, handleSetModalVisible] = useState<boolean>(false);
+  const formRef = useRef<ProFormInstance>();
+  const actionRef = useRef<ActionType>();
 
   const columns: ProColumns[] = [
     {
-      title: '主题类型',
-      dataIndex: 'title',
+      title: '课程编号',
+      dataIndex: 'code',
+      hideInSearch: true,
+    },
+    {
+      title: '课程名称',
+      dataIndex: 'name',
       hideInSearch: false,
     },
     {
-      title: '主题内容',
-      dataIndex: 'title',
-      hideInSearch: false,
+      title: '课程分类',
+      dataIndex: 'name',
+      hideInSearch: true,
     },
     {
-      title: '展示开始日期',
-      dataIndex: 'title',
-      hideInSearch: false,
+      title: '活动大类',
+      dataIndex: 'category',
+      hideInSearch: true,
     },
     {
-      title: '展示结束日期',
-      dataIndex: 'title',
-      hideInSearch: false,
+      title: '活动小类',
+      dataIndex: 'activity',
+      hideInSearch: true,
     },
-
+    {
+      title: '状态',
+      hideInSearch: true,
+      dataIndex: 'status',
+      valueEnum: {
+        ENABLED: {
+          text: <Tag color="green">有效</Tag>,
+          status: 'ENABLED',
+        },
+        DISABLED: {
+          text: <Tag color="red">无效</Tag>,
+          status: 'DISABLED',
+        },
+      },
+    },
     {
       title: '操作',
       dataIndex: 'option',
@@ -51,19 +69,19 @@ const Theme: React.FC = () => {
         <a
           key="config"
           onClick={() => {
-            setTitle('编辑');
-            setType('edit');
-            handleModalVisible(true);
-            setCurrentRow(record);
+            // setTitle('编辑');
+            // setType('edit');
+            // handleModalVisible(true);
+            // setCurrentRow(record);
           }}
         >
           编辑
         </a>,
-
         <a
           key="delete"
           onClick={() => {
-            //
+            // handleSetModalVisible(true);
+            // setCurrentRow(record);
           }}
         >
           删除
@@ -71,17 +89,15 @@ const Theme: React.FC = () => {
       ],
     },
   ];
-  const params = useParams();
 
   return (
     <div>
-      {/* <p>{params?.id}</p> */}
       <ProTable<any, API.PageParams>
         rowKey="id"
         search={{
           labelWidth: 120,
         }}
-        request={(params) => commonRequestList(type, params)}
+        request={(params) => commonRequestList(sourceList, params)}
         columns={columns}
         pagination={{
           showSizeChanger: true,
@@ -101,43 +117,14 @@ const Theme: React.FC = () => {
                 handleModalVisible(true);
               }}
             >
-              <PlusOutlined /> 新增
+              <PlusOutlined /> {Message.Action}
             </Button>,
           ],
           settings: [],
         }}
       />
-
-      <AddModelForm
-        title={title}
-        visible={createModalVisible}
-        type={type}
-        onSubmit={async (value) => {
-          console.log('onSubmit', currentRow);
-          const success =
-            type == 'new'
-              ? await addType(value)
-              : await updateType({ ...value, id: currentRow.id });
-          console.log(success);
-          if (success) {
-            message.success({
-              content: type == 'new' ? Message.New : Message.Edit,
-            });
-            handleModalVisible(false);
-            setCurrentRow(undefined);
-            if (actionRef.current) {
-              //手动
-              actionRef.current.reload();
-            }
-          }
-        }}
-        onCancel={() => {
-          handleModalVisible(false);
-        }}
-        values={currentRow || {}}
-      />
     </div>
   );
 };
 
-export default Theme;
+export default Source;

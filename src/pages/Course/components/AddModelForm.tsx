@@ -42,7 +42,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
         wrapperCol: { span: 14 },
       }}
       layout="horizontal"
-      onFinish={async (value) => {
+      onFinish={async (value: any) => {
         onSubmit(value);
       }}
       modalProps={{

@@ -10,4 +10,5 @@ export const Message = {
   Change: '修改成功',
   SendCode: '验证码发送成功',
   NoRouter: '当前用户暂无任何权限，请联系管理员。',
+  Action: '创建',
 };

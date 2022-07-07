@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { menuList } from '@/services/api';
 import Tree from 'antd/lib/tree';
 import useRequest from '@ahooksjs/use-request';
-import { Button, Card, Col, Form, Input, Radio, Row } from 'antd';
+import { Button, Card, Col, Form, Input, Radio, Row, Select, TreeSelect } from 'antd';
 import Icon from '@ant-design/icons';
 
 const Menu: React.FC = () => {
@@ -115,7 +115,12 @@ const Menu: React.FC = () => {
           autoComplete="off"
         >
           <Form.Item label="父级" name="parentId" rules={[{ required: false }]}>
-            <Input placeholder="请选择菜单父级" />
+            <TreeSelect
+              allowClear
+              placeholder="请选择父级"
+              treeData={data?.data}
+              fieldNames={{ label: 'name', value: 'id', children: 'subMenus' }}
+            />
           </Form.Item>
           <Form.Item label="名称" name="name" rules={[{ required: true, message: '' }]}>
             <Input placeholder="请输入名称" />

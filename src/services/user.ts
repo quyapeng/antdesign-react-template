@@ -1,7 +1,7 @@
 import request from '@/utils/request';
-const course_url = 'course';
+const user_url = 'user';
 
-export async function type(
+export async function userList(
   params: {
     // query
     /** 当前的页码 */
@@ -11,7 +11,7 @@ export async function type(
   },
   options?: { [key: string]: any },
 ) {
-  return request(course_url, {
+  return request(user_url, {
     method: 'GET',
     params: {
       ...params,
@@ -21,7 +21,7 @@ export async function type(
 }
 /** update PATCH  */
 export async function updateType(options?: { [key: string]: any }) {
-  return request(`${course_url}/${options?.id}`, {
+  return request(user_url, {
     method: 'PATCH',
     data: options,
     ...(options || {}),
@@ -29,7 +29,7 @@ export async function updateType(options?: { [key: string]: any }) {
 }
 /** add POST */
 export async function addType(options?: { [key: string]: any }) {
-  return request(course_url, {
+  return request(user_url, {
     method: 'POST',
     data: options,
     ...(options || {}),
@@ -37,7 +37,7 @@ export async function addType(options?: { [key: string]: any }) {
 }
 
 export async function sourceList(options?: { [key: string]: any }) {
-  return request(course_url, {
+  return request(user_url, {
     method: 'POST',
     data: options,
     ...(options || {}),

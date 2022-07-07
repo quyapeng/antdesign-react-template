@@ -14,10 +14,10 @@ const errorHandler = (error: any) => {
 };
 const request = extend({
   errorHandler, // 默认错误处理
-  prefix: 'https://dev-api.qlion.com',
+  prefix: 'https://dev-api.qlion.com/struggle/',
   // 默认请求头
   headers: {
-    Authorization: localStorage.getItem(xsrfHeaderName), // 携带token
+    authorization: localStorage.getItem(xsrfHeaderName), // 携带token
   } as HeadersInit,
   credentials: 'include', // 默认请求是否带上cookie
 });

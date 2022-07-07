@@ -6,7 +6,12 @@
       {
         name: 'login',
         path: '/user/login',
-        component: './user/Login',
+        component: './user/login',
+      },
+      {
+        path: '/user/index',
+        name: '用户管理',
+        component: './user/user',
       },
       {
         component: './404',
@@ -55,6 +60,7 @@
       },
     ],
   },
+
   {
     component: './404',
   },

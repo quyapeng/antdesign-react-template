@@ -11,7 +11,6 @@ import { pagination } from '@/constant/index';
 import { Message } from '@/constant/common';
 
 import { ProFormInstance } from '@ant-design/pro-form';
-import { useRequest } from 'umi';
 
 const CourseType: React.FC = () => {
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
@@ -20,7 +19,7 @@ const CourseType: React.FC = () => {
   const [currentRow, setCurrentRow]: any = useState();
   const formRef = useRef<ProFormInstance>();
   const [title, setTitle] = useState('');
-  
+
   const columns: ProColumns[] = [
     {
       title: '课程分类名称',

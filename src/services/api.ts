@@ -1,11 +1,12 @@
 // @ts-ignore
 /* eslint-disable */
 import request from '@/utils/request';
-const role_url = '/struggle/authority';
+const role_url = 'authority';
+const login_url = 'authenticate';
 
 /** 登录 */
 export async function login(body: API.LoginParams, options?: { [key: string]: any }) {
-  return request('/struggle/authenticate', {
+  return request(login_url, {
     method: 'POST',
     data: body,
     ...(options || {}),
@@ -14,7 +15,7 @@ export async function login(body: API.LoginParams, options?: { [key: string]: an
 
 /** 菜单 */
 export async function currentMenu(options?: { [key: string]: any }) {
-  return request('/struggle/menu/me', {
+  return request('menu/me', {
     method: 'GET',
     ...(options || {}),
   });
@@ -55,7 +56,7 @@ export async function addRole(options?: { [key: string]: any }) {
 }
 
 export async function menuList(options?: { [key: string]: any }) {
-  return request('/struggle/menu/all', {
+  return request('menu/all', {
     method: 'GET',
     params: {
       ...options,

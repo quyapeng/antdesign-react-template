@@ -4,6 +4,20 @@ import Tree from 'antd/lib/tree';
 import useRequest from '@ahooksjs/use-request';
 import { Button, Card, Col, Form, Input, Radio, Row, Select, TreeSelect } from 'antd';
 import Icon from '@ant-design/icons';
+import { IconData } from '@/constant/icon.js';
+function getIconName(name: string) {
+  const sym = '-';
+  const f = name.substr(0, 1);
+  if (name.indexOf(sym) == -1) {
+    const l = name.substr(1, name.length);
+    return `${f}${l}`;
+  } else {
+    const tem = name.split(sym);
+    for (let i = 0; i < tem.length; i++) {
+      console.log(i);
+    }
+  }
+}
 
 const Menu: React.FC = () => {
   /**
@@ -63,107 +77,108 @@ const Menu: React.FC = () => {
     setTitle('新增菜单');
     form?.resetFields();
   };
-  const treeData = [
-    {
-      name: 'name',
-      id: 1,
-      subMenus: [
-        {
-          name: 'name2',
-          id: 2,
-        },
-      ],
-    },
-  ];
 
   let { data } = useRequest(menuList);
 
   useEffect(() => {}, []);
   const [form] = Form.useForm();
   return (
-    <Row className="menu">
-      <Col span={12}>
-        <Button type="primary" key="primary" onClick={addHandle}>
-          新增菜单
-        </Button>
-        <Card title="菜单数据" bordered={false}>
-          <Tree
-            onSelect={onSelect}
-            onExpand={() => onExpand}
-            // expandedKeys={expandedKeys}
-            autoExpandParent={autoExpandParent}
-            defaultExpandAll={defaultExpandAll}
-            treeData={data?.data}
-            blockNode={defaultExpandAll}
-            fieldNames={{
-              title: 'name',
-              key: 'id',
-              children: 'subMenus',
-            }}
-          />
-        </Card>
-      </Col>
-      <Col span={12}>
-        <Card title={title} bordered={false}></Card>
-        <Form
-          name="base"
-          labelCol={{ span: 8 }}
-          wrapperCol={{ span: 16 }}
-          form={form}
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
-          autoComplete="off"
-        >
-          <Form.Item label="父级" name="parentId" rules={[{ required: false }]}>
-            <TreeSelect
-              allowClear
-              placeholder="请选择父级"
+    <>
+      <Button type="primary" key="primary" onClick={addHandle}>
+        新增菜单
+      </Button>
+      <Row className="menu">
+        <Col span={10}>
+          <Card title="菜单数据" bordered={false}>
+            <Tree
+              showLine
+              defaultExpandAll
+              onSelect={onSelect}
+              onExpand={() => onExpand}
+              // expandedKeys={expandedKeys}
               treeData={data?.data}
-              fieldNames={{ label: 'name', value: 'id', children: 'subMenus' }}
+              fieldNames={{
+                title: 'name',
+                key: 'id',
+                children: 'subMenus',
+              }}
             />
-          </Form.Item>
-          <Form.Item label="名称" name="name" rules={[{ required: true, message: '' }]}>
-            <Input placeholder="请输入名称" />
-          </Form.Item>
-          <Form.Item label="编号" name="code" rules={[{ required: true, message: '' }]}>
-            <Input placeholder="请输入名称" />
-          </Form.Item>
-          <Form.Item label="类型" name="type" rules={[{ required: true, message: '' }]}>
-            <Radio.Group>
-              <Radio value="MENU">菜单</Radio>
-              <Radio value="ACTION">权限</Radio>
-            </Radio.Group>
-          </Form.Item>
-          <Form.Item label="路由" name="path" rules={[{ required: false }]}>
-            <Input placeholder="请输入路由" />
-          </Form.Item>
-          <Form.Item label="权限" name="authority" rules={[{ required: false }]}>
-            <Input placeholder="请输入权限" />
-          </Form.Item>
-          <Form.Item label="图标" name="icon" rules={[{ required: false }]}></Form.Item>
-          <Form.Item label="排序" name="seq" rules={[{ required: true, message: '' }]}>
-            <Input placeholder="请输入菜单排序" />
-          </Form.Item>
-          <Form.Item label="是否展示" name="show" rules={[{ required: true, message: '' }]}>
-            <Radio.Group>
-              <Radio value={true}>展示</Radio>
-              <Radio value={false}>不展示</Radio>
-            </Radio.Group>
-          </Form.Item>
-          <Form.Item label="状态" name="status" rules={[{ required: true, message: '' }]}>
-            <Radio.Group>
-              <Radio value="ENABLED">有效</Radio>
-              <Radio value="DISABLED">无效</Radio>
-            </Radio.Group>
-          </Form.Item>
-          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-            <Button type="primary" htmlType="submit">
-              提交
-            </Button>
-          </Form.Item>
-        </Form>
-      </Col>
-    </Row>
+          </Card>
+        </Col>
+        <Col span={14}>
+          <Card title={title} bordered={false}></Card>
+          <Form
+            name="base"
+            labelCol={{ span: 8 }}
+            wrapperCol={{ span: 16 }}
+            form={form}
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            autoComplete="off"
+          >
+            <Form.Item label="父级" name="parent" rules={[{ required: false }]}>
+              <TreeSelect
+                allowClear
+                treeDefaultExpandAll
+                placeholder="请选择父级"
+                treeData={data?.data}
+                fieldNames={{ label: 'name', value: 'id', children: 'subMenus' }}
+              />
+            </Form.Item>
+            <Form.Item label="名称" name="name" rules={[{ required: true, message: '' }]}>
+              <Input placeholder="请输入名称" />
+            </Form.Item>
+            <Form.Item label="编号" name="code" rules={[{ required: true, message: '' }]}>
+              <Input placeholder="请输入名称" />
+            </Form.Item>
+            <Form.Item label="类型" name="type" rules={[{ required: true, message: '' }]}>
+              <Radio.Group>
+                <Radio value="MENU">菜单</Radio>
+                <Radio value="ACTION">权限</Radio>
+              </Radio.Group>
+            </Form.Item>
+            <Form.Item label="路由" name="path" rules={[{ required: false }]}>
+              <Input placeholder="请输入路由" />
+            </Form.Item>
+            <Form.Item label="权限" name="authority" rules={[{ required: false }]}>
+              <Input placeholder="请输入权限" />
+            </Form.Item>
+            <Form.Item label="图标" name="icon" rules={[{ required: false }]}>
+              <Select placeholder="请选择图标">
+                {IconData.map((i: string) => {
+                  return (
+                    <Select.Option value={i} key={i}>
+                      <Icon type={i} />
+                      {i}
+                    </Select.Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
+            <Form.Item label="排序" name="seq" rules={[{ required: true, message: '' }]}>
+              <Input placeholder="请输入菜单排序" />
+            </Form.Item>
+            <Form.Item label="是否展示" name="show" rules={[{ required: true, message: '' }]}>
+              <Radio.Group>
+                <Radio value={true}>展示</Radio>
+                <Radio value={false}>不展示</Radio>
+              </Radio.Group>
+            </Form.Item>
+            <Form.Item label="状态" name="status" rules={[{ required: true, message: '' }]}>
+              <Radio.Group>
+                <Radio value="ENABLED">有效</Radio>
+                <Radio value="DISABLED">无效</Radio>
+              </Radio.Group>
+            </Form.Item>
+            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+              <Button type="primary" htmlType="submit">
+                提交
+              </Button>
+            </Form.Item>
+          </Form>
+        </Col>
+      </Row>
+    </>
   );
 };
 

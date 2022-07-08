@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { xsrfHeaderName, AUTH_TYPE } from '@/constant/index';
+import { xsrfHeaderName } from '@/constant/index';
 import { codeMessage } from '@/constant/error';
 import { extend } from 'umi-request';
 

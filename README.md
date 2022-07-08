@@ -25,7 +25,7 @@ Scripts provided in `package.json`. It's safe to modify or add additional script
 ### Start project
 
 ```bash
-npm start
+npm dev
 ```
 
 ### Build project
@@ -46,11 +46,6 @@ You can also use script to auto fix some lint error:
 npm run lint:fix
 ```
 
-### Test code
-
-```bash
-npm test
-```
 
 ## More
 

@@ -17,7 +17,7 @@ const Source: React.FC = () => {
   const columns: ProColumns[] = [
     {
       title: '账号',
-      dataIndex: 'code',
+      dataIndex: 'login',
       hideInSearch: true,
     },
     {
@@ -27,17 +27,7 @@ const Source: React.FC = () => {
     },
     {
       title: '手机号',
-      dataIndex: 'name',
-      hideInSearch: true,
-    },
-    {
-      title: '角色',
-      dataIndex: 'category',
-      hideInSearch: true,
-    },
-    {
-      title: '销售区域',
-      dataIndex: 'activity',
+      dataIndex: 'mobile',
       hideInSearch: true,
     },
     {
@@ -45,6 +35,7 @@ const Source: React.FC = () => {
       hideInSearch: true,
       dataIndex: 'status',
       valueEnum: {
+        // PENDING, NORMAL, SUSPENDED
         ENABLED: {
           text: <Tag color="green">有效</Tag>,
           status: 'ENABLED',

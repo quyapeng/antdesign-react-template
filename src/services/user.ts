@@ -20,7 +20,7 @@ export async function userList(
   });
 }
 /** update PATCH  */
-export async function updateType(options?: { [key: string]: any }) {
+export async function updateUser(options?: { [key: string]: any }) {
   return request(user_url, {
     method: 'PATCH',
     data: options,
@@ -28,7 +28,7 @@ export async function updateType(options?: { [key: string]: any }) {
   });
 }
 /** add POST */
-export async function addType(options?: { [key: string]: any }) {
+export async function addUser(options?: { [key: string]: any }) {
   return request(user_url, {
     method: 'POST',
     data: options,

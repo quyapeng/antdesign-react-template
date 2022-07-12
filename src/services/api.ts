@@ -1,8 +1,9 @@
 // @ts-ignore
 /* eslint-disable */
 import request from '@/utils/request';
-const role_url = 'authority';
+const role_url = 'role';
 const login_url = 'authenticate';
+const menu_url = 'menu';
 
 /** 登录 */
 export async function login(body: API.LoginParams, options?: { [key: string]: any }) {
@@ -55,9 +56,39 @@ export async function addRole(options?: { [key: string]: any }) {
   });
 }
 
+// /role/1/menus
+export async function setMenuPower(options?: { [key: string]: any }) {
+  const { id, menu }: any = options;
+  return request(`${role_url}/${id}/${menu_url}s`, {
+    method: 'PATCH',
+    data: menu,
+    ...(options || {}),
+  });
+}
+
 export async function menuList(options?: { [key: string]: any }) {
-  return request('menu/all', {
+  return request(`${menu_url}/all`, {
     method: 'GET',
+    params: {
+      ...options,
+    },
+  });
+}
+
+export async function addMenu(options?: { [key: string]: any }) {
+  const { id }: any = options;
+  let ID = id ? `/${id}` : '';
+  return request(`${menu_url}${ID}`, {
+    method: id ? 'PATCH' : 'POST',
+    data: options,
+    ...(options || {}),
+  });
+}
+
+export async function getMenu(method: string, options?: { [key: string]: any }) {
+  //
+  return request(`${menu_url}/${options?.id}`, {
+    method,
     params: {
       ...options,
     },

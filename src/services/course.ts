@@ -38,8 +38,9 @@ export async function addType(options?: { [key: string]: any }) {
 
 export async function sourceList(options?: { [key: string]: any }) {
   return request(course_url, {
-    method: 'POST',
-    data: options,
-    ...(options || {}),
+    method: 'GET',
+    params: {
+      ...options,
+    },
   });
 }

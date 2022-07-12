@@ -12,3 +12,14 @@ export const Message = {
   NoRouter: '当前用户暂无任何权限，请联系管理员。',
   Action: '创建',
 };
+
+export const STATUS = {
+  ENABLED: {
+    text: '有效',
+    status: 'ENABLED',
+  },
+  DISABLED: {
+    text: '无效',
+    status: 'DISABLED',
+  },
+};

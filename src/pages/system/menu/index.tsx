@@ -1,23 +1,42 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { menuList } from '@/services/api';
+import {
+  Button,
+  Card,
+  Col,
+  Form,
+  Input,
+  Radio,
+  Row,
+  Select,
+  TreeSelect,
+  message,
+  Modal,
+} from 'antd';
+// import * as allIcons from '@ant-design/icons';
+import { IconData } from '@/constant/icon.js';
 import Tree from 'antd/lib/tree';
 import useRequest from '@ahooksjs/use-request';
-import { Button, Card, Col, Form, Input, Radio, Row, Select, TreeSelect } from 'antd';
-import Icon from '@ant-design/icons';
-import { IconData } from '@/constant/icon.js';
-function getIconName(name: string) {
-  const sym = '-';
-  const f = name.substr(0, 1);
-  if (name.indexOf(sym) == -1) {
-    const l = name.substr(1, name.length);
-    return `${f}${l}`;
-  } else {
-    const tem = name.split(sym);
-    for (let i = 0; i < tem.length; i++) {
-      console.log(i);
-    }
-  }
-}
+
+import { TYPE, SHOW, STATUS, operateMap } from '@/constant/index';
+import { menuList, addMenu, getMenu } from '@/services/api';
+// function getIconName(name: string) {
+//   const sym = '-';
+//   const f = name.substr(0, 1).toLocaleUpperCase();
+//   if (name.indexOf(sym) == -1) {
+//     // 无连接符
+//     const l = name.substr(1, name.length);
+//     return `${f}${l}`;
+//   } else {
+//     const tem = name.split(sym);
+//     let str = '';
+//     for (let i = 0; i < tem.length; i++) {
+//       let tf = tem[i].substr(0, 1).toLocaleUpperCase();
+//       const tl = tem[i].substr(1, tem[i].length);
+//       str += `${tf}${tl}`;
+//     }
+//     return str;
+//   }
+// }
 
 const Menu: React.FC = () => {
   /**
@@ -27,8 +46,9 @@ const Menu: React.FC = () => {
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
   const [autoExpandParent, setAutoExpandParent] = useState(true);
   const [title, setTitle] = useState('新增菜单');
-  const [defaultExpandAll] = useState(true);
-  const [detail, setDetail] = useState({});
+  const [detail, setDetail]: any = useState({});
+  // const [loading, setLoading] = useState(false);
+  const [list, setData] = useState([]);
 
   const onExpand = (newExpandedKeys: string[]) => {
     console.log(newExpandedKeys);
@@ -66,8 +86,27 @@ const Menu: React.FC = () => {
     form?.setFieldsValue(detail);
     // this.id = detail.id;
   };
-  const onFinish = (values: any) => {
-    console.log('Success:', values);
+  const onFinish = async (values: any) => {
+    // console.log('Success:', values);
+    try {
+      const params: any = {};
+      if (values.parent) {
+        params.parentId = values.parent;
+        delete values.parent;
+      }
+      if (detail.id) {
+        params.id = detail.id;
+      }
+      const { status }: any = await addMenu(Object.assign(params, values));
+      if (status == 200) {
+        message.success(params.id ? operateMap.modify : operateMap.create);
+        run();
+        setDetail({});
+      }
+    } catch (error: any) {
+      console.log(error.response.data.msg);
+      message.error('登录失败，请重试！');
+    }
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -75,12 +114,60 @@ const Menu: React.FC = () => {
   };
   const addHandle = () => {
     setTitle('新增菜单');
+    setDetail({});
     form?.resetFields();
+    console.log(TYPE[0].value);
+    form.setFieldsValue({
+      type: TYPE[0].value,
+      show: SHOW[0].value,
+      status: STATUS[0].value,
+    });
   };
+  const getList = () => {
+    let { data } = useRequest(menuList);
+    setData(data);
+  };
+  const deleteMenu = () => {
+    try {
+      Modal.confirm({
+        title: '确定要进行删除操作吗',
+        onOk() {
+          console.log('ok');
+          const { id } = detail;
+          if (id) {
+            getMenu('DELETE', { id }).then((res) => {
+              console.log('res', res);
+              const { status } = res;
+              if (status == 200) {
+                message.success(operateMap.delete);
+                run();
+              }
+            });
+          }
+        },
+        onCancel() {},
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  // let { data } = useRequest(menuList);
+  const [state, setState] = useState('');
 
-  let { data } = useRequest(menuList);
+  const { loading, run, data } = useRequest(menuList, {
+    manual: true,
+    onSuccess: (result, params) => {
+      if (result.success) {
+        console.log('sss', result, params);
+      }
+    },
+  });
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    run();
+    addHandle();
+  }, []);
+
   const [form] = Form.useForm();
   return (
     <>
@@ -125,16 +212,29 @@ const Menu: React.FC = () => {
                 fieldNames={{ label: 'name', value: 'id', children: 'subMenus' }}
               />
             </Form.Item>
-            <Form.Item label="名称" name="name" rules={[{ required: true, message: '' }]}>
-              <Input placeholder="请输入名称" />
+            <Form.Item
+              label="名称"
+              name="name"
+              rules={[{ required: true, message: '菜单名称不能为空' }]}
+            >
+              <Input placeholder="请输入菜单名称" />
             </Form.Item>
-            <Form.Item label="编号" name="code" rules={[{ required: true, message: '' }]}>
-              <Input placeholder="请输入名称" />
+            <Form.Item
+              label="编号"
+              name="code"
+              rules={[{ required: true, message: '菜单编号不能为空' }]}
+            >
+              <Input placeholder="请输入菜单编号" />
             </Form.Item>
-            <Form.Item label="类型" name="type" rules={[{ required: true, message: '' }]}>
+            <Form.Item label="类型" name="type" rules={[{ required: true, message: '请选择类型' }]}>
               <Radio.Group>
-                <Radio value="MENU">菜单</Radio>
-                <Radio value="ACTION">权限</Radio>
+                {TYPE.map((i) => {
+                  return (
+                    <Radio value={i.value} key={i.value}>
+                      {i.label}
+                    </Radio>
+                  );
+                })}
               </Radio.Group>
             </Form.Item>
             <Form.Item label="路由" name="path" rules={[{ required: false }]}>
@@ -148,32 +248,63 @@ const Menu: React.FC = () => {
                 {IconData.map((i: string) => {
                   return (
                     <Select.Option value={i} key={i}>
-                      <Icon type={i} />
+                      {/* {allIcons[i]} */}
+                      {/* allIcons[icon] || allIcons[''.concat(v4IconName, 'Outlined')]; */}
+                      {/* const NewIcon = allIcons[icon] || allIcons[''.concat(v4IconName, 'Outlined')]; */}
+                      {/* <Icon component={'setting'} /> */}
+                      {/* <Icon type={getIconName(i) + 'Outlined'} /> */}
+                      {/* {getIconName(i).concat('Outlined')} */}
+                      {/* {Icon(getIconName(i))} */}
+                      {/* {allIcons[i]} */}
                       {i}
                     </Select.Option>
                   );
                 })}
               </Select>
             </Form.Item>
-            <Form.Item label="排序" name="seq" rules={[{ required: true, message: '' }]}>
+            <Form.Item
+              label="排序"
+              name="seq"
+              rules={[{ required: true, message: '菜单排序不能为空' }]}
+            >
               <Input placeholder="请输入菜单排序" />
             </Form.Item>
             <Form.Item label="是否展示" name="show" rules={[{ required: true, message: '' }]}>
               <Radio.Group>
-                <Radio value={true}>展示</Radio>
-                <Radio value={false}>不展示</Radio>
+                {SHOW.map((i, j) => {
+                  return (
+                    <Radio value={i.value} key={j}>
+                      {i.label}
+                    </Radio>
+                  );
+                })}
               </Radio.Group>
             </Form.Item>
             <Form.Item label="状态" name="status" rules={[{ required: true, message: '' }]}>
               <Radio.Group>
-                <Radio value="ENABLED">有效</Radio>
-                <Radio value="DISABLED">无效</Radio>
+                {STATUS.map((i) => {
+                  return (
+                    <Radio value={i.value} key={i.value}>
+                      {i.label}
+                    </Radio>
+                  );
+                })}
               </Radio.Group>
             </Form.Item>
             <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-              <Button type="primary" htmlType="submit">
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={loading}
+                style={{ marginRight: '20px' }}
+              >
                 提交
               </Button>
+              {detail?.id ? (
+                <Button danger onClick={deleteMenu}>
+                  删除
+                </Button>
+              ) : null}
             </Form.Item>
           </Form>
         </Col>

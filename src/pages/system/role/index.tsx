@@ -5,14 +5,14 @@ import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import AddRoleForm from '../components/AddRoleForm';
 import SetForm from '../components/SetForm';
-
-import { role, addRole, updateRole, menuList } from '@/services/api';
-import { commonRequestList } from '@/utils/index';
-import { pagination } from '@/constant/index';
-import { Message } from '@/constant/common';
-
 import { ProFormInstance } from '@ant-design/pro-form';
 import { useRequest } from 'umi';
+
+import { commonRequestList } from '@/utils/index';
+import { pagination, operateMap } from '@/constant/index';
+import { Message } from '@/constant/common';
+
+import { role, addRole, updateRole, menuList, setMenuPower } from '@/services/api';
 
 const Role: React.FC = () => {
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
@@ -83,6 +83,21 @@ const Role: React.FC = () => {
       ],
     },
   ];
+  const setPower = async (values: any) => {
+    const { id } = currentRow;
+    try {
+      let { status } = await setMenuPower({ id, menu: values });
+      if (status == 200) {
+        message.success(Message.Set);
+        if (actionRef.current) {
+          //手动
+          actionRef.current.reload();
+        }
+      }
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
 
   return (
     <div>
@@ -155,7 +170,8 @@ const Role: React.FC = () => {
         menu={data}
         visible={setModalVisible}
         onSubmit={async (value) => {
-          console.log('onSubmit', value);
+          // console.log('onSubmit', value);
+          setPower(value);
         }}
         onCancel={() => {
           handleSetModalVisible(false);

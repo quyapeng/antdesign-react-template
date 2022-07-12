@@ -3,13 +3,13 @@ import { Button, Tag } from 'antd';
 import React, { useState, useRef } from 'react';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
+import { ProFormInstance } from '@ant-design/pro-form';
+import AddSourceModelForm from '../components/AddSourceModelForm';
 
 import { sourceList } from '@/services/course';
 import { commonRequestList } from '@/utils/index';
 import { pagination } from '@/constant/index';
-import { Message } from '@/constant/common';
-
-import { ProFormInstance } from '@ant-design/pro-form';
+import { Message, STATUS } from '@/constant/common';
 
 const Source: React.FC = () => {
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
@@ -24,7 +24,7 @@ const Source: React.FC = () => {
     {
       title: '课程编号',
       dataIndex: 'code',
-      hideInSearch: true,
+      hideInSearch: false,
     },
     {
       title: '课程名称',
@@ -33,33 +33,37 @@ const Source: React.FC = () => {
     },
     {
       title: '课程分类',
-      dataIndex: 'name',
-      hideInSearch: true,
+      dataIndex: 'category',
+      hideInSearch: false,
+      valueEnum: {
+        NORMAL: {
+          text: 'test',
+          status: 'NORMAL',
+        },
+        SUSPENDED: {
+          text: 'test1',
+          status: 'SUSPENDED',
+        },
+      },
+      render: (_, record) => [<>{record.category?.name}</>],
     },
     {
       title: '活动大类',
-      dataIndex: 'category',
-      hideInSearch: true,
+      dataIndex: 'activity',
+      hideInSearch: false,
+      render: (_, record) => [<>{record.activity?.parent?.name}</>],
     },
     {
       title: '活动小类',
       dataIndex: 'activity',
-      hideInSearch: true,
+      hideInSearch: false,
+      render: (_, record) => [<>{record.activity?.name}</>],
     },
     {
       title: '状态',
-      hideInSearch: true,
+      hideInSearch: false,
       dataIndex: 'status',
-      valueEnum: {
-        ENABLED: {
-          text: <Tag color="green">有效</Tag>,
-          status: 'ENABLED',
-        },
-        DISABLED: {
-          text: <Tag color="red">无效</Tag>,
-          status: 'DISABLED',
-        },
-      },
+      valueEnum: { ...STATUS },
     },
     {
       title: '操作',
@@ -122,6 +126,22 @@ const Source: React.FC = () => {
           ],
           settings: [],
         }}
+      />
+
+      <AddSourceModelForm
+        title={title}
+        visible={createModalVisible}
+        type={type}
+        onSubmit={async (value: any) => {
+          console.log('onSubmit', currentRow);
+        }}
+        onCancel={() => {
+          handleModalVisible(false);
+          // if (!showDetail) {
+          //   setCurrentRow(undefined);
+          // }
+        }}
+        values={currentRow || {}}
       />
     </div>
   );

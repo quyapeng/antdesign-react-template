@@ -58,6 +58,11 @@
         name: '主题',
         component: './course/theme',
       },
+      {
+        path: '/course/source',
+        name: '课程资源',
+        component: './course/source',
+      },
     ],
   },
 

@@ -18,7 +18,6 @@ export const IconData = [
   'carry-out',
   'check-circle',
   'check-square',
-  'ci',
   'clock-circle',
   'close-circle',
   'close-square',

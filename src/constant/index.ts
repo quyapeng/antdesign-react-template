@@ -50,3 +50,35 @@ export const ROLE_CODE = [
     label: '用户',
   },
 ];
+
+export const TYPE = [
+  {
+    value: 'MENU',
+    label: '菜单',
+  },
+  {
+    value: 'ACTION',
+    label: '权限',
+  },
+];
+
+export const SHOW = [
+  {
+    value: true,
+    label: '展示',
+  },
+  {
+    value: false,
+    label: '不展示',
+  },
+];
+export const STATUS = [
+  {
+    value: 'ENABLED',
+    label: '有效',
+  },
+  {
+    value: 'DISABLED',
+    label: '无效',
+  },
+];

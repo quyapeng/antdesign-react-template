@@ -41,7 +41,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
         wrapperCol: { span: 14 },
       }}
       layout="horizontal"
-      onFinish={async (value) => {
+      onFinish={async (value: any) => {
         onSubmit(value);
       }}
       modalProps={{
@@ -61,9 +61,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
         label="主题类型"
       />
       <ProFormText width="md" name="content" label="主题内容" placeholder="请输入主题内容" />
-      <ProForm.Group>
-        
-      </ProForm.Group>
+      <ProForm.Group></ProForm.Group>
     </ModalForm>
   );
 };

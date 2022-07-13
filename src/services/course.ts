@@ -44,3 +44,17 @@ export async function sourceList(options?: { [key: string]: any }) {
     },
   });
 }
+
+// 课程分类
+export async function categoryList() {
+  return request(`${course_url}/category`, {
+    method: 'GET',
+  });
+}
+
+// activity
+export async function activityList() {
+  return request(`${course_url}/activity`, {
+    method: 'GET',
+  });
+}

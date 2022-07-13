@@ -1,3 +1,5 @@
+import { Tag } from 'antd';
+
 export const Message = {
   New: '创建成功',
   Edit: '编辑成功',

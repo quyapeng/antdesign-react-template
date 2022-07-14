@@ -5,7 +5,10 @@ import { extend } from 'umi-request';
 
 const errorHandler = (error: any) => {
   const { response = {} } = error;
-  const errortext = codeMessage[response.status] || response.statusText;
+  const key = Object.keys(error?.data?.errors)[0];
+  const value = Object.values(error.data.errors)[0];
+  const errortext = codeMessage[response.status] || response.statusText || `${key}: ${value}`;
+  console.log('error', error);
   const { status, url } = response;
 
   message.error({

@@ -9,7 +9,7 @@ import { ProFormInstance } from '@ant-design/pro-form';
 import { useRequest } from 'umi';
 
 import { commonRequestList } from '@/utils/index';
-import { pagination, operateMap } from '@/constant/index';
+import { pagination, ROLE_CODE_EUM } from '@/constant/index';
 import { Message } from '@/constant/common';
 
 import { role, addRole, updateRole, menuList, setMenuPower } from '@/services/api';
@@ -39,6 +39,12 @@ const Role: React.FC = () => {
       title: '角色编码',
       dataIndex: 'name',
       hideInSearch: true,
+    },
+    {
+      title: '角色类型',
+      dataIndex: 'type',
+      hideInSearch: true,
+      render: (_, record) => <>{ROLE_CODE_EUM[record.type].text}</>,
     },
     {
       title: '状态',
@@ -172,6 +178,7 @@ const Role: React.FC = () => {
         onSubmit={async (value) => {
           // console.log('onSubmit', value);
           setPower(value);
+          handleSetModalVisible(false);
         }}
         onCancel={() => {
           handleSetModalVisible(false);

@@ -8,16 +8,17 @@
         path: '/user/login',
         component: './user/login',
       },
-      {
-        path: '/user/index',
-        name: '用户管理',
-        component: './user/user',
-      },
+      // {
+      //   path: '/user/index',
+      //   name: '用户管理',
+      //   component: './user/user',
+      // },
       {
         component: './404',
       },
     ],
   },
+
   // {
   //   path: '/welcome',
   //   name: '欢迎页',
@@ -62,6 +63,18 @@
         path: '/course/source',
         name: '课程资源',
         component: './course/source',
+      },
+    ],
+  },
+  {
+    path: '/users',
+    icon: 'table',
+    component: './App',
+    routes: [
+      {
+        path: '/users/operation',
+        name: '用户管理',
+        component: './users/operation',
       },
     ],
   },

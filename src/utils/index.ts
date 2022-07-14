@@ -46,32 +46,43 @@ export const formatMenu = (list: any) => {
   let menu: any = [];
   if (list && list.length > 0) {
     list.filter((i: any) => {
-      let { icon } = i;
-      if (i.status == 'ENABLED') {
+      const { icon, status, subMenus, path, name, type, show } = i;
+      if (status == 'ENABLED') {
         let c: any = [];
-        if (i.subMenus && i.subMenus.length > 0) {
-          i.subMenus.filter((j: any) => {
+        if (subMenus && subMenus.length > 0) {
+          subMenus.filter((j: any) => {
             c.push({
               name: j.name,
               hideInMenu: !j.show,
-              path: `/${i.path}/${j.path}`,
-              parentKeys: [i.path],
+              path: `/${path}/${j.path}`,
+              parentKeys: [path],
               type: j.type,
             });
           });
         }
-        const v4IconName = toHump(icon.replace(icon[0], icon[0].toUpperCase()));
+        const v4IconName = icon ? toHump(icon.replace(icon[0], icon[0].toUpperCase())) : '';
         const NewIcon = allIcons[icon] || allIcons[''.concat(v4IconName, 'Outlined')];
-        menu.push({
-          path: `/${i.path}`,
-          routes: c,
-          icon: React.createElement(NewIcon),
-          name: i.name,
-          hideInMenu: !i.show,
-          type: i.type,
-        });
+        const iconObj = NewIcon
+          ? {
+              icon: React.createElement(NewIcon),
+            }
+          : {};
+        menu.push(
+          Object.assign(
+            {
+              path: `/${path}`,
+              routes: c,
+
+              name,
+              hideInMenu: !show,
+              type,
+            },
+            iconObj,
+          ),
+        );
       }
     });
   }
+  console.log('menu', menu);
   return menu;
 };

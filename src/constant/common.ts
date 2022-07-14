@@ -25,3 +25,18 @@ export const STATUS = {
     status: 'DISABLED',
   },
 };
+
+export const STATUS_USER = {
+  PENDING: {
+    text: '待激活',
+    status: 'PENDING',
+  },
+  NORMAL: {
+    text: '正常',
+    status: 'NORMAL',
+  },
+  SUSPENDED: {
+    text: '冻结',
+    status: 'SUSPENDED',
+  },
+};

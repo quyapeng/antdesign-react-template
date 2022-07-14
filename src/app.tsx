@@ -29,7 +29,7 @@ export async function getInitialState(): Promise<{
     try {
       const msg: any = getLocaleInfo('userinfo');
       const { data } = await currentMenu();
-      const list = formatMenu(data);
+      const list = formatMenu(data || []) || [];
       return {
         ...JSON.parse(msg),
         menu: list,

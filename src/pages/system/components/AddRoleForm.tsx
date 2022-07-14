@@ -42,7 +42,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
         wrapperCol: { span: 14 },
       }}
       layout="horizontal"
-      onFinish={async (value) => {
+      onFinish={async (value: any) => {
         onSubmit(value);
       }}
       modalProps={{
@@ -51,7 +51,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
     >
       <ProFormText
         name="title"
-        label="角色名称"
+        label="角色标题"
         rules={[
           {
             required: true,
@@ -62,7 +62,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
       />
       <ProFormText
         name="name"
-        label="角色编码"
+        label="角色名称"
         rules={[
           {
             required: true,
@@ -71,6 +71,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
         ]}
         width="md"
       />
+
       {/* <ProFormText
         name="accPrefix"
         label="角色前缀"

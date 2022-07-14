@@ -54,7 +54,7 @@ export async function categoryList() {
 
 // activity
 export async function activityList() {
-  return request(`${course_url}/activity`, {
+  return request(`${course_url}/activity/tree`, {
     method: 'GET',
   });
 }

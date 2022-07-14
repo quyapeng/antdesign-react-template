@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, memo } from 'react';
+import React, { useEffect, useRef, memo, useState } from 'react';
 import {
   ModalForm,
   ProFormText,
@@ -6,9 +6,11 @@ import {
   ProFormTextArea,
   ProFormUploadButton,
   ProFormRadio,
+  ProFormTreeSelect,
 } from '@ant-design/pro-form';
 import type { ProFormInstance } from '@ant-design/pro-form';
 import { STATUS } from '@/constant/index';
+import { TreeSelect } from 'antd';
 
 export type UpdateFormProps = {
   title: string;
@@ -17,6 +19,8 @@ export type UpdateFormProps = {
   onSubmit: (values: FormValueType) => Promise<void>;
   type: string;
   values: Partial<API.RoleItem>;
+  activityList: [];
+  categoryList: [];
 };
 
 export type FormValueType = {};
@@ -27,6 +31,8 @@ const AddSourceModelForm: React.FC<UpdateFormProps> = ({
   visible,
   onSubmit,
   onCancel,
+  activityList,
+  categoryList,
   type,
 }: any) => {
   useEffect(() => {
@@ -37,6 +43,22 @@ const AddSourceModelForm: React.FC<UpdateFormProps> = ({
     }
   }, [values]);
   const formRef = useRef<ProFormInstance>();
+  const [list, setList] = useState([]);
+  useEffect(() => {
+    const tem: any = activityList?.map((i: any) => {
+      if (i.subActivities && i.subActivities.length > 0) {
+        i.disabled = true;
+      }
+      return i;
+    });
+    console.log(tem);
+    setList(tem);
+  }, [activityList]);
+
+  const onChangeTeach = (e: any) => {
+    console.log(e);
+  };
+
   return (
     <ModalForm
       title={title}
@@ -57,7 +79,7 @@ const AddSourceModelForm: React.FC<UpdateFormProps> = ({
       }}
     >
       <ProFormText
-        name="title"
+        name="code"
         label="课程编号"
         rules={[
           {
@@ -68,7 +90,7 @@ const AddSourceModelForm: React.FC<UpdateFormProps> = ({
         width="md"
       />
       <ProFormText
-        name="title"
+        name="name"
         label="课程名称"
         rules={[
           {
@@ -79,41 +101,53 @@ const AddSourceModelForm: React.FC<UpdateFormProps> = ({
         width="md"
       />
       <ProFormSelect
-        name="type"
+        name="categoryId"
         label="课程分类"
-        options={[
+        options={activityList}
+        fieldProps={{
+          fieldNames: { label: 'name', value: 'id' },
+        }}
+        width="md"
+        rules={[
           {
-            value: 'month',
-            label: '月主题',
+            required: true,
+            message: '必填',
           },
         ]}
-        width="md"
       />
-      <ProFormSelect
-        name="type"
-        label="活动大类"
-        options={[
+      <ProFormTreeSelect
+        initialValue={['0-0-0']}
+        label="活动类"
+        request={async () => activityList}
+        fieldProps={{
+          fieldNames: { label: 'name', value: 'id', children: 'subActivities' },
+          treeCheckable: false,
+          showCheckedStrategy: TreeSelect.SHOW_CHILD,
+          placeholder: '请选择活动类',
+          treeDefaultExpandAll: true,
+        }}
+        rules={[
           {
-            value: 'month',
-            label: '月主题',
+            required: true,
+            message: '必填',
           },
         ]}
-        width="md"
       />
-      <ProFormSelect
-        name="type"
-        label="活动小类"
-        options={[
-          {
-            value: 'month',
-            label: '月主题',
-          },
-        ]}
-        width="md"
+      <ProFormUploadButton
+        extra="支持扩展名：.pdf"
+        label="教案文档"
+        name="teachPaper"
+        title="上传"
+        onChange={onChangeTeach}
       />
-      <ProFormUploadButton extra="支持扩展名：.pdf" label="教案文档" name="file" title="上传" />
-      <ProFormUploadButton extra="支持扩展名：.mp4" label="教案视屏" name="file" title="上传" />
+      <ProFormUploadButton
+        extra="支持扩展名：.mp4"
+        label="教案视屏"
+        name="videoResource"
+        title="上传"
+      />
       <ProFormTextArea name="desc" width="md" label={'课程目标'} placeholder={'请输入课程目标'} />
+      <ProFormText name="purpose" label="课程目标" width="md" />
       <ProFormRadio.Group
         name="status"
         label="状态"

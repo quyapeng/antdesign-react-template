@@ -51,6 +51,21 @@ export const ROLE_CODE = [
   },
 ];
 
+export const ROLE_CODE_EUM = {
+  SYS: {
+    value: 'SYS',
+    text: '系统',
+  },
+  STAFF: {
+    value: 'STAFF',
+    text: '员工',
+  },
+  USER: {
+    value: 'USER',
+    text: '用户',
+  },
+};
+
 export const TYPE = [
   {
     value: 'MENU',

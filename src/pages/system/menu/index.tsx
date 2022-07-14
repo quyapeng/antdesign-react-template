@@ -17,8 +17,9 @@ import { IconData } from '@/constant/icon.js';
 import Tree from 'antd/lib/tree';
 import useRequest from '@ahooksjs/use-request';
 
-import { TYPE, SHOW, STATUS, operateMap } from '@/constant/index';
+import { TYPE, SHOW, STATUS } from '@/constant/index';
 import { menuList, addMenu, getMenu } from '@/services/api';
+import { Message } from '@/constant/common';
 // function getIconName(name: string) {
 //   const sym = '-';
 //   const f = name.substr(0, 1).toLocaleUpperCase();
@@ -83,6 +84,7 @@ const Menu: React.FC = () => {
     console.log(detail);
     setDetail(detail);
     setTitle('编辑菜单');
+    form?.resetFields();
     form?.setFieldsValue(detail);
     // this.id = detail.id;
   };
@@ -99,9 +101,9 @@ const Menu: React.FC = () => {
       }
       const { status }: any = await addMenu(Object.assign(params, values));
       if (status == 200) {
-        message.success(params.id ? operateMap.modify : operateMap.create);
+        message.success(params.id ? Message.Edit : Message.New);
         run();
-        setDetail({});
+        formatForm();
       }
     } catch (error: any) {
       console.log(error.response.data.msg);
@@ -114,9 +116,11 @@ const Menu: React.FC = () => {
   };
   const addHandle = () => {
     setTitle('新增菜单');
+    formatForm();
+  };
+  const formatForm = () => {
     setDetail({});
     form?.resetFields();
-    console.log(TYPE[0].value);
     form.setFieldsValue({
       type: TYPE[0].value,
       show: SHOW[0].value,
@@ -139,8 +143,9 @@ const Menu: React.FC = () => {
               console.log('res', res);
               const { status } = res;
               if (status == 200) {
-                message.success(operateMap.delete);
+                message.success(Message.Delete);
                 run();
+                formatForm();
               }
             });
           }
@@ -152,7 +157,6 @@ const Menu: React.FC = () => {
     }
   };
   // let { data } = useRequest(menuList);
-  const [state, setState] = useState('');
 
   const { loading, run, data } = useRequest(menuList, {
     manual: true,

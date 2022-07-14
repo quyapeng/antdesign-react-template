@@ -1,5 +1,5 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Select, Tag } from 'antd';
+import { Button, Select, Tag, TreeSelect } from 'antd';
 import React, { useState, useRef, useEffect, Fragment } from 'react';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
@@ -11,7 +11,7 @@ import { commonRequestList } from '@/utils/index';
 import { pagination } from '@/constant/index';
 import { Message, STATUS } from '@/constant/common';
 
-import { sourceList, categoryList, activityList, activitySubList } from '@/services/course';
+import { sourceList, categoryList, activityList } from '@/services/course';
 
 const Source: React.FC = () => {
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
@@ -24,11 +24,7 @@ const Source: React.FC = () => {
   const [categoryData, setData] = useState({});
   const [activityData, setActivityData] = useState({});
   const [activitySub, setActivitySub] = useState({});
-  const [parent, setParent] = useState();
-
-  useEffect(() => {
-    parent ? runSub(parent) : null;
-  }, [parent]);
+  const [activityId, setId] = useState();
 
   const { run, data } = useRequest(categoryList, {
     manual: true,
@@ -40,10 +36,6 @@ const Source: React.FC = () => {
   });
 
   const { run: runActivity, data: list } = useRequest(activityList, {
-    manual: true,
-  });
-
-  const { run: runSub, data: sub } = useRequest((id) => activitySubList(id), {
     manual: true,
   });
 
@@ -89,14 +81,9 @@ const Source: React.FC = () => {
   }, [list?.data]);
 
   const onChange = (e: any, type: string, form: any) => {
-    if (e) {
-      // 存在
-      console.log('onChange', e, type);
-      setParent(e);
-    } else {
-      // 清除父级后
-      form.setFieldsValue('activity', undefined);
-    }
+    console.log(e, type, form);
+    setId(e);
+    form.setFieldsValue('activityId', e ? e : undefined);
   };
   const MySelect: React.FC<{
     state: {
@@ -126,6 +113,7 @@ const Source: React.FC = () => {
 
     return <Select options={innerOptions} value={props.value} onChange={props.onChange} />;
   };
+  const testList = [{ id: 1, name: 'test', sub: [{ id: 2, name: 'test2' }] }];
   const columns: ProColumns[] = [
     {
       title: '课程编号',
@@ -147,31 +135,36 @@ const Source: React.FC = () => {
     {
       title: '活动大类',
       key: 'parent',
-      valueType: 'select',
+      // valueType: 'select',
       dataIndex: 'parent',
-      hideInSearch: false,
+      hideInSearch: true,
       valueEnum: { ...activityData },
-      renderFormItem: (_, record, form) => {
-        // console.log('_', record, form.getFieldsValue());
-        return (
-          <Select allowClear onChange={(e) => onChange(e, 'onChange', form)} key="activity">
-            {list?.data.map((i: any) => (
-              <Select.Option key={i.id} value={i.id}>
-                {i.name}
-              </Select.Option>
-            ))}
-          </Select>
-        );
-      },
       render: (_, record) => <>{record?.activity?.parent?.name}</>,
     },
     {
       title: '活动小类',
       key: 'activityId',
-      valueType: 'select',
+      valueType: 'treeSelect',
       dataIndex: 'activityId',
-      valueEnum: { ...activitySub },
+      valueEnum: { ...activityData },
       hideInSearch: false,
+      renderFormItem: (_, record, form) => {
+        // console.log('_', record, form);
+        return (
+          <TreeSelect
+            treeData={list?.data}
+            treeDefaultExpandAll
+            allowClear
+            value={activityId}
+            placeholder="请选择活动类"
+            onChange={(e: any) => onChange(e, 'onChange', form)}
+            key="activity"
+            treeLine
+            showCheckedStrategy={TreeSelect.SHOW_CHILD}
+            fieldNames={{ label: 'name', value: 'id', children: 'subActivities' }}
+          ></TreeSelect>
+        );
+      },
       render: (_, record) => <>{record?.activity?.name}</>,
     },
     {
@@ -259,6 +252,8 @@ const Source: React.FC = () => {
           //   setCurrentRow(undefined);
           // }
         }}
+        categoryList={data?.data}
+        activityList={list?.data}
         values={currentRow || {}}
       />
     </div>

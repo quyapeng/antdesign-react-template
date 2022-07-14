@@ -58,3 +58,9 @@ export async function activityList() {
     method: 'GET',
   });
 }
+
+export async function activitySubList(id: number | string) {
+  return request(`${course_url}/activity/${id}`, {
+    method: 'GET',
+  });
+}

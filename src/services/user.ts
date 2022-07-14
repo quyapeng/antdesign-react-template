@@ -43,3 +43,24 @@ export async function sourceList(options?: { [key: string]: any }) {
     ...(options || {}),
   });
 }
+
+//
+const operation = '/operation/account';
+export async function operationList(
+  params: {
+    // query
+    /** 当前的页码 */
+    page?: number;
+    /** 页面的容量 */
+    size?: number;
+  },
+  options?: { [key: string]: any },
+) {
+  return request(operation, {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}

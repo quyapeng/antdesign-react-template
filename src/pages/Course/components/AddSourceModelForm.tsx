@@ -40,7 +40,7 @@ const AddSourceModelForm: React.FC<UpdateFormProps> = ({
   return (
     <ModalForm
       title={title}
-      width="500px"
+      width="60%"
       formRef={formRef}
       visible={visible}
       onVisibleChange={() => {}}

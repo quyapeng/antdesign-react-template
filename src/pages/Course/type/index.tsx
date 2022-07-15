@@ -5,7 +5,7 @@ import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import AddModelForm from '../components/AddModelForm';
 
-import { type, addType, updateType } from '@/services/course';
+import { type as typeList, addType, updateType } from '@/services/type';
 import { commonRequestList } from '@/utils/index';
 import { pagination } from '@/constant/index';
 import { Message } from '@/constant/common';
@@ -84,7 +84,7 @@ const CourseType: React.FC = () => {
         search={{
           labelWidth: 120,
         }}
-        request={(params) => commonRequestList(type, params)}
+        request={(params) => commonRequestList(typeList, params)}
         columns={columns}
         pagination={{
           showSizeChanger: true,

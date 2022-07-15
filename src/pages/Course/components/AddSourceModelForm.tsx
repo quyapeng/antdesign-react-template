@@ -7,10 +7,14 @@ import {
   ProFormUploadButton,
   ProFormRadio,
   ProFormTreeSelect,
+  ProFormDateRangePicker,
 } from '@ant-design/pro-form';
 import type { ProFormInstance } from '@ant-design/pro-form';
 import { STATUS } from '@/constant/index';
 import { TreeSelect } from 'antd';
+
+import UploadService from '@/services/upload';
+import moment from 'moment';
 
 export type UpdateFormProps = {
   title: string;
@@ -24,7 +28,15 @@ export type UpdateFormProps = {
 };
 
 export type FormValueType = {};
-
+const getFileName = (url: string, type: string) => {
+  if (!url) return;
+  let d = url.split('/').filter((i: string) => {
+    if (i.includes(type)) {
+      return i;
+    }
+  });
+  return d[0];
+};
 const AddSourceModelForm: React.FC<UpdateFormProps> = ({
   title,
   values,
@@ -35,28 +47,81 @@ const AddSourceModelForm: React.FC<UpdateFormProps> = ({
   categoryList,
   type,
 }: any) => {
+  const formRef = useRef<ProFormInstance>();
+  const [list, setList] = useState([]);
+  const [defaultFileList, setFileList]: any = useState([]);
+  const [defaultMp4FileList, setMp4FileList]: any = useState([]);
+  const [courseDates, setDate]: any = useState([]);
+
   useEffect(() => {
     if (values.id) {
       formRef?.current?.setFieldsValue(values);
+      if (values.teachPaper) {
+        setFileList([{ url: values.teachPaper, name: getFileName(values.teachPaper, '.pdf') }]);
+      }
+      if (values.videoResource) {
+        setMp4FileList([
+          { url: values.videoResource, name: getFileName(values.videoResource, '.mp4') },
+        ]);
+      }
+      let params = {
+        categoryId: values.category.id,
+        activityId: values.activity.id,
+      };
+      formRef?.current?.setFieldsValue(params);
     } else {
       formRef?.current?.resetFields();
     }
-  }, [values]);
-  const formRef = useRef<ProFormInstance>();
-  const [list, setList] = useState([]);
+  }, [visible]);
+
   useEffect(() => {
+    //活动类
     const tem: any = activityList?.map((i: any) => {
       if (i.subActivities && i.subActivities.length > 0) {
         i.disabled = true;
       }
       return i;
     });
-    console.log(tem);
     setList(tem);
   }, [activityList]);
+  const deleteFile = (type: string) => {
+    if (type == 'defaultFileList') {
+      setFileList([]);
+    } else {
+      setMp4FileList([]);
+    }
+  };
+  const customRequest = async (options: any) => {
+    const { file } = options;
+    console.log('sss', file);
+    const res = await UploadService.upload(file);
+    console.log('res', res);
+  };
 
-  const onChangeTeach = (e: any) => {
-    console.log(e);
+  const MyDate: React.FC<{
+    state: {
+      option: object;
+      key: any;
+    };
+    value?: string;
+    onChange?: (value: string) => void;
+  }> = (props) => {
+    const {
+      state: { fromDate, toDate, id },
+    }: any = props;
+    console.log('state', props);
+    const dateFormat = 'YYYY-MM-DD';
+
+    return (
+      <>
+        <ProFormDateRangePicker
+          key={id}
+          name="dateRange"
+          label="展示日期"
+          initialValue={[moment(fromDate, dateFormat), moment(toDate, dateFormat)]}
+        />
+      </>
+    );
   };
 
   return (
@@ -72,6 +137,7 @@ const AddSourceModelForm: React.FC<UpdateFormProps> = ({
       }}
       layout="horizontal"
       onFinish={async (value: any) => {
+        values.id ? (value.id = values.id) : null;
         onSubmit(value);
       }}
       modalProps={{
@@ -84,7 +150,7 @@ const AddSourceModelForm: React.FC<UpdateFormProps> = ({
         rules={[
           {
             required: true,
-            message: '必填',
+            message: '请输入课程编号',
           },
         ]}
         width="md"
@@ -95,7 +161,7 @@ const AddSourceModelForm: React.FC<UpdateFormProps> = ({
         rules={[
           {
             required: true,
-            message: '必填',
+            message: '请输入课程名称',
           },
         ]}
         width="md"
@@ -103,7 +169,7 @@ const AddSourceModelForm: React.FC<UpdateFormProps> = ({
       <ProFormSelect
         name="categoryId"
         label="课程分类"
-        options={activityList}
+        options={categoryList}
         fieldProps={{
           fieldNames: { label: 'name', value: 'id' },
         }}
@@ -111,13 +177,14 @@ const AddSourceModelForm: React.FC<UpdateFormProps> = ({
         rules={[
           {
             required: true,
-            message: '必填',
+            message: '请选择课程分类',
           },
         ]}
       />
       <ProFormTreeSelect
-        initialValue={['0-0-0']}
+        // initialValue={[]}
         label="活动类"
+        name="activityId"
         request={async () => activityList}
         fieldProps={{
           fieldNames: { label: 'name', value: 'id', children: 'subActivities' },
@@ -129,32 +196,65 @@ const AddSourceModelForm: React.FC<UpdateFormProps> = ({
         rules={[
           {
             required: true,
-            message: '必填',
+            message: '请选择活动类',
           },
         ]}
       />
       <ProFormUploadButton
+        max={1}
         extra="支持扩展名：.pdf"
         label="教案文档"
         name="teachPaper"
         title="上传"
-        onChange={onChangeTeach}
+        // onChange={onChangeTeach}
+        // action={''}
+        fieldProps={{
+          accept: '.pdf',
+          customRequest,
+          defaultFileList,
+          fileList: defaultFileList,
+          onRemove: () => deleteFile('defaultFileList'),
+        }}
+        rules={[
+          {
+            required: true,
+            message: '请上传教案文档',
+          },
+        ]}
       />
       <ProFormUploadButton
+        max={1}
+        accept={'.mp4'}
         extra="支持扩展名：.mp4"
         label="教案视屏"
         name="videoResource"
         title="上传"
+        fieldProps={{
+          accept: '.mp4',
+          customRequest,
+          defaultFileList: defaultMp4FileList,
+          fileList: defaultMp4FileList,
+          onRemove: () => deleteFile('defaultMp4FileList'),
+        }}
       />
-      <ProFormTextArea name="desc" width="md" label={'课程目标'} placeholder={'请输入课程目标'} />
-      <ProFormText name="purpose" label="课程目标" width="md" />
+      <ProFormTextArea
+        name="purpose"
+        width="md"
+        label={'课程目标'}
+        placeholder={'请输入课程目标'}
+      />
+
+      {/* MyDate */}
+      {values?.courseDates?.map((i: any, j: any) => {
+        return <MyDate state={i} key={j} />;
+      })}
       <ProFormRadio.Group
         name="status"
         label="状态"
         rules={[
           {
             required: true,
-            message: '必填',
+            message: '请选择状态',
           },
         ]}
         options={STATUS}

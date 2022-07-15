@@ -1,5 +1,5 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Select, Tag, TreeSelect } from 'antd';
+import { Button, message, Modal, Select, Tag, TreeSelect } from 'antd';
 import React, { useState, useRef, useEffect, Fragment } from 'react';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
@@ -11,7 +11,7 @@ import { commonRequestList } from '@/utils/index';
 import { pagination } from '@/constant/index';
 import { Message, STATUS } from '@/constant/common';
 
-import { sourceList, categoryList, activityList } from '@/services/course';
+import { sourceList, categoryList, activityList, handleSource } from '@/services/course';
 
 const Source: React.FC = () => {
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
@@ -36,6 +36,10 @@ const Source: React.FC = () => {
   });
 
   const { run: runActivity, data: list } = useRequest(activityList, {
+    manual: true,
+  });
+
+  const { run: source } = useRequest(sourceList, {
     manual: true,
   });
 
@@ -85,6 +89,32 @@ const Source: React.FC = () => {
     setId(e);
     form.setFieldsValue('activityId', e ? e : undefined);
   };
+
+  //
+  const deleteSource = (detail: any) => {
+    try {
+      Modal.confirm({
+        title: '确定要进行删除操作吗',
+        onOk() {
+          console.log('ok');
+          const { id } = detail;
+          if (id) {
+            handleSource('DELETE', { id }).then((res) => {
+              console.log('res', res);
+              const { status } = res;
+              if (status == 200) {
+                message.success(Message.Delete);
+                source();
+              }
+            });
+          }
+        },
+        onCancel() {},
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const MySelect: React.FC<{
     state: {
       type: number;
@@ -113,7 +143,6 @@ const Source: React.FC = () => {
 
     return <Select options={innerOptions} value={props.value} onChange={props.onChange} />;
   };
-  const testList = [{ id: 1, name: 'test', sub: [{ id: 2, name: 'test2' }] }];
   const columns: ProColumns[] = [
     {
       title: '课程编号',
@@ -184,21 +213,15 @@ const Source: React.FC = () => {
         <a
           key="config"
           onClick={() => {
-            // setTitle('编辑');
+            setTitle('编辑');
             // setType('edit');
-            // handleModalVisible(true);
-            // setCurrentRow(record);
+            handleModalVisible(true);
+            setCurrentRow(record);
           }}
         >
           编辑
         </a>,
-        <a
-          key="delete"
-          onClick={() => {
-            // handleSetModalVisible(true);
-            // setCurrentRow(record);
-          }}
-        >
+        <a key="delete" onClick={() => deleteSource(record)}>
           删除
         </a>,
       ],
@@ -244,7 +267,7 @@ const Source: React.FC = () => {
         visible={createModalVisible}
         type={type}
         onSubmit={async (value: any) => {
-          console.log('onSubmit', currentRow);
+          console.log('onSubmit', value);
         }}
         onCancel={() => {
           handleModalVisible(false);

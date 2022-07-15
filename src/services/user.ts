@@ -64,3 +64,13 @@ export async function operationList(
     ...(options || {}),
   });
 }
+
+//
+export async function handleUser(method: string, options?: { [key: string]: any }) {
+  return request(`${operation}/${options?.id}`, {
+    method,
+    params: {
+      ...options,
+    },
+  });
+}

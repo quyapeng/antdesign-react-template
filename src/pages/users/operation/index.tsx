@@ -1,5 +1,5 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Tag } from 'antd';
+import { Button, message, Modal, Tag } from 'antd';
 import React, { useState, useRef } from 'react';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
@@ -9,12 +9,40 @@ import { pagination } from '@/constant/index';
 import { ProFormInstance } from '@ant-design/pro-form';
 import { Message, STATUS_USER } from '@/constant/common';
 
-import { operationList } from '@/services/user';
+import { operationList, handleUser } from '@/services/user';
+import { useRequest } from '@/.umi/plugin-request/request';
 
 const Operation: React.FC = () => {
   const formRef = useRef<ProFormInstance>();
   const actionRef = useRef<ActionType>();
 
+  const { run: typeList, loading } = useRequest(operationList, {
+    manual: true,
+  });
+  const freeze = (detail: any) => {
+    try {
+      Modal.confirm({
+        title: '确定要进行删除操作吗',
+        onOk() {
+          console.log('ok');
+          const { id } = detail;
+          if (id) {
+            handleUser('DELETE', { id }).then((res: any) => {
+              console.log('res', res);
+              const { status } = res;
+              if (status == 200) {
+                message.success(Message.Delete);
+                typeList(pagination);
+              }
+            });
+          }
+        },
+        onCancel() {},
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const columns: ProColumns[] = [
     {
       title: '账号',
@@ -71,7 +99,7 @@ const Operation: React.FC = () => {
         <a
           key="close"
           onClick={() => {
-            //
+            freeze(record);
           }}
         >
           冻结
@@ -91,7 +119,8 @@ const Operation: React.FC = () => {
   return (
     <div>
       <ProTable<any, API.PageParams>
-        rowKey="id"
+        rowKey="userId"
+        loading={loading}
         search={{
           labelWidth: 120,
         }}

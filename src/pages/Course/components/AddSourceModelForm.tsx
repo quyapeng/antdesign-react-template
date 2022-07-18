@@ -12,6 +12,7 @@ import {
 import type { ProFormInstance } from '@ant-design/pro-form';
 import { STATUS } from '@/constant/index';
 import { TreeSelect } from 'antd';
+import md5 from 'md5';
 
 import UploadService from '@/services/upload';
 import moment from 'moment';
@@ -91,11 +92,22 @@ const AddSourceModelForm: React.FC<UpdateFormProps> = ({
       setMp4FileList([]);
     }
   };
+  const getFIleMD5 = (img: any, callback: any) => {
+    const reader = new FileReader();
+    debugger;
+    reader.addEventListener('load', () => callback(reader.result));
+    reader.readAsDataURL(img);
+  };
   const customRequest = async (options: any) => {
     const { file } = options;
-    console.log('sss', file);
-    const res = await UploadService.upload(file);
-    console.log('res', res);
+    let resourceMd5;
+    await getFIleMD5(file, (img: any) => {
+      resourceMd5 = md5(img);
+    });
+    // this.fileList = [imgItem];
+    const params = { type: resourceMd5, file };
+    const res = await UploadService.upload(params);
+    console.log(res);
   };
 
   const MyDate: React.FC<{

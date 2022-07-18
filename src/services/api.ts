@@ -95,3 +95,11 @@ export async function getMenu(method: string, options?: { [key: string]: any }) 
   });
 }
 
+export async function roleList(options?: { [key: string]: any }) {
+  return request(`${role_url}/all`, {
+    method: 'GET',
+    params: {
+      ...options,
+    },
+  });
+}

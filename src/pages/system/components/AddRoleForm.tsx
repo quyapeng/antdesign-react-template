@@ -71,29 +71,6 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
         ]}
         width="md"
       />
-
-      {/* <ProFormText
-        name="accPrefix"
-        label="角色前缀"
-        rules={[
-          {
-            required: true,
-            message: '必填',
-          },
-        ]}
-        width="md"
-      />
-      <ProFormText
-        name="weight"
-        label="角色权重"
-        rules={[
-          {
-            required: true,
-            message: '必填',
-          },
-        ]}
-        width="md"
-      /> */}
       <ProFormRadio.Group
         name="type"
         label="角色类型"
@@ -116,7 +93,6 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
         ]}
         options={STATUS_CODE}
       /> */}
-      {/* <ProFormTextArea name="desc" width="md" label={'备注'} placeholder={'请输入备注'} /> */}
     </ModalForm>
   );
 };

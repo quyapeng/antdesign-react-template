@@ -46,4 +46,14 @@ declare namespace API {
   type RoleItem = {
     name: string;
   };
+
+  type UserItem = {
+    name: string;
+    mobile: string;
+    roleId: number;
+    password: string;
+    status: string;
+  };
 }
+
+declare module 'md5';

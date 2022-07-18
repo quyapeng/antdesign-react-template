@@ -67,10 +67,17 @@ export async function operationList(
 
 //
 export async function handleUser(method: string, options?: { [key: string]: any }) {
-  return request(`${operation}/${options?.id}`, {
+  const id = options?.userId ? `/${options?.userId}` : '';
+  return request(`${operation}${id}`, {
     method,
-    params: {
-      ...options,
-    },
+    data: options,
+    ...(options || {}),
+  });
+}
+
+// /account
+export async function roleOperationList() {
+  return request(`${operation}/roles`, {
+    method: 'GET',
   });
 }

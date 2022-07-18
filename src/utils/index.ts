@@ -83,7 +83,6 @@ export const formatMenu = (list: any) => {
       }
     });
   }
-  console.log('menu', menu);
   return menu;
 };
 
@@ -91,3 +90,7 @@ export const blobToFile = (blob: any, filename: string) => {
   const file = new File([blob], filename, { type: blob.type, lastModified: +new Date() });
   return file;
 };
+
+export function resolveURL(...urls: any[]) {
+  return urls.map((url) => (url || '').replace(/(^\/)|(\/$)/g, '')).filter(Boolean);
+}

@@ -27,6 +27,7 @@ const request = extend({
 });
 
 request.interceptors.request.use((url, options) => {
+  // prefix: 'https://dev-api.qlion.com/struggle/',
   return {
     options: {
       ...options,
@@ -36,11 +37,11 @@ request.interceptors.request.use((url, options) => {
 
 request.interceptors.response.use((response) => {
   const { status } = response;
-  if (status !== 200) {
-    message.error({
-      content: `${status}: 请求失败`,
-    });
-  }
+  // if (status !== 200) {
+  //   message.error({
+  //     content: `${status}: 请求失败`,
+  //   });
+  // }
   return response;
 });
 

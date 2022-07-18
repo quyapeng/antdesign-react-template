@@ -19,15 +19,16 @@ async function uploadConfig() {
 
 /** 上传到 OSS */
 async function uploadOSS(configure: any, name: any, file: any, options: any) {
-  const data = useRequest({
-    url: configure.host,
-    method: 'POST',
-    data: configure,
-  });
-  console.log('uploadOSS', data);
-  return data;
-
+  //
+  // const data = useRequest({
+  //   url: configure.host,
+  //   method: 'POST',
+  //   data: configure,
+  // });
+  // console.log('uploadOSS', data);
+  // return data;
   // const client = new oss({ ...configure });
+  // console.log('client', client);
   // return new Promise((resolve, reject) => {
   //   client
   //     .put(name, file, options)
@@ -117,6 +118,7 @@ export async function upload(option: any) {
 
 const UploadService = {
   upload,
+  uploadConfig,
 };
 
 export default UploadService;

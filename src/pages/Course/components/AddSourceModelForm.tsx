@@ -53,6 +53,7 @@ const AddSourceModelForm: React.FC<UpdateFormProps> = ({
   const [defaultFileList, setFileList]: any = useState([]);
   const [defaultMp4FileList, setMp4FileList]: any = useState([]);
   const [courseDates, setDate]: any = useState([]);
+  const [fileData, setFile] = useState({});
 
   useEffect(() => {
     if (values.id) {
@@ -73,6 +74,21 @@ const AddSourceModelForm: React.FC<UpdateFormProps> = ({
     } else {
       formRef?.current?.resetFields();
     }
+
+    const d = {
+      key: 'tmp/test.png',
+      OSSAccessKeyId: 'LTAI4Fym6zbF7NUdJbKGuaym',
+      callback:
+        'eyJjYWxsYmFja1VybCI6Imh0dHBzOi8vZGV2LWFwaS5xbGlvbi5jb20vc3RydWdnbGUvb3NzL2NhbGxiYWNrIiwiY2FsbGJhY2tCb2R5Ijoie1wib2JqZWN0XCI6JHtvYmplY3R9LFwic2l6ZVwiOiR7c2l6ZX0sXCJtaW1lVHlwZVwiOiR7bWltZVR5cGV9fSIsImNhbGxiYWNrQm9keVR5cGUiOiJhcHBsaWNhdGlvbi9qc29uIn0=',
+      dir: 'tmp/',
+      expire: '1658157881',
+      host: 'https://i.qlion.com',
+      policy:
+        'eyJleHBpcmF0aW9uIjoiMjAyMi0wNy0xOFQxNToyNDo0MS41NDJaIiwiY29uZGl0aW9ucyI6W1siY29udGVudC1sZW5ndGgtcmFuZ2UiLDAsMTA0ODU3NjAwMF0sWyJzdGFydHMtd2l0aCIsIiRrZXkiLCJ0bXAvIl1dfQ==',
+      signature: 'kGWA3+zs+xyA95SmaavoDdkPpHU=',
+    };
+
+    setFile(d);
   }, [visible]);
 
   useEffect(() => {
@@ -92,22 +108,36 @@ const AddSourceModelForm: React.FC<UpdateFormProps> = ({
       setMp4FileList([]);
     }
   };
-  const getFIleMD5 = (img: any, callback: any) => {
-    const reader = new FileReader();
-    debugger;
-    reader.addEventListener('load', () => callback(reader.result));
-    reader.readAsDataURL(img);
-  };
+  // const getFIleMD5 = (img: any, callback: any) => {
+  //   const reader = new FileReader();
+  //   reader.addEventListener('load', () => callback(reader.result));
+  //   reader.readAsDataURL(img);
+  // };
   const customRequest = async (options: any) => {
     const { file } = options;
-    let resourceMd5;
-    await getFIleMD5(file, (img: any) => {
-      resourceMd5 = md5(img);
-    });
-    // this.fileList = [imgItem];
-    const params = { type: resourceMd5, file };
-    const res = await UploadService.upload(params);
-    console.log(res);
+    // let resourceMd5;
+    // await getFIleMD5(file, (img: any) => {
+    //   resourceMd5 = md5(img);
+    // });
+    // // this.fileList = [imgItem];
+    // const params = { type: resourceMd5, file };
+    const {
+      data: { accessId: OSSAccessKeyId, callback, dir, expire, host, policy, signature },
+    } = await UploadService.uploadConfig();
+    const params: any = {
+      key: `${dir}manager.${name}`,
+      OSSAccessKeyId,
+      callback,
+      dir,
+      expire,
+      host,
+      policy,
+      signature,
+    };
+    params.file = options;
+    setFile(params);
+    // const res = await UploadService.upload(file);
+    console.log('file', file);
   };
 
   const MyDate: React.FC<{
@@ -216,16 +246,18 @@ const AddSourceModelForm: React.FC<UpdateFormProps> = ({
         max={1}
         extra="支持扩展名：.pdf"
         label="教案文档"
-        name="teachPaper"
+        name="file"
         title="上传"
         // onChange={onChangeTeach}
-        // action={''}
+
+        action={'http://kinder-care.oss-cn-shanghai.aliyuncs.com'}
         fieldProps={{
-          accept: '.pdf',
-          customRequest,
+          // accept: '.pdf',
+          // customRequest,
           defaultFileList,
           fileList: defaultFileList,
           onRemove: () => deleteFile('defaultFileList'),
+          data: fileData,
         }}
         rules={[
           {

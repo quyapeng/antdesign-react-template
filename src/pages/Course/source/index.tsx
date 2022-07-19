@@ -90,6 +90,17 @@ const Source: React.FC = () => {
     form.setFieldsValue('activityId', e ? e : undefined);
   };
 
+  const onSubmit = (value: any) => {
+    handleSource('POST', value).then((res) => {
+      console.log('res', res);
+      const { status } = res;
+      if (status == 200) {
+        message.success(Message.New);
+        source();
+      }
+    });
+  };
+
   //
   const deleteSource = (detail: any) => {
     try {
@@ -164,7 +175,6 @@ const Source: React.FC = () => {
     {
       title: '活动大类',
       key: 'parent',
-      // valueType: 'select',
       dataIndex: 'parent',
       hideInSearch: true,
       valueEnum: { ...activityData },
@@ -178,7 +188,6 @@ const Source: React.FC = () => {
       valueEnum: { ...activityData },
       hideInSearch: false,
       renderFormItem: (_, record, form) => {
-        // console.log('_', record, form);
         return (
           <TreeSelect
             treeData={list?.data}
@@ -250,7 +259,9 @@ const Source: React.FC = () => {
               key="primary"
               onClick={() => {
                 setTitle('新增');
-                setCurrentRow({});
+                setCurrentRow({
+                  courseDates: [{ fromDate: undefined, toDate: undefined }],
+                });
                 setType('new');
                 handleModalVisible(true);
               }}
@@ -268,6 +279,12 @@ const Source: React.FC = () => {
         type={type}
         onSubmit={async (value: any) => {
           console.log('onSubmit', value);
+          const { dateRange } = value;
+          let courseDates = [{ fromDate: dateRange[0], endDate: dateRange[1] }];
+          value.courseDates = courseDates;
+          delete value.dateRange;
+          console.log(value);
+          onSubmit(value);
         }}
         onCancel={() => {
           handleModalVisible(false);

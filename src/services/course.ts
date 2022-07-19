@@ -48,8 +48,11 @@ export async function activitySubList(id: number | string) {
 }
 
 export async function handleSource(method: string, options?: { [key: string]: any }) {
-  return request(`${course_url}/${options?.id}`, {
+  const id = method == 'POST' ? '' : `/${options?.id}`;
+  const data = method == 'POST' ? { data: options } : {};
+  return request(`${course_url}${id}`, {
     method,
+    ...data,
     params: {
       ...options,
     },

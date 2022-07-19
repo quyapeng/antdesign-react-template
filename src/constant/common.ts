@@ -1,5 +1,7 @@
 export const NUMBER_RULES =
   /^(0|86|17951)?(13[0-9]|14[0-9]|15[0-9]|16[0-9]|17[0-9]|18[0-9]|19[0-9])[0-9]{8}$/;
+export const UPLOAD = 'http://kinder-care.oss-cn-shanghai.aliyuncs.com';
+
 export const Message = {
   New: '创建成功',
   Edit: '编辑成功',

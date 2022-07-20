@@ -54,6 +54,14 @@ declare namespace API {
     password: string;
     status: string;
   };
+
+  interface Option {
+    value: string;
+    label: string;
+    children?: Option[];
+    isLeaf?: boolean;
+    loading?: boolean;
+  }
 }
 
 declare module 'md5';

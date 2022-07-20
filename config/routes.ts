@@ -78,7 +78,18 @@
       },
     ],
   },
-
+  {
+    path: '/school',
+    icon: 'table',
+    component: './App',
+    routes: [
+      {
+        path: '/school/school',
+        name: '园所管理',
+        component: './school/school',
+      },
+    ],
+  },
   {
     component: './404',
   },

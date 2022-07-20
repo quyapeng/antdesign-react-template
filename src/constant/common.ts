@@ -42,3 +42,36 @@ export const STATUS_USER = {
     status: 'SUSPENDED',
   },
 };
+
+export const STATUS_SCHOOL = {
+  PENDING: {
+    text: '待审批',
+    status: 'PENDING',
+  },
+  NORMAL: {
+    text: '已审批',
+    status: 'NORMAL',
+  },
+};
+
+export const SCHOOL_TYPE = {
+  KINDERGARDEN: {
+    text: '幼儿园',
+    status: 'KINDERGARDEN',
+  },
+  NURSERY: {
+    text: '托育园',
+    status: 'NURSERY',
+  },
+};
+
+export const FRANCH_TYPE = {
+  DIRECT: {
+    text: '直供',
+    status: 'DIRECT',
+  },
+  THIRD_PARTY: {
+    text: '代理',
+    status: 'THIRD_PARTY',
+  },
+};

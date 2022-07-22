@@ -23,6 +23,7 @@ const School: React.FC = () => {
   const [setModalVisible, handleModalVisible] = useState<boolean>(false);
   const [title, setTitle] = useState('');
   const [type, setType] = useState('new');
+  const [areaData, setAreaData] = useState<any>([]);
 
   const { run, loading } = useRequest(getList, {
     manual: true,
@@ -30,13 +31,14 @@ const School: React.FC = () => {
   const { run: runAgent, data: agentData } = useRequest(getAgent, {
     manual: true,
   });
-  const { run: runArea, data: areaData } = useRequest(areaList, {
-    manual: true,
-  });
-  const getAreaList = () => {
+  // const { run: runArea, data }: any = useRequest(areaList, {
+  //   manual: true,
+  // });
+  const getAreaList = (id?: string | number) => {
     //
-    areaList().then((res) => {
+    areaList(id).then((res) => {
       console.log('areaList', res);
+      setAreaData(res);
     });
   };
   // agentData

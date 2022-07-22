@@ -29,17 +29,6 @@ export type UpdateFormProps = {
   categoryList: [];
 };
 
-interface OSSDataType {
-  key: string;
-  dir: string;
-  expire: string;
-  host: string;
-  OSSAccessKeyId: string;
-  policy: string;
-  signature: string;
-  callback: string;
-}
-
 export type FormValueType = {};
 const getFileName = (url: string, type: string) => {
   if (!url) return;
@@ -117,7 +106,7 @@ const AddSourceModelForm: React.FC<UpdateFormProps> = ({
     const {
       data: { accessId: OSSAccessKeyId, callback, dir, expire, host, policy, signature },
     } = await UploadService.uploadConfig();
-    const params: OSSDataType = {
+    const params: API.OSSDataType = {
       key: `${dir}manager.${name}`,
       OSSAccessKeyId,
       callback,

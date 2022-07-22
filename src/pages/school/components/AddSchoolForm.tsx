@@ -4,14 +4,16 @@ import {
   ProFormText,
   ProFormSelect,
   ProFormTextArea,
-  ProFormCascader,
+  ProFormUploadButton,
+  // ProFormCascader,
 } from '@ant-design/pro-form';
 import type { ProFormInstance } from '@ant-design/pro-form';
 
-import { roleOperationList } from '@/services/user';
-import { useRequest } from 'umi';
-import { Message, STATUS_SCHOOL, SCHOOL_TYPE, FRANCH_TYPE } from '@/constant/common';
+import { SCHOOL_TYPE, FRANCH_TYPE } from '@/constant/common';
 import { areaList } from '@/services/common';
+import { Form, Select, Upload } from 'antd';
+import { UPLOAD } from '@/constant/common';
+import UploadService from '@/services/upload';
 
 export type UpdateFormProps = {
   title: string;
@@ -38,30 +40,89 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
   salesData,
   areaData,
 }: any) => {
+  const formRef = useRef<ProFormInstance>();
+  const [options, setOptions] = useState<API.Option[]>(areaData);
+  const [sub, subData] = useState<API.Option[]>([]);
+  const [subNext, subNextData] = useState<API.Option[]>([]);
+  const [areaCode, setAreaCode] = useState<any>(null);
+  const [cityCode, setCityCode] = useState<any>(null);
+  const [provinceCode, setProv] = useState<any>(null);
+  // file
+  const [fileData, setFile] = useState({});
+  const [defaultFileList, setFileList]: any = useState([]);
+  const style = {
+    width: '100px',
+    display: 'inline-block',
+  };
+
+  const deleteFile = (e: any) => {
+    console.log(e);
+    // setFile()
+  };
+
+  const handleChange: any = ({ fileList, file }: any, type: string) => {
+    const { status, response } = file;
+    if (status == 'done') {
+      fileList[0].url = response.data.url;
+    }
+    setFileList([...fileList]);
+  };
+
   // 地区
-  // const { data, run } = useRequest(areaList, {
-  //   manual: true,
-  // });
-  console.log('areaData', areaData);
+  const getAreaList = (id?: string | number, type?: string) => {
+    areaList(id).then((res) => {
+      if (type == 'province') {
+        // 一级
+        setProv(id);
+        subData(res);
+        subNextData([]);
+        setCityCode(null);
+        setAreaCode(null);
+        formRef?.current?.setFieldsValue({ areaId: null });
+      } else if (type == 'city') {
+        setCityCode(id);
+        subNextData(res);
+        setAreaCode(null);
+        formRef?.current?.setFieldsValue({ areaId: res && res.length == 0 ? id : null });
+      } else if (type == 'area') {
+        setAreaCode(id);
+        formRef?.current?.setFieldsValue({ areaId: id });
+      }
+    });
+  };
+
   useEffect(() => {
-    // run();
     if (values.id) {
       formRef?.current?.setFieldsValue(values);
     } else {
       formRef?.current?.resetFields();
     }
-    // setOptions()
+    setOptions(areaData);
   }, [values]);
-  const formRef = useRef<ProFormInstance>();
 
-  const [options, setOptions] = useState<API.Option[]>(areaData);
-
-  const loadData = (selectedOptions: API.Option[]) => {
-    console.log('loadData', selectedOptions);
+  const beforeUpload = async (e: any) => {
+    const { name } = e;
+    const {
+      data: { accessId: OSSAccessKeyId, callback, dir, expire, host, policy, signature },
+    } = await UploadService.uploadConfig();
+    const params: API.OSSDataType = {
+      key: `${dir}manager.${name}`,
+      OSSAccessKeyId,
+      callback,
+      dir,
+      expire,
+      host,
+      policy,
+      signature,
+    };
+    setFile(params);
+    return e;
   };
 
-  const onChange = (value: string[], selectedOptions: API.Option[]) => {
-    console.log('onChange', value, selectedOptions);
+  const onChange = (value: any, code: string) => {
+    console.log('onChange', value, code);
+
+    getAreaList(value, code);
   };
 
   return (
@@ -132,27 +193,45 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
         }}
         width="md"
       />
-      <ProFormCascader
-        label="所在地区"
+      <Form.Item
         name="areaId"
-        rules={[
-          {
-            required: true,
-            message: '请选择所在地区',
-          },
-        ]}
-        fieldProps={{
-          options,
-          fieldNames: {
-            label: 'name',
-            value: 'id',
-          },
-          loadData: (e: any) => loadData(e),
-          onChange: (e: any, i: any) => onChange(e, i),
-          changeOnSelect: true,
-        }}
-        width="md"
-      />
+        label="所在地区"
+        required={true}
+        rules={[{ required: true, message: '请选择' }]}
+      >
+        <Select
+          placeholder="请选择省份"
+          value={provinceCode}
+          onChange={(e) => onChange(e, 'province')}
+          style={Object.assign(style, { marginRight: '15px' })}
+        >
+          {areaData?.map((i: any) => {
+            return <Select.Option value={i.id}>{i.name}</Select.Option>;
+          })}
+        </Select>
+        <Select
+          placeholder="请选择市"
+          value={cityCode}
+          onChange={(e) => onChange(e, 'city')}
+          style={Object.assign(style, { marginRight: '15px' })}
+        >
+          {sub?.map((i: any) => {
+            return <Select.Option value={i.id}>{i.name}</Select.Option>;
+          })}
+        </Select>
+        {subNext && subNext.length > 0 ? (
+          <Select
+            placeholder="请选择区"
+            value={areaCode}
+            onChange={(e) => onChange(e, 'area')}
+            style={style}
+          >
+            {subNext?.map((i: any) => {
+              return <Select.Option value={i.id}>{i.name}</Select.Option>;
+            })}
+          </Select>
+        ) : null}
+      </Form.Item>
       <ProFormTextArea
         name="address"
         width="md"
@@ -213,6 +292,36 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
         width="md"
       />
       {/* 合同归档 */}
+      <Form.Item
+        required
+        label="合同归档"
+        rules={[
+          {
+            required: true,
+            message: '请上传教案文档',
+          },
+        ]}
+      >
+        <Upload
+          listType="picture-card"
+          // extra={
+          //   <p style={{ color: 'red' }}>
+          //     1.签章处盖章上传 /n2.补充协议上传 3.合作期限上传 4.合作条件上传
+          //   </p>
+          // }
+          name="file"
+          action={UPLOAD}
+          accept=".pdf,.jpg"
+          beforeUpload={beforeUpload}
+          defaultFileList={defaultFileList}
+          fileList={defaultFileList}
+          onRemove={deleteFile}
+          data={fileData}
+          onChange={handleChange}
+        >
+          + Upload
+        </Upload>
+      </Form.Item>
     </ModalForm>
   );
 };

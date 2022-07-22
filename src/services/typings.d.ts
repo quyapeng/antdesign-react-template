@@ -62,6 +62,16 @@ declare namespace API {
     isLeaf?: boolean;
     loading?: boolean;
   }
+  interface OSSDataType {
+    key: string;
+    dir: string;
+    expire: string;
+    host: string;
+    OSSAccessKeyId: string;
+    policy: string;
+    signature: string;
+    callback: string;
+  }
 }
 
 declare module 'md5';

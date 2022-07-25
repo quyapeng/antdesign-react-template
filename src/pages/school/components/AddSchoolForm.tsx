@@ -4,16 +4,16 @@ import {
   ProFormText,
   ProFormSelect,
   ProFormTextArea,
-  ProFormUploadButton,
   // ProFormCascader,
 } from '@ant-design/pro-form';
 import type { ProFormInstance } from '@ant-design/pro-form';
 
 import { SCHOOL_TYPE, FRANCH_TYPE } from '@/constant/common';
 import { areaList } from '@/services/common';
-import { Form, Select, Upload } from 'antd';
+import { Button, Form, Input, Select, Space, Upload } from 'antd';
 import { UPLOAD } from '@/constant/common';
 import UploadService from '@/services/upload';
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
 export type UpdateFormProps = {
   title: string;
@@ -47,6 +47,8 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
   const [areaCode, setAreaCode] = useState<any>(null);
   const [cityCode, setCityCode] = useState<any>(null);
   const [provinceCode, setProv] = useState<any>(null);
+
+  const [franchiseType, setFType] = useState<string>('');
   // file
   const [fileData, setFile] = useState({});
   const [defaultFileList, setFileList]: any = useState([]);
@@ -61,11 +63,22 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
   };
 
   const handleChange: any = ({ fileList, file }: any, type: string) => {
-    const { status, response } = file;
+    const { status } = file;
+    setFileList([...fileList]);
     if (status == 'done') {
-      fileList[0].url = response.data.url;
+      fileList.map((i: any) => {
+        i.url = i.url || i.response.data.url;
+      });
     }
     setFileList([...fileList]);
+    let contractPapers = fileList
+      .map((i: any) => {
+        return i.url;
+      })
+      ?.join(',');
+    formRef?.current?.setFieldsValue({
+      contractPapers,
+    });
   };
 
   // 地区
@@ -86,6 +99,7 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
         formRef?.current?.setFieldsValue({ areaId: res && res.length == 0 ? id : null });
       } else if (type == 'area') {
         setAreaCode(id);
+        console.log('area', id);
         formRef?.current?.setFieldsValue({ areaId: id });
       }
     });
@@ -93,12 +107,45 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
 
   useEffect(() => {
     if (values.id) {
+      setOptions(areaData);
       formRef?.current?.setFieldsValue(values);
+
+      formRef?.current?.setFieldsValue({
+        areaId: values?.areaId,
+      });
     } else {
       formRef?.current?.resetFields();
     }
-    setOptions(areaData);
-  }, [values]);
+    setFType(values.franchiseType);
+    let list: any = [];
+    if (!!values.contractPapers && values.contractPapers.indexOf(',') > -1) {
+      console.log('1111');
+      values.contractPapers?.split(',').map((i: any) => {
+        list.push({ url: i });
+      });
+    } else {
+      list.push({ url: values.contractPapers });
+    }
+    console.log('values.contractPapers', list);
+
+    setFileList(list);
+    formRef?.current?.setFieldsValue({ contractPapers: list });
+  }, [visible]);
+
+  useEffect(() => {
+    console.log('values.area', values.area);
+    setTimeout(() => {
+      if (values?.area?.parent?.parent?.id) {
+        // 3
+        onChange(values.area.parent.parent.id, 'province');
+        onChange(values.area.parent.id, 'city');
+        onChange(values.areaId, 'area');
+      } else {
+        onChange(values?.area?.parent?.id, 'province');
+        onChange(values.areaId, 'city');
+      }
+    }, 0);
+  }, [!!values.area]);
 
   const beforeUpload = async (e: any) => {
     const { name } = e;
@@ -120,9 +167,11 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
   };
 
   const onChange = (value: any, code: string) => {
-    console.log('onChange', value, code);
-
     getAreaList(value, code);
+  };
+
+  const changeType = (value: any) => {
+    setFType(value);
   };
 
   return (
@@ -140,6 +189,7 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
         if (values.id) {
           value.id = values.id;
         }
+        console.log('value', value);
         onSubmit(value);
       }}
       modalProps={{
@@ -194,10 +244,10 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
         width="md"
       />
       <Form.Item
-        name="areaId"
         label="所在地区"
+        name="areaId"
         required={true}
-        rules={[{ required: true, message: '请选择' }]}
+        rules={[{ required: true, message: '请选择所在地区' }]}
       >
         <Select
           placeholder="请选择省份"
@@ -206,7 +256,11 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
           style={Object.assign(style, { marginRight: '15px' })}
         >
           {areaData?.map((i: any) => {
-            return <Select.Option value={i.id}>{i.name}</Select.Option>;
+            return (
+              <Select.Option value={i.id} key={i.id}>
+                {i.name}
+              </Select.Option>
+            );
           })}
         </Select>
         <Select
@@ -216,7 +270,11 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
           style={Object.assign(style, { marginRight: '15px' })}
         >
           {sub?.map((i: any) => {
-            return <Select.Option value={i.id}>{i.name}</Select.Option>;
+            return (
+              <Select.Option value={i.id} key={i.id}>
+                {i.name}
+              </Select.Option>
+            );
           })}
         </Select>
         {subNext && subNext.length > 0 ? (
@@ -227,7 +285,11 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
             style={style}
           >
             {subNext?.map((i: any) => {
-              return <Select.Option value={i.id}>{i.name}</Select.Option>;
+              return (
+                <Select.Option value={i.id} key={i.id}>
+                  {i.name}
+                </Select.Option>
+              );
             })}
           </Select>
         ) : null}
@@ -239,6 +301,7 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
         placeholder={'请输入详细地址'}
       />
       <ProFormSelect
+        fieldProps={{ onChange: (e) => changeType(e) }}
         label="代理模式"
         name="franchiseType"
         rules={[
@@ -250,25 +313,27 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
         valueEnum={FRANCH_TYPE}
         width="md"
       />
-      {/* {franchiseType == ''} */}
-      <ProFormSelect
-        label="代理商"
-        name="agentId"
-        request={async () => agentData}
-        rules={[
-          {
-            required: true,
-            message: '请选择代理商',
-          },
-        ]}
-        fieldProps={{
-          fieldNames: {
-            label: 'companyName',
-            value: 'id',
-          },
-        }}
-        width="md"
-      />
+      {franchiseType == 'THIRD_PARTY' ? (
+        <ProFormSelect
+          label="代理商"
+          name="agentId"
+          request={async () => agentData}
+          rules={[
+            {
+              required: true,
+              message: '请选择代理商',
+            },
+          ]}
+          fieldProps={{
+            fieldNames: {
+              label: 'companyName',
+              value: 'id',
+            },
+          }}
+          width="md"
+        />
+      ) : null}
+
       <ProFormText
         name="monitorDeviceSerial"
         label="监控设备序列号"
@@ -295,23 +360,19 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
       <Form.Item
         required
         label="合同归档"
+        name="contractPapers"
         rules={[
           {
             required: true,
-            message: '请上传教案文档',
+            message: '请上传合同归档',
           },
         ]}
       >
         <Upload
           listType="picture-card"
-          // extra={
-          //   <p style={{ color: 'red' }}>
-          //     1.签章处盖章上传 /n2.补充协议上传 3.合作期限上传 4.合作条件上传
-          //   </p>
-          // }
           name="file"
           action={UPLOAD}
-          accept=".pdf,.jpg"
+          accept=".pdf,.jpg,.png"
           beforeUpload={beforeUpload}
           defaultFileList={defaultFileList}
           fileList={defaultFileList}
@@ -319,8 +380,57 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
           data={fileData}
           onChange={handleChange}
         >
-          + Upload
+          + 上传
         </Upload>
+      </Form.Item>
+      <Form.Item colon={false} label>
+        <p style={{ color: 'red' }}>
+          1.签章处盖章上传 2.补充协议上传 3.合作期限上传 4.合作条件上传
+        </p>
+      </Form.Item>
+      <Form.Item
+        required
+        label="监控设备"
+        rules={[
+          {
+            required: true,
+            message: '请输入监控设备',
+          },
+        ]}
+      >
+        <Form.List name="monitors">
+          {(fields, { add, remove }) => (
+            <>
+              {fields.map((field) => (
+                <Space key={field.key} align="baseline">
+                  <Form.Item
+                    // label={index === 0 ? '监控设备' : ''}
+                    name={[field.name, 'channelNo']}
+                    rules={[{ required: true, message: '请输入通道号' }]}
+                  >
+                    <Input placeholder="请输入通道号" />
+                  </Form.Item>
+                  <Form.Item
+                    name={[field.name, 'name']}
+                    rules={[{ required: true, message: '请输入通道名称' }]}
+                  >
+                    <Input placeholder="请输入通道名称" />
+                  </Form.Item>
+                  <MinusCircleOutlined
+                    onClick={() => remove(field.name)}
+                    style={{ marginRight: '20px' }}
+                  />
+                </Space>
+              ))}
+
+              <Form.Item>
+                <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                  新增设备信息
+                </Button>
+              </Form.Item>
+            </>
+          )}
+        </Form.List>
       </Form.Item>
     </ModalForm>
   );

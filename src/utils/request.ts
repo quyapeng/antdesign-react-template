@@ -9,9 +9,8 @@ const errorHandler = (error: any) => {
   const key = errors ? Object.keys(error?.data?.errors)[0] : errors;
   const value = errors ? Object.values(error.data.errors)[0] : errors;
   const errortext = codeMessage[response.status] || response.statusText || `${key}: ${value}`;
-  console.log('error', error);
-  const { status, url } = response;
 
+  const { status, url } = response;
   message.error({
     content: `请求错误 ${status}: ${errortext}`,
   });

@@ -21,7 +21,7 @@ const School: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const [currentRow, setCurrentRow]: any = useState();
   const [setModalVisible, handleModalVisible] = useState<boolean>(false);
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState('新增');
   const [type, setType] = useState('new');
   const [areaData, setAreaData] = useState<any>([]);
 
@@ -37,7 +37,6 @@ const School: React.FC = () => {
   const getAreaList = (id?: string | number) => {
     //
     areaList(id).then((res) => {
-      console.log('areaList', res);
       setAreaData(res);
     });
   };
@@ -50,7 +49,6 @@ const School: React.FC = () => {
     runAgent({ status: 'ENABLED' });
     // runArea();
     getAreaList();
-    // runArea();
     runSales();
   }, []);
 
@@ -59,14 +57,10 @@ const School: React.FC = () => {
       Modal.confirm({
         title: '确定要进行删除操作吗',
         onOk() {
-          const { userId, status } = detail;
-          if (userId) {
+          const { id } = detail;
+          if (id) {
             handleSchool('DELETE', {
-              userId,
-              status:
-                status == STATUS_SCHOOL.NORMAL.status
-                  ? STATUS_SCHOOL.PENDING.status
-                  : STATUS_SCHOOL.NORMAL.status,
+              id,
             }).then((res: any) => {
               const { status } = res;
               if (status == 200) {
@@ -85,27 +79,32 @@ const School: React.FC = () => {
     }
   };
 
+  // 审批
   const handleCheck = (detail: any) => {
     console.log(detail);
   };
 
-  const submitUser = async (value: any, method: string) => {
+  const submitSchool = async (value: any, method: string) => {
     try {
-      // const params = type == 'new' ? value : { ...value, id: currentRow.id };
-      // if (!value.mobile) delete params.mobile;
-      // const success = await handleUser(method, params);
-      // if (success) {
-      //   message.success({
-      //     content: type == 'new' ? Message.New : Message.Edit,
-      //   });
-      //   handleModalVisible(false);
-      //   setCurrentRow(undefined);
-      //   if (actionRef.current) {
-      //     //手动
-      //     actionRef.current.reload();
-      //   }
-      // }
+      const params =
+        type == 'new'
+          ? value
+          : { ...value, ...{ status: method == 'POST' ? 'PENDING' : 'NORMAL' } };
+      const success = await handleSchool(method, params);
+      if (success) {
+        message.success({
+          content: type == 'new' ? Message.New : Message.Edit,
+        });
+        handleModalVisible(false);
+        setCurrentRow(undefined);
+        if (actionRef.current) {
+          //手动
+          actionRef.current.reload();
+        }
+      } else {
+      }
     } catch (error) {
+      debugger;
       console.log(error);
     }
   };
@@ -133,7 +132,12 @@ const School: React.FC = () => {
       dataIndex: 'area',
       hideInSearch: false,
       // areaData
-      render: (_, record) => <>{record?.area?.name}</>,
+      render: (_, record) => (
+        <>
+          {record?.area?.parent?.parent?.name ? `${record?.area?.parent?.parent?.name}-` : ''}
+          {`${record?.area?.parent?.name}-${record?.area?.name}`}
+        </>
+      ),
     },
     {
       title: '业务员',
@@ -206,10 +210,16 @@ const School: React.FC = () => {
         <a
           key="config"
           onClick={() => {
-            // setType('edit');
-            // setTitle('编辑');
-            // setCurrentRow({ ...record, roleId: record.role.id });
-            // handleModalVisible(true);
+            setType('edit');
+            setTitle('编辑');
+            setCurrentRow({
+              ...record,
+              id: record.id,
+              salesId: record.sales.id,
+              areaId: record.area.id,
+              agentId: record.agent?.id || null,
+            });
+            handleModalVisible(true);
           }}
         >
           编辑
@@ -233,7 +243,7 @@ const School: React.FC = () => {
         <a
           key="delete"
           onClick={() => {
-            //
+            deleteSchool(record);
           }}
         >
           删除
@@ -294,7 +304,7 @@ const School: React.FC = () => {
         onSubmit={async (value) => {
           console.log('onSubmit', currentRow, value);
           const method = type == 'new' ? 'POST' : 'PATCH';
-          submitUser(value, method);
+          submitSchool(value, method);
         }}
         onCancel={() => {
           handleModalVisible(false);

@@ -7,12 +7,13 @@ import { ProFormInstance } from '@ant-design/pro-form';
 
 import { commonRequestList } from '@/utils/index';
 import { pagination } from '@/constant/index';
-
 import { Message, STATUS_SCHOOL, SCHOOL_TYPE, FRANCH_TYPE } from '@/constant/common';
-
 import { useRequest } from 'umi';
-import { getList, handleSchool } from '@/services/school';
+
+import { getList, handleSchool, changePWD } from '@/services/school';
 import AddSchoolForm from '../components/AddSchoolForm';
+import SchoolDetail from '../components/SchoolDetail';
+import ChangePWD from '../components/ChangePWD';
 import { getAgent } from '@/services/agent';
 import { areaList, salesList } from '@/services/common';
 
@@ -24,6 +25,8 @@ const School: React.FC = () => {
   const [title, setTitle] = useState('新增');
   const [type, setType] = useState('new');
   const [areaData, setAreaData] = useState<any>([]);
+  const [detailVisible, handleDetailVisible] = useState<boolean>(false);
+  const [pwdVisible, handlePWDVisible] = useState<boolean>(false);
 
   const { run, loading } = useRequest(getList, {
     manual: true,
@@ -80,8 +83,32 @@ const School: React.FC = () => {
   };
 
   // 审批
-  const handleCheck = (detail: any) => {
-    console.log(detail);
+  const handleCheck = (id: any) => {
+    console.log(id);
+    try {
+      Modal.confirm({
+        title: '确定要进行审批操作吗',
+        onOk() {
+          if (id) {
+            handleSchool('PATCH', {
+              id,
+              status: 'NORMAL',
+            }).then((res: any) => {
+              const { status } = res;
+              if (status == 200) {
+                message.success(Message.Options);
+                if (actionRef.current) {
+                  actionRef.current.reload();
+                }
+              }
+            });
+          }
+        },
+        onCancel() {},
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const submitSchool = async (value: any, method: string) => {
@@ -101,10 +128,33 @@ const School: React.FC = () => {
           //手动
           actionRef.current.reload();
         }
+        return true;
       } else {
+        return false;
       }
     } catch (error) {
-      debugger;
+      console.log(error);
+      return false;
+    }
+  };
+
+  const handlePWD = (values: any) => {
+    console.log(values);
+    const { id, pwd }: any = values;
+    try {
+      changePWD({
+        id,
+        pwd,
+      }).then((res: any) => {
+        const { status } = res;
+        if (status == 200) {
+          message.success(Message.Options);
+          if (actionRef.current) {
+            actionRef.current.reload();
+          }
+        }
+      });
+    } catch (error) {
       console.log(error);
     }
   };
@@ -225,9 +275,18 @@ const School: React.FC = () => {
           编辑
         </a>,
         <a
-          key="set"
+          key="check"
           onClick={() => {
-            handleCheck(record);
+            setType('check');
+            setTitle('审批');
+            setCurrentRow({
+              ...record,
+              id: record.id,
+              salesId: record.sales.id,
+              areaId: record.area.id,
+              agentId: record.agent?.id || null,
+            });
+            handleDetailVisible(true);
           }}
         >
           审批
@@ -236,6 +295,16 @@ const School: React.FC = () => {
           key="details"
           onClick={() => {
             //
+            setType('details');
+            setTitle('详情');
+            setCurrentRow({
+              ...record,
+              id: record.id,
+              salesId: record.sales.id,
+              areaId: record.area.id,
+              agentId: record.agent?.id || null,
+            });
+            handleDetailVisible(true);
           }}
         >
           详情
@@ -252,7 +321,9 @@ const School: React.FC = () => {
           key="password"
           onClick={() => {
             //
-            deleteSchool(record);
+            setTitle('修改密码');
+            setCurrentRow(record);
+            handlePWDVisible(true);
           }}
         >
           修改密码
@@ -312,6 +383,40 @@ const School: React.FC = () => {
         agentData={agentData}
         salesData={salesData}
         areaData={areaData}
+      />
+      <SchoolDetail
+        type={type}
+        title={title}
+        values={currentRow || {}}
+        visible={detailVisible}
+        onSubmit={async (id: any) => {
+          console.log('onSubmit', id);
+          // type == check
+          if (type == 'check') {
+            handleCheck(id);
+          } else {
+            //
+          }
+
+          handleDetailVisible(false);
+        }}
+        onCancel={() => {
+          handleDetailVisible(false);
+        }}
+        agentData={agentData}
+        salesData={salesData}
+      />
+      <ChangePWD
+        title={title}
+        values={currentRow || {}}
+        visible={pwdVisible}
+        onSubmit={async (values: any) => {
+          console.log('onSubmit', values);
+          handlePWD(values);
+        }}
+        onCancel={() => {
+          handlePWDVisible(false);
+        }}
       />
     </div>
   );

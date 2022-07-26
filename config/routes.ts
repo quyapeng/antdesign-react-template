@@ -88,6 +88,11 @@
         name: '园所管理',
         component: './school/school',
       },
+      {
+        path: '/school/classroom',
+        name: '园所管理',
+        component: './school/classroom',
+      },
     ],
   },
   {

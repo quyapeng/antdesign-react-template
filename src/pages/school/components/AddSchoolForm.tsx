@@ -81,71 +81,44 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
     });
   };
 
-  // 地区
-  const getAreaList = (id?: string | number, type?: string) => {
-    areaList(id).then((res) => {
-      if (type == 'province') {
-        // 一级
-        setProv(id);
-        subData(res);
-        subNextData([]);
-        setCityCode(null);
-        setAreaCode(null);
-        formRef?.current?.setFieldsValue({ areaId: null });
-      } else if (type == 'city') {
-        setCityCode(id);
-        subNextData(res);
-        setAreaCode(null);
-        formRef?.current?.setFieldsValue({ areaId: res && res.length == 0 ? id : null });
-      } else if (type == 'area') {
-        setAreaCode(id);
-        console.log('area', id);
-        formRef?.current?.setFieldsValue({ areaId: id });
-      }
-    });
-  };
-
   useEffect(() => {
     if (values.id) {
-      setOptions(areaData);
+      // setOptions(areaData);
       formRef?.current?.setFieldsValue(values);
-
-      formRef?.current?.setFieldsValue({
-        areaId: values?.areaId,
-      });
+      let list: any = [];
+      console.log(values.contractPapers, '222222');
+      if (!!values.contractPapers && values.contractPapers.indexOf(',') > -1) {
+        values.contractPapers?.split(',').map((i: any) => {
+          list.push({ url: i });
+        });
+      } else if (values.contractPapers == '') {
+        list = [];
+      } else {
+        list.push({ url: values.contractPapers });
+      }
+      setFileList(list);
+      formRef?.current?.setFieldsValue({ contractPapers: list });
+      setFType(values.franchiseType);
+      if (values.areaId) {
+        formRef?.current?.setFieldsValue({
+          areaId: values?.areaId,
+        });
+        setTimeout(() => {
+          if (values?.area?.parent?.parent?.id) {
+            // 3
+            onChange(values.area.parent.parent.id, 'province');
+            onChange(values.area.parent.id, 'city');
+            onChange(values.areaId, 'area');
+          } else {
+            onChange(values?.area?.parent?.id, 'province');
+            onChange(values.areaId, 'city');
+          }
+        }, 0);
+      }
     } else {
       formRef?.current?.resetFields();
     }
-    setFType(values.franchiseType);
-    let list: any = [];
-    if (!!values.contractPapers && values.contractPapers.indexOf(',') > -1) {
-      console.log('1111');
-      values.contractPapers?.split(',').map((i: any) => {
-        list.push({ url: i });
-      });
-    } else {
-      list.push({ url: values.contractPapers });
-    }
-    console.log('values.contractPapers', list);
-
-    setFileList(list);
-    formRef?.current?.setFieldsValue({ contractPapers: list });
   }, [visible]);
-
-  useEffect(() => {
-    console.log('values.area', values.area);
-    setTimeout(() => {
-      if (values?.area?.parent?.parent?.id) {
-        // 3
-        onChange(values.area.parent.parent.id, 'province');
-        onChange(values.area.parent.id, 'city');
-        onChange(values.areaId, 'area');
-      } else {
-        onChange(values?.area?.parent?.id, 'province');
-        onChange(values.areaId, 'city');
-      }
-    }, 0);
-  }, [!!values.area]);
 
   const beforeUpload = async (e: any) => {
     const { name } = e;
@@ -170,6 +143,30 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
     getAreaList(value, code);
   };
 
+  // 地区
+  const getAreaList = (id: string | number, type?: string) => {
+    areaList(id).then((res) => {
+      if (type == 'province') {
+        // 一级
+        setProv(id);
+        subData(res);
+        subNextData([]);
+        setCityCode(null);
+        setAreaCode(null);
+        formRef?.current?.setFieldsValue({ areaId: null });
+      } else if (type == 'city') {
+        setCityCode(id);
+        subNextData(res);
+        setAreaCode(null);
+        formRef?.current?.setFieldsValue({ areaId: res && res.length == 0 ? id : null });
+      } else if (type == 'area') {
+        setAreaCode(id);
+        console.log('area', id);
+        formRef?.current?.setFieldsValue({ areaId: id });
+      }
+    });
+  };
+
   const changeType = (value: any) => {
     setFType(value);
   };
@@ -184,12 +181,15 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
         labelCol: { span: 6 },
         wrapperCol: { span: 14 },
       }}
+      style={{ height: '600px', overflow: 'scroll' }}
       layout="horizontal"
       onFinish={async (value: any) => {
         if (values.id) {
           value.id = values.id;
         }
-        console.log('value', value);
+        value.areaId = areaCode || cityCode;
+        console.log('value', value, areaCode, cityCode);
+
         onSubmit(value);
       }}
       modalProps={{
@@ -245,7 +245,6 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
       />
       <Form.Item
         label="所在地区"
-        name="areaId"
         required={true}
         rules={[{ required: true, message: '请选择所在地区' }]}
       >

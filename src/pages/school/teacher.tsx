@@ -4,29 +4,25 @@ import React, { useState, useRef, Fragment, useEffect } from 'react';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { ProFormInstance } from '@ant-design/pro-form';
-
+import { useRequest } from 'umi';
 import { commonRequestList } from '@/utils/index';
 import { pagination } from '@/constant/index';
-import { Message, STATUS, SCHOOL_TYPE } from '@/constant/common';
-import { useRequest } from 'umi';
+import { Message, STATUS, TEACHER_TYPE } from '@/constant/common';
 
-import { categoryList } from '@/services/course';
-import { classroomList, allSchool, foodTemplate, handleClassroom } from '@/services/school';
-import ClassroomForm from '../components/ClassroomForm';
+import { getTeacherList, allSchool, handleTeacher } from '@/services/school';
+import TeacherForm from './components/TeacherForm';
+import ChangePWD from './components/ChangePWD';
 
-const Classroom: React.FC = () => {
+const Teacher: React.FC = () => {
   const formRef = useRef<ProFormInstance>();
   const actionRef = useRef<ActionType>();
   const [currentRow, setCurrentRow]: any = useState();
   const [setModalVisible, handleModalVisible] = useState<boolean>(false);
-  const [title, setTitle] = useState('新增');
+  const [title, setTitle] = useState('新增教师');
   const [type, setType] = useState('new');
+  const [pwdVisible, pwdModalVisible] = useState<boolean>(false);
 
-  const { run, loading } = useRequest(classroomList, {
-    manual: true,
-  });
-
-  const { run: runFoodTemplate, data: foodTemData } = useRequest(foodTemplate, {
+  const { run, loading } = useRequest(getTeacherList, {
     manual: true,
   });
 
@@ -34,16 +30,10 @@ const Classroom: React.FC = () => {
     manual: true,
   });
 
-  const { run: runCategory, data: categoryData } = useRequest(categoryList, {
-    manual: true,
-  });
-
   //
 
   useEffect(() => {
     runSchool();
-    runCategory();
-    runFoodTemplate();
   }, []);
 
   const columns: ProColumns[] = [
@@ -53,62 +43,42 @@ const Classroom: React.FC = () => {
       valueType: 'select',
       hideInSearch: false,
       fieldProps: {
+        options: schoolData,
         fieldNames: {
           label: 'name',
           value: 'id',
         },
-        options: schoolData,
       },
       render: (_, record) => <>{record?.school?.name}</>,
     },
     {
-      title: '教室名称',
-      dataIndex: 'name',
+      title: '教师名称',
+      dataIndex: 'teacherName',
       hideInSearch: false,
+      render: (_, record) => <>{record?.user?.name}</>,
+    },
+
+    {
+      title: '手机号',
+      dataIndex: 'mobile',
+      hideInSearch: false,
+      render: (_, record) => <>{record?.user?.mobile}</>,
     },
     {
-      title: '课程分类',
-      dataIndex: 'courseCategoryId',
-      valueType: 'select',
-      hideInSearch: false,
-      fieldProps: {
-        fieldNames: {
-          label: 'name',
-          value: 'id',
-        },
-        options: categoryData,
-      },
-      render: (_, record) => <>{record?.courseCategory?.name}</>,
-    },
-    {
-      title: '食谱模版名称',
-      dataIndex: 'recipeId',
-      valueType: 'select',
-      hideInSearch: false,
-      fieldProps: {
-        fieldNames: {
-          label: 'name',
-          value: 'id',
-        },
-        options: foodTemData,
-      },
-      render: (_, record) => <>{record?.recipe?.name}</>,
-    },
-    {
-      title: '监控设备数',
-      dataIndex: 'schoolMonitors',
+      title: '带班班级',
+      dataIndex: 'classroom',
       hideInSearch: true,
-      render: (_, record) => <>{record?.schoolMonitors?.length}</>,
+      render: (_, record) => <>{record?.classroom?.name}</>,
     },
     {
       title: '状态',
-      hideInSearch: false,
+      hideInSearch: true,
       dataIndex: 'status',
-      valueType: 'select',
-      valueEnum: STATUS,
+      // valueType: 'select',
+      // valueEnum: TEACHER_TYPE,
       render: (_, record) => (
-        <Tag color={record.status == 'ENABLED' ? 'green' : 'red'}>
-          {STATUS[record.status]?.text}
+        <Tag color={record.status == 'INCUMBENT' ? 'green' : 'red'}>
+          {TEACHER_TYPE[record.status]?.text}
         </Tag>
       ),
     },
@@ -123,13 +93,12 @@ const Classroom: React.FC = () => {
           key="config"
           onClick={() => {
             setType('edit');
-            setTitle('编辑');
+            setTitle('编辑教师');
             setCurrentRow({
               ...record,
               schoolId: record.school.id,
-              courseCategoryId: record.courseCategory.id,
-              recipeId: record.recipe.id,
-              schoolMonitorIds: record.schoolMonitors?.map((i: any) => i.id),
+              name: record.user.name,
+              mobile: record.user.mobile,
             });
             handleModalVisible(true);
           }}
@@ -137,46 +106,23 @@ const Classroom: React.FC = () => {
           编辑
         </a>,
         <a
-          key="delete"
+          key="password"
           onClick={() => {
-            deleteClassroom(record);
+            setType('password');
+            setTitle('修改密码');
+            setCurrentRow(record);
+            pwdModalVisible(true);
           }}
         >
-          删除
+          修改密码
         </a>,
       ],
     },
   ];
-  const deleteClassroom = (detail: any) => {
-    try {
-      Modal.confirm({
-        title: '确定要进行删除操作吗',
-        onOk() {
-          console.log('ok');
-          const { id } = detail;
-          if (id) {
-            handleClassroom('DELETE', { id }).then((res) => {
-              console.log('res', res);
-              const { status } = res;
-              if (status == 200) {
-                message.success(Message.Delete);
-                handleModalVisible(false);
-                setCurrentRow(undefined);
-                if (actionRef.current) actionRef.current.reload();
-              }
-            });
-          }
-        },
-        onCancel() {},
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
-  const submitClassroom = async (method: string, value: any) => {
+  const submitTeacher = async (method: string, value: any) => {
     try {
-      const success = await handleClassroom(method, value);
+      const success = await handleTeacher(method, value);
       if (success) {
         message.success({
           content: type == 'new' ? Message.New : Message.Edit,
@@ -184,6 +130,8 @@ const Classroom: React.FC = () => {
         handleModalVisible(false);
         setCurrentRow(undefined);
         if (actionRef.current) actionRef.current.reload();
+      } else {
+        console.log(success);
       }
     } catch (error) {
       console.log(error);
@@ -199,7 +147,7 @@ const Classroom: React.FC = () => {
         search={{
           labelWidth: 120,
         }}
-        request={(params) => commonRequestList(classroomList, params)}
+        request={(params) => commonRequestList(getTeacherList, params)}
         columns={columns}
         pagination={{
           showSizeChanger: true,
@@ -213,7 +161,7 @@ const Classroom: React.FC = () => {
               type="primary"
               key="primary"
               onClick={() => {
-                setTitle('新增');
+                setTitle('新增教师');
                 setType('new');
                 setCurrentRow({});
                 handleModalVisible(true);
@@ -225,23 +173,33 @@ const Classroom: React.FC = () => {
           settings: [],
         }}
       />
-      <ClassroomForm
+      <TeacherForm
         type={type}
         title={title}
         values={currentRow || {}}
         visible={setModalVisible}
         onSubmit={async (value: any) => {
-          submitClassroom(type == 'new' ? 'POST' : 'PATCH', value);
+          submitTeacher(type == 'new' ? 'POST' : 'PATCH', value);
         }}
         onCancel={() => {
           handleModalVisible(false);
         }}
         schoolData={schoolData}
-        categoryData={categoryData}
-        foodTemData={foodTemData}
+      />
+      <ChangePWD
+        title={title}
+        values={currentRow || {}}
+        visible={pwdVisible}
+        onSubmit={async (values: any) => {
+          const { id, pwd } = values;
+          submitTeacher('PATCH', { id, pwd });
+        }}
+        onCancel={() => {
+          pwdModalVisible(false);
+        }}
       />
     </div>
   );
 };
 
-export default Classroom;
+export default Teacher;

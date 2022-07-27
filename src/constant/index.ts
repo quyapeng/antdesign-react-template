@@ -97,3 +97,14 @@ export const STATUS = [
     label: '无效',
   },
 ];
+
+export const SEX = [
+  {
+    label: '男',
+    value: 'MALE',
+  },
+  {
+    label: '女',
+    value: 'FEMALE',
+  },
+];

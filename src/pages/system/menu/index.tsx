@@ -106,8 +106,9 @@ const Menu: React.FC = () => {
         formatForm();
       }
     } catch (error: any) {
-      console.log(error.response.data.msg);
-      message.error('登录失败，请重试！');
+      console.log('error.response', error.response);
+      console.log(error.response?.data?.msg);
+      message.error('');
     }
   };
 

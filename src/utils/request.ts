@@ -5,11 +5,11 @@ import { extend } from 'umi-request';
 
 const errorHandler = (error: any) => {
   const { response = {} } = error;
-  const errors = error?.data?.errors || '';
-  const key = errors ? Object.keys(error?.data?.errors)[0] : errors;
-  const value = errors ? Object.values(error.data.errors)[0] : errors;
-  const errortext = codeMessage[response.status] || response.statusText || `${key}: ${value}`;
-
+  const errors = error?.data?.message || error.data.errors || '';
+  const key = !errors ? Object.keys(error?.data?.errors)[0] : errors;
+  const value = !errors ? Object.values(error.data.errors)[0] : errors;
+  const errortext =
+    codeMessage[response.status] || response.statusText || errors ? errors : `${key}: ${value}`;
   const { status, url } = response;
   message.error({
     content: `请求错误 ${status}: ${errortext}`,
@@ -26,7 +26,6 @@ const request = extend({
 });
 
 request.interceptors.request.use((url, options) => {
-  // prefix: 'https://dev-api.qlion.com/struggle/',
   return {
     options: {
       ...options,
@@ -34,7 +33,7 @@ request.interceptors.request.use((url, options) => {
   };
 });
 
-request.interceptors.response.use((response) => {
+request.interceptors.response.use((response, b) => {
   const { status } = response;
   // if (status !== 200) {
   //   message.error({

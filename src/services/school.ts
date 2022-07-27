@@ -65,14 +65,12 @@ export async function allSchool() {
   });
 }
 
-//
 export async function foodTemplate() {
   return request(`recipe`, {
     method: 'GET',
   });
 }
 
-//
 export async function getMonitor(id: string) {
   return request(`school/${id}/monitors`, {
     method: 'GET',
@@ -86,6 +84,56 @@ export async function handleClassroom(method: string, options?: { [key: string]:
   return request(`${school_url}/classroom${ID}`, {
     method,
     data: options,
+    ...(options || {}),
+  });
+}
+
+export async function getTeacherList(
+  params: {
+    // query
+    /** 当前的页码 */
+    page?: number;
+    /** 页面的容量 */
+    size?: number;
+  },
+  options?: { [key: string]: any },
+) {
+  return request(`school/teacher`, {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+//
+export async function handleTeacher(method: string, options?: { [key: string]: any }) {
+  //
+  const ID = method == 'POST' ? '' : `/${options?.id}`;
+  const PWD = options?.pwd ? `/password/${options?.pwd}` : '';
+  // /school/teacher/1/password/1'
+  return request(`school/teacher${ID}${PWD}`, {
+    method,
+    data: options,
+    ...(options || {}),
+  });
+}
+
+export async function getStudentList(
+  params: {
+    // query
+    /** 当前的页码 */
+    page?: number;
+    /** 页面的容量 */
+    size?: number;
+  },
+  options?: { [key: string]: any },
+) {
+  return request(`school/student`, {
+    method: 'GET',
+    params: {
+      ...params,
+    },
     ...(options || {}),
   });
 }

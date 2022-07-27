@@ -4,18 +4,16 @@ import React, { useState, useRef, Fragment, useEffect } from 'react';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { ProFormInstance } from '@ant-design/pro-form';
-
+import { useRequest } from 'umi';
 import { commonRequestList } from '@/utils/index';
 import { pagination } from '@/constant/index';
 import { Message, STATUS_SCHOOL, SCHOOL_TYPE, FRANCH_TYPE } from '@/constant/common';
-import { useRequest } from 'umi';
-
 import { getList, handleSchool, changePWD } from '@/services/school';
-import AddSchoolForm from '../components/AddSchoolForm';
-import SchoolDetail from '../components/SchoolDetail';
-import ChangePWD from '../components/ChangePWD';
 import { getAgent } from '@/services/agent';
 import { areaList, salesList } from '@/services/common';
+import AddSchoolForm from './components/AddSchoolForm';
+import SchoolDetail from './components/SchoolDetail';
+import ChangePWD from './components/ChangePWD';
 
 const School: React.FC = () => {
   const formRef = useRef<ProFormInstance>();

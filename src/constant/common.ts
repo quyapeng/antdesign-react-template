@@ -17,6 +17,11 @@ export const Message = {
   Action: '创建',
 };
 
+export const DIS_STYLE = {
+  color: 'rgba(0,0,0,.25)',
+  cursor: 'not-allowed',
+};
+
 export const STATUS = {
   ENABLED: {
     text: '有效',
@@ -75,3 +80,64 @@ export const FRANCH_TYPE = {
     status: 'THIRD_PARTY',
   },
 };
+
+export const ACTIVED_STATUS = {
+  1: {
+    text: '已激活',
+    status: true,
+  },
+  0: {
+    text: '未激活',
+    status: false,
+  },
+};
+
+// ENROLLED, GRADUATE
+
+export const STUDENT_STATUS = {
+  ENROLLED: {
+    text: '在读',
+    status: 'ENROLLED',
+  },
+  GRADUATE: {
+    text: '毕业',
+    status: 'GRADUATE',
+  },
+  PENDING: {
+    text: '待分班',
+    status: 'PENDING',
+  },
+};
+
+export const STUDENT_TYPE = {
+  ENROLLED: {
+    text: '在读',
+    status: 'ENROLLED',
+  },
+  GRADUATE: {
+    text: '毕业',
+    status: 'GRADUATE',
+  },
+};
+
+export const TEACHER_TYPE = {
+  INCUMBENT: {
+    text: '在职',
+    status: 'INCUMBENT',
+  },
+  DIMISSION: {
+    text: '离职',
+    status: 'DIMISSION',
+  },
+};
+
+export const TEACHER_STATUS = [
+  {
+    value: 'DIMISSION',
+    label: '离职',
+  },
+  {
+    value: 'INCUMBENT',
+    label: '在职',
+  },
+];

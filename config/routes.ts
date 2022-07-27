@@ -90,8 +90,26 @@
       },
       {
         path: '/school/classroom',
-        name: '园所管理',
+        name: '教室管理',
         component: './school/classroom',
+      },
+    ],
+  },
+  //
+  {
+    path: '/business',
+    icon: 'table',
+    component: './App',
+    routes: [
+      {
+        path: '/business/teacher',
+        name: '教师管理',
+        component: './school/teacher',
+      },
+      {
+        path: '/business/student',
+        name: '学生管理',
+        component: './school/student',
       },
     ],
   },

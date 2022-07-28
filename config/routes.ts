@@ -111,6 +111,11 @@
         name: '学生管理',
         component: './school/student',
       },
+      {
+        path: '/business/order/:id',
+        name: '合同管理',
+        component: './school/order',
+      },
     ],
   },
   {

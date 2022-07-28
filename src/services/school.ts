@@ -108,7 +108,6 @@ export async function getTeacherList(
 }
 //
 export async function handleTeacher(method: string, options?: { [key: string]: any }) {
-  //
   const ID = method == 'POST' ? '' : `/${options?.id}`;
   const PWD = options?.pwd ? `/password/${options?.pwd}` : '';
   // /school/teacher/1/password/1'
@@ -134,6 +133,32 @@ export async function getStudentList(
     params: {
       ...params,
     },
+    ...(options || {}),
+  });
+}
+
+export async function handleStudent(method: string, options?: { [key: string]: any }) {
+  //
+  const ID = method == 'POST' ? '' : `/${options?.id}`;
+  // /school/teacher/1/password/1'
+  return request(`school/student${ID}`, {
+    method,
+    data: options,
+    ...(options || {}),
+  });
+}
+
+export async function orderById(options: { [key: string]: any }) {
+  return request(`school/order`, {
+    method: 'GET',
+    params: options,
+  });
+}
+export async function handleOrder(method: string, options?: { [key: string]: any }) {
+  const ID = method == 'POST' ? '' : `/${options?.id}`;
+  return request(`school/order${ID}`, {
+    method,
+    data: options,
     ...(options || {}),
   });
 }

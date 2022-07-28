@@ -141,3 +141,40 @@ export const TEACHER_STATUS = [
     label: '在职',
   },
 ];
+
+export const ORDER_STATUS = [
+  {
+    value: 'PENDING',
+    label: '等待',
+  },
+  {
+    value: 'NORMAL',
+    label: '正常',
+  },
+  {
+    value: 'SUSPENDED',
+    label: '退课',
+  },
+  {
+    value: 'EXPIRED',
+    label: '到期',
+  },
+];
+export const ORDER_STATUS_EUM = {
+  PENDING: {
+    value: 'PENDING',
+    text: '等待',
+  },
+  NORMAL: {
+    value: 'NORMAL',
+    text: '正常',
+  },
+  SUSPENDED: {
+    value: 'SUSPENDED',
+    text: '退课',
+  },
+  EXPIRED: {
+    value: 'EXPIRED',
+    text: '到期',
+  },
+};

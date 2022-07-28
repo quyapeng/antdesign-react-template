@@ -34,11 +34,7 @@ const TeacherForm: React.FC<UpdateProps> = ({
       formRef?.current?.resetFields();
     }
   }, [visible]);
-  useEffect(() => {
-    // schoolMonitorData
-    //
-    // setMonitorData();
-  }, [formRef?.current?.getFieldValue('schoolId')]);
+  useEffect(() => {}, [formRef?.current?.getFieldValue('schoolId')]);
   const onChange = (e: any) => {
     console.log(e);
   };

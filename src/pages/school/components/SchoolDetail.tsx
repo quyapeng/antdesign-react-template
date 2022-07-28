@@ -3,11 +3,8 @@ import { ModalForm, ProFormText, ProFormSelect, ProFormTextArea } from '@ant-des
 import type { ProFormInstance } from '@ant-design/pro-form';
 
 import { SCHOOL_TYPE, FRANCH_TYPE } from '@/constant/common';
-import { areaList } from '@/services/common';
-import { Button, Form, Input, Select, Space, Upload } from 'antd';
+import { Form, Input, Space, Upload } from 'antd';
 import { UPLOAD } from '@/constant/common';
-import UploadService from '@/services/upload';
-import { ConsoleSqlOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
 export type UpdateFormProps = {
   title: string;

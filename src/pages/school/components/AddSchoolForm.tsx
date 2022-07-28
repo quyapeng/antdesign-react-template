@@ -312,8 +312,7 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
         valueEnum={FRANCH_TYPE}
         width="md"
       />
-      {franchiseType == 'THIRD_PARTY' ? (
-        <ProFormSelect
+      {franchiseType == 'THIRD_PARTY' ? (<ProFormSelect
           label="代理商"
           name="agentId"
           request={async () => agentData}
@@ -331,6 +330,7 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
           }}
           width="md"
         />
+        
       ) : null}
 
       <ProFormText

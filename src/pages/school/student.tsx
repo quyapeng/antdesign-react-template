@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { ProFormInstance } from '@ant-design/pro-form';
-import { useRequest } from 'umi';
+import { useRequest, history } from 'umi';
 import { commonRequestList } from '@/utils/index';
 import { pagination } from '@/constant/index';
 import {
@@ -16,14 +16,16 @@ import {
   DIS_STYLE,
 } from '@/constant/common';
 import { productAll } from '@/services/product';
-import { getStudentList, allSchool, handleTeacher } from '@/services/school';
+import { getStudentList, allSchool, handleStudent } from '@/services/school';
 import StudentForm from './components/StudentForm';
+import EnterClassroom from './components/EnterClassroom';
 
 const Student: React.FC = () => {
   const formRef = useRef<ProFormInstance>();
   const actionRef = useRef<ActionType>();
   const [currentRow, setCurrentRow]: any = useState();
   const [setModalVisible, handleModalVisible] = useState<boolean>(false);
+  const [enterModalVisible, handleEnterVisible] = useState<boolean>(false);
   const [title, setTitle] = useState('新增');
   const [type, setType] = useState('new');
 
@@ -37,6 +39,9 @@ const Student: React.FC = () => {
   const { run: runProduct, data: productData } = useRequest(productAll, {
     manual: true,
   });
+  // const { run: runClassroom, data: classData } = useRequest(runClassroom, {
+  //   manual: true,
+  // });
 
   //
 
@@ -128,6 +133,9 @@ const Student: React.FC = () => {
             setCurrentRow({
               ...record,
               schoolId: record.school.id,
+              name: record.user.name,
+              sex: record.user.sex,
+              birthday: record.user.birthday,
             });
             handleModalVisible(true);
           }}
@@ -137,7 +145,7 @@ const Student: React.FC = () => {
         <a
           key="renew"
           onClick={() => {
-            deleteClassroom(record);
+            history.push(`/business/order/${record.id}`);
           }}
         >
           续约
@@ -145,7 +153,13 @@ const Student: React.FC = () => {
         <a
           key="enter"
           onClick={() => {
-            deleteClassroom(record);
+            setType('enter');
+            setTitle('进班');
+            setCurrentRow({
+              ...record,
+              classroomId: record.classroom.id || null,
+            });
+            handleEnterVisible(true);
           }}
           style={record.type == 'GRADUATE' ? DIS_STYLE : {}}
         >
@@ -154,7 +168,7 @@ const Student: React.FC = () => {
         <a
           key="check"
           onClick={() => {
-            deleteClassroom(record);
+            handleStudent(record);
           }}
         >
           出缺勤
@@ -162,7 +176,7 @@ const Student: React.FC = () => {
         <a
           key="delete"
           onClick={() => {
-            deleteClassroom(record);
+            deleteStudent(record);
           }}
           style={record.actived ? DIS_STYLE : {}}
         >
@@ -171,7 +185,7 @@ const Student: React.FC = () => {
       ],
     },
   ];
-  const deleteClassroom = (detail: any) => {
+  const deleteStudent = (detail: any) => {
     try {
       Modal.confirm({
         title: '确定要进行删除操作吗',
@@ -179,16 +193,16 @@ const Student: React.FC = () => {
           console.log('ok');
           const { id } = detail;
           if (id) {
-            // handleStudent('DELETE', { id }).then((res) => {
-            //   console.log('res', res);
-            //   const { status } = res;
-            //   if (status == 200) {
-            //     message.success(Message.Delete);
-            //     handleModalVisible(false);
-            //     setCurrentRow(undefined);
-            //     if (actionRef.current) actionRef.current.reload();
-            //   }
-            // });
+            handleStudent('DELETE', { id }).then((res) => {
+              console.log('res', res);
+              const { status } = res;
+              if (status == 200) {
+                message.success(Message.Delete);
+                handleModalVisible(false);
+                setCurrentRow(undefined);
+                if (actionRef.current) actionRef.current.reload();
+              }
+            });
           }
         },
         onCancel() {},
@@ -199,17 +213,17 @@ const Student: React.FC = () => {
   };
 
   const submitStudent = async (method: string, value: any) => {
-    console.log('value', value);
+    console.log('value', value, method);
     try {
-      // const success = await handleStudent(method, value);
-      // if (success) {
-      //   message.success({
-      //     content: type == 'new' ? Message.New : Message.Edit,
-      //   });
-      //   handleModalVisible(false);
-      //   setCurrentRow(undefined);
-      //   if (actionRef.current) actionRef.current.reload();
-      // }
+      const success = await handleStudent(method, value);
+      if (success) {
+        message.success({
+          content: type == 'new' ? Message.New : Message.Edit,
+        });
+        handleModalVisible(false);
+        setCurrentRow(undefined);
+        if (actionRef.current) actionRef.current.reload();
+      }
     } catch (error) {
       console.log(error);
     }
@@ -263,6 +277,19 @@ const Student: React.FC = () => {
         }}
         schoolData={schoolData}
         productData={productData}
+      />
+      <EnterClassroom
+        title={title}
+        values={currentRow || {}}
+        visible={enterModalVisible}
+        onSubmit={async (value: any) => {
+          submitStudent('PATCH', value);
+        }}
+        onCancel={() => {
+          handleModalVisible(false);
+        }}
+        classData={[]}
+        // classData={classData}
       />
     </div>
   );

@@ -1,19 +1,18 @@
-import { DownOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, message, Modal } from 'antd';
-import React, { useState, useRef, useEffect } from 'react';
+import { DownOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
+import React, { useRef, useEffect } from 'react';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { ProFormInstance } from '@ant-design/pro-form';
 import { useRequest, useParams } from 'umi';
 import { OPTION_DATE, pagination, STATUS_DATE, TYPE_LEAVE } from '@/constant/index';
-import { Message, DIS_STYLE, ORDER_STATUS_EUM } from '@/constant/common';
+import { Message } from '@/constant/common';
 import { getAttendance } from '@/services/school';
 import { commonRequestList } from '@/utils';
 
 const Check: React.FC = () => {
   const formRef = useRef<ProFormInstance>();
   const actionRef = useRef<ActionType>();
-  const [user, setUser]: any = useState({});
 
   const { run, loading, data } = useRequest(getAttendance, {
     manual: true,

@@ -173,10 +173,7 @@ export async function allClassroom(id: string | number) {
 //
 export async function getAttendance(
   params: {
-    // query
-    /** 当前的页码 */
     page?: number;
-    /** 页面的容量 */
     size?: number;
   },
   options?: { [key: string]: any },
@@ -191,3 +188,56 @@ export async function getAttendance(
 }
 
 // school/order/1/status/SUSPENDED
+
+export async function getCalendarList(
+  params: {
+    page?: number;
+    size?: number;
+  },
+  options?: { [key: string]: any },
+) {
+  return request(`school/calendar`, {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
+export async function getFoodList(options?: { [key: string]: any }) {
+  return request(`school/recipe`, {
+    method: 'GET',
+    params: {
+      ...options,
+    },
+    ...(options || {}),
+  });
+}
+
+//
+export async function getNoticeList(
+  params: {
+    page?: number;
+    size?: number;
+  },
+  options?: { [key: string]: any },
+) {
+  return request(`school/announcement`, {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
+export async function handleNotice(method: string, options?: { [key: string]: any }) {
+  const ID = method == 'POST' ? '' : `/${options?.id}`;
+  // const options.endDate?-> 停课
+  return request(`school/announcement${ID}`, {
+    method,
+    data: options,
+    ...(options || {}),
+  });
+}

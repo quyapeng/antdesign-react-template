@@ -192,8 +192,7 @@ const Student: React.FC = () => {
           if (id) {
             handleStudent('DELETE', { id }).then((res) => {
               console.log('res', res);
-              const { status } = res;
-              if (status == 200) {
+              if (res?.status == 200) {
                 message.success(Message.Delete);
                 handleModalVisible(false);
                 setCurrentRow(undefined);

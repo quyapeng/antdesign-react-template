@@ -1,13 +1,13 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, message, Modal, Tag } from 'antd';
-import React, { useState, useRef, Fragment, useEffect } from 'react';
+import { Button, message, Tag } from 'antd';
+import React, { useState, useRef, useEffect } from 'react';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { ProFormInstance } from '@ant-design/pro-form';
 import { useRequest } from 'umi';
 import { commonRequestList } from '@/utils/index';
 import { pagination } from '@/constant/index';
-import { Message, STATUS, TEACHER_TYPE } from '@/constant/common';
+import { Message, TEACHER_TYPE } from '@/constant/common';
 
 import { getTeacherList, allSchool, handleTeacher } from '@/services/school';
 import TeacherForm from './components/TeacherForm';

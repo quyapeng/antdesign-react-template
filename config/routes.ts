@@ -121,6 +121,11 @@
         name: '考勤管理',
         component: './school/check',
       },
+      {
+        path: '/business/notice',
+        name: '校历管理',
+        component: './school/notice',
+      },
     ],
   },
   {

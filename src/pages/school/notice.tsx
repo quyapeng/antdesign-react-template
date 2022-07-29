@@ -4,29 +4,23 @@ import React, { useState, useRef, useEffect } from 'react';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { ProFormInstance } from '@ant-design/pro-form';
-
+import { useRequest } from 'umi';
 import { commonRequestList } from '@/utils/index';
 import { pagination } from '@/constant/index';
-import { Message, STATUS } from '@/constant/common';
-import { useRequest } from 'umi';
+import { Message, NOTICE_TYPE, TEACHER_TYPE } from '@/constant/common';
 
-import { categoryList } from '@/services/course';
-import { classroomList, allSchool, foodTemplate, handleClassroom } from '@/services/school';
-import ClassroomForm from './components/ClassroomForm';
+import { getNoticeList, allSchool, handleNotice } from '@/services/school';
+import NoticeForm from './components/NoticeForm';
 
-const Classroom: React.FC = () => {
+const Notice: React.FC = () => {
   const formRef = useRef<ProFormInstance>();
   const actionRef = useRef<ActionType>();
   const [currentRow, setCurrentRow]: any = useState();
   const [setModalVisible, handleModalVisible] = useState<boolean>(false);
-  const [title, setTitle] = useState('新增');
+  const [title, setTitle] = useState('新增教师');
   const [type, setType] = useState('new');
 
-  const { run, loading } = useRequest(classroomList, {
-    manual: true,
-  });
-
-  const { run: runFoodTemplate, data: foodTemData } = useRequest(foodTemplate, {
+  const { run, loading } = useRequest(getNoticeList, {
     manual: true,
   });
 
@@ -34,16 +28,10 @@ const Classroom: React.FC = () => {
     manual: true,
   });
 
-  const { run: runCategory, data: categoryData } = useRequest(categoryList, {
-    manual: true,
-  });
-
   //
 
   useEffect(() => {
     runSchool();
-    runCategory();
-    runFoodTemplate();
   }, []);
 
   const columns: ProColumns[] = [
@@ -53,62 +41,47 @@ const Classroom: React.FC = () => {
       valueType: 'select',
       hideInSearch: false,
       fieldProps: {
+        options: schoolData,
         fieldNames: {
           label: 'name',
           value: 'id',
         },
-        options: schoolData,
       },
       render: (_, record) => <>{record?.school?.name}</>,
     },
     {
-      title: '教室名称',
-      dataIndex: 'name',
+      title: '通知对象',
+      dataIndex: 'teacherName',
+      hideInSearch: false,
+      render: (_, record) => <>{record?.user?.name}</>,
+    },
+
+    {
+      title: '通知主题',
+      dataIndex: 'title',
       hideInSearch: false,
     },
     {
-      title: '课程分类',
-      dataIndex: 'courseCategoryId',
-      valueType: 'select',
-      hideInSearch: false,
-      fieldProps: {
-        fieldNames: {
-          label: 'name',
-          value: 'id',
-        },
-        options: categoryData,
-      },
-      render: (_, record) => <>{record?.courseCategory?.name}</>,
-    },
-    {
-      title: '食谱模版名称',
-      dataIndex: 'recipeId',
-      valueType: 'select',
-      hideInSearch: false,
-      fieldProps: {
-        fieldNames: {
-          label: 'name',
-          value: 'id',
-        },
-        options: foodTemData,
-      },
-      render: (_, record) => <>{record?.recipe?.name}</>,
-    },
-    {
-      title: '监控设备数',
-      dataIndex: 'schoolMonitors',
+      title: '操作人',
+      dataIndex: 'createdBy',
       hideInSearch: true,
-      render: (_, record) => <>{record?.schoolMonitors?.length}</>,
+      render: (_, record) => <>{record?.createdBy?.name}</>,
     },
     {
-      title: '状态',
-      hideInSearch: false,
+      title: '发布时间',
+      dataIndex: 'classroom',
+      hideInSearch: true,
+      render: (_, record) => <>{record?.classroom?.name}</>,
+    },
+    {
+      title: '发布状态',
+      hideInSearch: true,
       dataIndex: 'status',
-      valueType: 'select',
-      valueEnum: STATUS,
+      // valueType: 'select',
+      // valueEnum: TEACHER_TYPE,
       render: (_, record) => (
-        <Tag color={record.status == 'ENABLED' ? 'green' : 'red'}>
-          {STATUS[record.status]?.text}
+        <Tag color={record.status == 'PUBLISHED' ? 'green' : 'red'}>
+          {NOTICE_TYPE[record.status]?.text}
         </Tag>
       ),
     },
@@ -123,13 +96,9 @@ const Classroom: React.FC = () => {
           key="config"
           onClick={() => {
             setType('edit');
-            setTitle('编辑');
+            setTitle('编辑通知');
             setCurrentRow({
               ...record,
-              schoolId: record.school.id,
-              courseCategoryId: record.courseCategory.id,
-              recipeId: record.recipe.id,
-              schoolMonitorIds: record.schoolMonitors?.map((i: any) => i.id),
             });
             handleModalVisible(true);
           }}
@@ -137,9 +106,20 @@ const Classroom: React.FC = () => {
           编辑
         </a>,
         <a
+          key="publish"
+          onClick={() => {
+            setType('publish');
+            setTitle('发布');
+            deleteNotice(record, 'PATCH');
+          }}
+        >
+          {/* 发布 | 撤回 */}
+          {record.status == 'DRAFT' ? '发布' : '撤回'}
+        </a>,
+        <a
           key="delete"
           onClick={() => {
-            deleteClassroom(record);
+            deleteNotice(record, 'DELETE');
           }}
         >
           删除
@@ -147,19 +127,29 @@ const Classroom: React.FC = () => {
       ],
     },
   ];
-  const deleteClassroom = (detail: any) => {
+
+  const deleteNotice = (detail: any, method: string) => {
+    const opt = {
+      DELETE: '删除',
+      DRAFT: '发布',
+      PUBLISHED: '撤回',
+    };
+    let status = '';
+    if (method !== 'DELETE') {
+      status = detail.status == 'DRAFT' ? 'PUBLISHED' : 'DRAFT';
+    }
+    console.log(opt[method]);
     try {
       Modal.confirm({
-        title: '确定要进行删除操作吗',
+        title: `确定要进行${opt[method]}操作吗`,
         onOk() {
           console.log('ok');
           const { id } = detail;
           if (id) {
-            handleClassroom('DELETE', { id }).then((res) => {
-              console.log('res', res);
-              const { status } = res;
-              if (status == 200) {
-                message.success(Message.Delete);
+            const params = status ? { id, status } : { id };
+            handleNotice(method, params).then((res) => {
+              if (res && res.status && res.status == 200) {
+                message.success(`${opt[method]}成功`);
                 handleModalVisible(false);
                 setCurrentRow(undefined);
                 if (actionRef.current) actionRef.current.reload();
@@ -173,10 +163,9 @@ const Classroom: React.FC = () => {
       console.log(error);
     }
   };
-
-  const submitClassroom = async (method: string, value: any) => {
+  const submitNotice = async (method: string, value: any) => {
     try {
-      const success = await handleClassroom(method, value);
+      const success = await handleNotice(method, value);
       if (success) {
         message.success({
           content: type == 'new' ? Message.New : Message.Edit,
@@ -184,6 +173,8 @@ const Classroom: React.FC = () => {
         handleModalVisible(false);
         setCurrentRow(undefined);
         if (actionRef.current) actionRef.current.reload();
+      } else {
+        console.log(success);
       }
     } catch (error) {
       console.log(error);
@@ -199,7 +190,7 @@ const Classroom: React.FC = () => {
         search={{
           labelWidth: 120,
         }}
-        request={(params) => commonRequestList(classroomList, params)}
+        request={(params) => commonRequestList(getNoticeList, params)}
         columns={columns}
         pagination={{
           showSizeChanger: true,
@@ -213,7 +204,7 @@ const Classroom: React.FC = () => {
               type="primary"
               key="primary"
               onClick={() => {
-                setTitle('新增');
+                setTitle('新增通知');
                 setType('new');
                 setCurrentRow({});
                 handleModalVisible(true);
@@ -225,23 +216,22 @@ const Classroom: React.FC = () => {
           settings: [],
         }}
       />
-      <ClassroomForm
+      <NoticeForm
         type={type}
         title={title}
         values={currentRow || {}}
         visible={setModalVisible}
         onSubmit={async (value: any) => {
-          submitClassroom(type == 'new' ? 'POST' : 'PATCH', value);
+          console.log(value);
+          submitNotice(type == 'new' ? 'POST' : 'PATCH', value);
         }}
         onCancel={() => {
           handleModalVisible(false);
         }}
         schoolData={schoolData}
-        categoryData={categoryData}
-        foodTemData={foodTemData}
       />
     </div>
   );
 };
 
-export default Classroom;
+export default Notice;

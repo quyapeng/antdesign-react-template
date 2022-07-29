@@ -133,6 +133,17 @@ export const TEACHER_TYPE = {
   },
 };
 
+export const NOTICE_TYPE = {
+  DRAFT: {
+    text: '未发布',
+    status: 'DRAFT',
+  },
+  PUBLISHED: {
+    text: '已发布',
+    status: 'PUBLISHED',
+  },
+};
+
 export const TEACHER_STATUS = [
   {
     value: 'DIMISSION',

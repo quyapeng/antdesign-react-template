@@ -1,5 +1,6 @@
 import { ModalForm } from '@ant-design/pro-form';
 import ProTable, { ProColumns } from '@ant-design/pro-table';
+import { Modal } from 'antd';
 import React, { memo } from 'react';
 
 export type CityFormProps = {
@@ -11,14 +12,7 @@ export type CityFormProps = {
   values: Partial<any>;
 };
 
-const LogModal: React.FC<CityFormProps> = ({
-  type,
-  title,
-  values,
-  visible,
-  onSubmit,
-  onCancel,
-}: any) => {
+const LogModal: React.FC<CityFormProps> = ({ title, values, visible, onCancel }: any) => {
   const columns: ProColumns[] = [
     {
       title: '延期原因',
@@ -44,34 +38,18 @@ const LogModal: React.FC<CityFormProps> = ({
       title: '合同新结束日期',
       dataIndex: 'newEndDate',
       hideInSearch: true,
-      // render: (_, record) => <>{record?.endDate}</>,
     },
   ];
   return (
-    <ModalForm
-      title={title}
-      visible={visible}
-      onVisibleChange={() => {}}
-      {...{
-        labelCol: { span: 6 },
-        wrapperCol: { span: 14 },
-      }}
-      layout="horizontal"
-      onFinish={async () => onCancel()}
-      modalProps={{
-        onCancel: () => onCancel(),
-      }}
-    >
+    <Modal title={title} visible={visible} onOk={onCancel} onCancel={onCancel} width={'800px'}>
       <ProTable<any>
         rowKey="id"
         columns={columns}
         dataSource={values.data}
-        toolbar={{
-          actions: [],
-          settings: [],
-        }}
+        toolBarRender={false}
+        search={false}
       />
-    </ModalForm>
+    </Modal>
   );
 };
 

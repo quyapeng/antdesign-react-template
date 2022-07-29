@@ -156,9 +156,38 @@ export async function orderById(options: { [key: string]: any }) {
 }
 export async function handleOrder(method: string, options?: { [key: string]: any }) {
   const ID = method == 'POST' ? '' : `/${options?.id}`;
+  // const options.endDate?-> 停课
   return request(`school/order${ID}`, {
     method,
     data: options,
     ...(options || {}),
   });
 }
+
+export async function allClassroom(id: string | number) {
+  return request(`school/${id}/classsroom`, {
+    method: 'GET',
+  });
+}
+
+//
+export async function getAttendance(
+  params: {
+    // query
+    /** 当前的页码 */
+    page?: number;
+    /** 页面的容量 */
+    size?: number;
+  },
+  options?: { [key: string]: any },
+) {
+  return request(`school/attendance`, {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
+// school/order/1/status/SUSPENDED

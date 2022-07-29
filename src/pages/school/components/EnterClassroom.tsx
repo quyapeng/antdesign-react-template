@@ -1,6 +1,8 @@
-import React, { useEffect, useRef, memo } from 'react';
+import React, { useEffect, useRef, memo, useState } from 'react';
 import { ModalForm, ProFormSelect, ProFormText } from '@ant-design/pro-form';
 import type { ProFormInstance } from '@ant-design/pro-form';
+
+import { allClassroom } from '@/services/school';
 
 export type UpdateProps = {
   title: string;
@@ -8,7 +10,6 @@ export type UpdateProps = {
   onCancel: (flag?: boolean, formVals?: any) => void;
   onSubmit: (values: any) => Promise<void>;
   values: Partial<any>;
-  classData: [];
 };
 
 const EnterClassroom: React.FC<UpdateProps> = ({
@@ -17,12 +18,19 @@ const EnterClassroom: React.FC<UpdateProps> = ({
   onCancel,
   onSubmit,
   values,
-  classData,
 }: any) => {
   const formRef = useRef<ProFormInstance>();
+  const [classData, setClassData] = useState([]);
 
+  const getClassroom = async (id: string | number) => {
+    allClassroom(id).then((res) => {
+      console.log(res);
+      setClassData(res.data || []);
+    });
+  };
   useEffect(() => {
     if (values.id) {
+      getClassroom(values?.school?.id);
       formRef?.current?.setFieldsValue(values);
     }
   }, [visible]);
@@ -48,7 +56,7 @@ const EnterClassroom: React.FC<UpdateProps> = ({
       <ProFormSelect
         label="班级"
         name="classroomId"
-        request={async () => classData}
+        options={classData}
         rules={[
           {
             required: true,

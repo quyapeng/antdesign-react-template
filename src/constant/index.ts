@@ -108,3 +108,29 @@ export const SEX = [
     value: 'FEMALE',
   },
 ];
+
+export const STATUS_DATE = {
+  LEAVE: '未出勤',
+  NORMAL: '出勤',
+};
+
+export const TYPE_LEAVE = {
+  UNPAID_LEAVE: '事假',
+  SICK_LEAVE: '病假',
+};
+
+export const SICK_LEAVE = {
+  EPIDEMIC: '传染病',
+  OTHERS: '其他病',
+};
+
+export const OPTION_DATE = {
+  LEAVE: {
+    text: '未出勤',
+    value: 'LEAVE',
+  },
+  NORMAL: {
+    text: '出勤',
+    value: 'NORMAL',
+  },
+};

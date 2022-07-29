@@ -14,7 +14,9 @@ export const Message = {
   Change: '修改成功',
   SendCode: '验证码发送成功',
   NoRouter: '当前用户暂无任何权限，请联系管理员。',
+  FAIL: '操作失败',
   Action: '创建',
+  DownLoad: '导出',
 };
 
 export const DIS_STYLE = {

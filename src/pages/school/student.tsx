@@ -39,9 +39,6 @@ const Student: React.FC = () => {
   const { run: runProduct, data: productData } = useRequest(productAll, {
     manual: true,
   });
-  // const { run: runClassroom, data: classData } = useRequest(runClassroom, {
-  //   manual: true,
-  // });
 
   //
 
@@ -157,7 +154,7 @@ const Student: React.FC = () => {
             setTitle('进班');
             setCurrentRow({
               ...record,
-              classroomId: record.classroom.id || null,
+              classroomId: record?.classroom?.id || null,
             });
             handleEnterVisible(true);
           }}
@@ -168,7 +165,7 @@ const Student: React.FC = () => {
         <a
           key="check"
           onClick={() => {
-            handleStudent(record);
+            history.push(`/business/check/${record.id}`);
           }}
         >
           出缺勤
@@ -221,6 +218,7 @@ const Student: React.FC = () => {
           content: type == 'new' ? Message.New : Message.Edit,
         });
         handleModalVisible(false);
+        handleEnterVisible(false);
         setCurrentRow(undefined);
         if (actionRef.current) actionRef.current.reload();
       }
@@ -286,10 +284,8 @@ const Student: React.FC = () => {
           submitStudent('PATCH', value);
         }}
         onCancel={() => {
-          handleModalVisible(false);
+          handleEnterVisible(false);
         }}
-        classData={[]}
-        // classData={classData}
       />
     </div>
   );

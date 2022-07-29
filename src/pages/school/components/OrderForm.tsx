@@ -122,6 +122,9 @@ const OrderForm: React.FC<UpdateProps> = ({
         ]}
         fieldProps={{
           onChange: async (e) => changeDate(e),
+          disabledDate: (current: any) => {
+            return current && current <= dayjs().endOf('day');
+          },
         }}
         label="开始日期"
         width="md"

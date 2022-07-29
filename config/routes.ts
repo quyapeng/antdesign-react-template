@@ -116,6 +116,11 @@
         name: '合同管理',
         component: './school/order',
       },
+      {
+        path: '/business/check/:id',
+        name: '考勤管理',
+        component: './school/check',
+      },
     ],
   },
   {

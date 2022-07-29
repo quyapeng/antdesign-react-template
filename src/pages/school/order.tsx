@@ -11,8 +11,9 @@ import { productAll } from '@/services/product';
 import { orderById, handleOrder } from '@/services/school';
 import LogModal from './components/LogModal';
 import OrderForm from './components/OrderForm';
+import Renew from './components/Renew';
 
-const Student: React.FC = () => {
+const Order: React.FC = () => {
   const formRef = useRef<ProFormInstance>();
   const actionRef = useRef<ActionType>();
   const [currentRow, setCurrentRow]: any = useState();
@@ -20,6 +21,7 @@ const Student: React.FC = () => {
   const [logModalVisible, setLogModalVisible] = useState<boolean>(false);
   const [title, setTitle] = useState('新增');
   const [type, setType] = useState('new');
+  const [renewVisible, setRenewVisible] = useState<boolean>(false);
 
   const { run, loading, data } = useRequest(orderById, {
     manual: true,
@@ -102,8 +104,15 @@ const Student: React.FC = () => {
         // 仅合同状态为等待 or 执行时可用
         <a
           key="renew"
-          onClick={() => {}}
-          style={record.status == 'PENDING' || record.status == 'NORMAL' ? DIS_STYLE : {}}
+          onClick={() => {
+            setType('renew');
+            setTitle('退课');
+            setCurrentRow({
+              ...record,
+            });
+            setRenewVisible(true);
+          }}
+          style={record.status == 'PENDING' || record.status == 'NORMAL' ? {} : DIS_STYLE}
         >
           退课
         </a>,
@@ -146,12 +155,9 @@ const Student: React.FC = () => {
             handleOrder('DELETE', {
               id,
             }).then((res: any) => {
-              const { status } = res;
-              if (status == 200) {
+              if (res?.status && res?.status == 200) {
                 message.success(Message.Options);
-                if (actionRef.current) {
-                  actionRef.current.reload();
-                }
+                run({ studentId: params.id });
               }
             });
           }
@@ -172,7 +178,7 @@ const Student: React.FC = () => {
         });
         handleModalVisible(false);
         setCurrentRow(undefined);
-        if (actionRef.current) actionRef.current.reload();
+        run({ studentId: params.id });
       }
     } catch (error) {
       console.log(error);
@@ -187,7 +193,7 @@ const Student: React.FC = () => {
         search={{
           labelWidth: 120,
         }}
-        // request={() => request(orderById, { id: params.id })}
+        beforeSearchSubmit={({ status }: any) => run({ studentId: params.id, status })}
         columns={columns}
         pagination={{
           showSizeChanger: true,
@@ -241,8 +247,21 @@ const Student: React.FC = () => {
           setLogModalVisible(false);
         }}
       />
+      <Renew
+        title={title}
+        values={currentRow || {}}
+        visible={renewVisible}
+        onSubmit={async (value: any) => {
+          console.log(value);
+          //
+          // submitOrder('PATCH', value);
+        }}
+        onCancel={() => {
+          setRenewVisible(false);
+        }}
+      />
     </div>
   );
 };
 
-export default Student;
+export default Order;

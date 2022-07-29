@@ -5,14 +5,18 @@ import { extend } from 'umi-request';
 
 const errorHandler = (error: any) => {
   const { response = {} } = error;
-  const errors = error?.data?.message || error.data.errors || '';
+  const errors = error.data.errors || error?.data?.message || '';
   const key = !errors ? Object.keys(error?.data?.errors)[0] : errors;
   const value = !errors ? Object.values(error.data.errors)[0] : errors;
   const errortext =
     codeMessage[response.status] || response.statusText || errors ? errors : `${key}: ${value}`;
   const { status, url } = response;
+  const text =
+    typeof errortext == 'object'
+      ? Object.keys(errortext)[0] + Object.values(errortext)[0]
+      : errortext;
   message.error({
-    content: `请求错误 ${status}: ${errortext}`,
+    content: `请求错误 ${status}: ${text || errortext}`,
   });
 };
 const request = extend({

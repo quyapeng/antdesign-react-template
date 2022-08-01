@@ -1,5 +1,5 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import React, { useState, useRef, useEffect } from 'react';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
@@ -9,17 +9,15 @@ import { commonRequestList } from '@/utils/index';
 import { pagination } from '@/constant/index';
 import { Message } from '@/constant/common';
 
-import { getCalendarList, allSchool } from '@/services/school';
+import { getCalendarList, allSchool, handleCalendar } from '@/services/school';
+import AddCalendar from './components/AddCalendar';
 
 const Calendar: React.FC = () => {
   const formRef = useRef<ProFormInstance>();
   const actionRef = useRef<ActionType>();
-  const [currentRow, setCurrentRow]: any = useState();
   const [setModalVisible, handleModalVisible] = useState<boolean>(false);
-  const [title, setTitle] = useState('新增教师');
-  const [type, setType] = useState('new');
 
-  const { run, data, loading } = useRequest(getCalendarList, {
+  const { run, loading } = useRequest(getCalendarList, {
     manual: true,
   });
 
@@ -29,6 +27,21 @@ const Calendar: React.FC = () => {
   useEffect(() => {
     runSchool();
   }, []);
+
+  const submitCalendar = async (value: any) => {
+    try {
+      const success: any = await handleCalendar(value);
+      if (success) {
+        message.success({
+          content: Message.New,
+        });
+        handleModalVisible(false);
+        if (actionRef.current) actionRef.current.reload();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const columns: ProColumns[] = [
     {
@@ -60,7 +73,7 @@ const Calendar: React.FC = () => {
         <a
           key="config"
           onClick={() => {
-            history.push(``);
+            history.push(`/business/detailCalendar/${record.id}`);
           }}
         >
           设置校历
@@ -91,9 +104,6 @@ const Calendar: React.FC = () => {
               type="primary"
               key="primary"
               onClick={() => {
-                setTitle('新增校历');
-                setType('new');
-                setCurrentRow({});
                 handleModalVisible(true);
               }}
             >
@@ -102,6 +112,18 @@ const Calendar: React.FC = () => {
           ],
           settings: [],
         }}
+      />
+      <AddCalendar
+        title="新增校历"
+        visible={setModalVisible}
+        onSubmit={async (value: any) => {
+          console.log(value);
+          submitCalendar(value);
+        }}
+        onCancel={() => {
+          handleModalVisible(false);
+        }}
+        schoolData={schoolData}
       />
     </div>
   );

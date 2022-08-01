@@ -253,8 +253,7 @@ const Order: React.FC = () => {
         visible={renewVisible}
         onSubmit={async (value: any) => {
           console.log(value);
-          //
-          // submitOrder('PATCH', value);
+          // submitOrder('PATCH', value); endDate
         }}
         onCancel={() => {
           setRenewVisible(false);

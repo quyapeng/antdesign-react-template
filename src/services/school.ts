@@ -154,9 +154,10 @@ export async function orderById(options: { [key: string]: any }) {
     params: options,
   });
 }
+
 export async function handleOrder(method: string, options?: { [key: string]: any }) {
   const ID = method == 'POST' ? '' : `/${options?.id}`;
-  // const options.endDate?-> 停课
+  // const options.endDate ? -> 停课
   return request(`school/order${ID}`, {
     method,
     data: options,
@@ -170,7 +171,6 @@ export async function allClassroom(id: string | number) {
   });
 }
 
-//
 export async function getAttendance(
   params: {
     page?: number;
@@ -188,7 +188,7 @@ export async function getAttendance(
 }
 
 // school/order/1/status/SUSPENDED
-
+const calendar_url = 'school/calendar';
 export async function getCalendarList(
   params: {
     page?: number;
@@ -196,7 +196,7 @@ export async function getCalendarList(
   },
   options?: { [key: string]: any },
 ) {
-  return request(`school/calendar`, {
+  return request(`${calendar_url}`, {
     method: 'GET',
     params: {
       ...params,
@@ -239,5 +239,59 @@ export async function handleNotice(method: string, options?: { [key: string]: an
     method,
     data: options,
     ...(options || {}),
+  });
+}
+
+export async function handleCalendar(options?: { [key: string]: any }) {
+  return request(`${calendar_url}`, {
+    method: 'POST',
+    data: options,
+    ...(options || {}),
+  });
+}
+
+export async function teacherList(options?: { [key: string]: any }) {
+  return request(``, {
+    method: 'GET',
+    params: {
+      ...options,
+    },
+    ...(options || {}),
+  });
+}
+const class_url = 'school/classroom';
+export async function classList(
+  params: {
+    page?: number;
+    size?: number;
+  },
+  options?: { [key: string]: any },
+) {
+  return request(`${class_url}`, {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
+export async function handleClass(options?: { [key: string]: any }) {
+  return request(`school/classsroom/${options?.id}`, {
+    method: 'PATCH',
+    data: options,
+    ...(options || {}),
+  });
+}
+
+export async function getCalendarDetail(id: string | number, month: string) {
+  return request(`school/calendar/holiday/schoolcalendar/${id}/month/${month}`, {
+    method: 'GET',
+  });
+}
+//
+export async function teacherListBySchool(id: string | number) {
+  return request(`school/${id}/teacher`, {
+    method: 'GET',
   });
 }

@@ -122,9 +122,39 @@
         component: './school/check',
       },
       {
-        path: '/business/notice',
+        path: '/business/calendar',
         name: '校历管理',
+        component: './school/calendar',
+      },
+      {
+        path: '/business/notice',
+        name: '通知管理',
         component: './school/notice',
+      },
+      {
+        path: '/business/food',
+        name: '通知管理',
+        component: './school/food',
+      },
+      {
+        path: '/business/class',
+        name: '班级管理',
+        component: './school/class',
+      },
+      {
+        path: '/business/detailCalendar/:id',
+        name: '配置校历',
+        component: './school/detailCalendar',
+      },
+      {
+        path: '/business/foodDetail/:id',
+        name: '配置食谱',
+        component: './school/foodDetail',
+      },
+      {
+        path: '/business/studentList/:id',
+        name: '学生名单',
+        component: './school/studentList',
       },
     ],
   },

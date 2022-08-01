@@ -41,7 +41,6 @@ const School: React.FC = () => {
       setAreaData(res);
     });
   };
-  // agentData
 
   const { run: runSales, data: salesData } = useRequest(salesList, {
     manual: true,

@@ -8,23 +8,11 @@
         path: '/user/login',
         component: './user/login',
       },
-      // {
-      //   path: '/user/index',
-      //   name: '用户管理',
-      //   component: './user/user',
-      // },
       {
         component: './404',
       },
     ],
   },
-
-  // {
-  //   path: '/welcome',
-  //   name: '欢迎页',
-  //   icon: 'smile',
-  //   component: './Welcome',
-  // },
   {
     path: '/system',
     name: '菜单',

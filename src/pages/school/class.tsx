@@ -1,5 +1,4 @@
-import { PlusOutlined } from '@ant-design/icons';
-import { Button, message } from 'antd';
+import { message } from 'antd';
 import React, { useState, useRef, useEffect } from 'react';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
@@ -11,13 +10,7 @@ import { Message } from '@/constant/common';
 import { useRequest, history } from 'umi';
 
 import { categoryList } from '@/services/course';
-import {
-  classList,
-  allSchool,
-  teacherList,
-  handleClass,
-  teacherListBySchool,
-} from '@/services/school';
+import { classList, allSchool, handleClass, allTeacher } from '@/services/school';
 import ClassForm from './components/ClassForm';
 
 const Classroom: React.FC = () => {
@@ -33,9 +26,9 @@ const Classroom: React.FC = () => {
     manual: true,
   });
 
-  // const { run: runTeacherTemplate, data: teacherData } = useRequest(teacherList, {
-  //   manual: true,
-  // });
+  const { run: runTeacherTemplate, data } = useRequest(allTeacher, {
+    manual: true,
+  });
 
   const { run: runSchool, data: schoolData } = useRequest(allSchool, {
     manual: true,
@@ -46,11 +39,19 @@ const Classroom: React.FC = () => {
   });
 
   //
+  useEffect(() => {
+    console.log('data', data);
+    data?.map((i: any) => {
+      i.name = i.user.name;
+      return i;
+    }),
+      setTeacherData(data);
+  }, [data]);
 
   useEffect(() => {
     runSchool();
     runCategory();
-    // runTeacherTemplate();
+    runTeacherTemplate();
   }, []);
 
   const columns: ProColumns[] = [
@@ -89,7 +90,7 @@ const Classroom: React.FC = () => {
     },
     {
       title: '带班教师',
-      dataIndex: 'teacher',
+      dataIndex: 'teacherId',
       valueType: 'select',
       hideInSearch: false,
       fieldProps: {
@@ -97,7 +98,7 @@ const Classroom: React.FC = () => {
           label: 'name',
           value: 'id',
         },
-        // options: teacherData,
+        options: teacherData,
       },
       render: (_, record) => [
         record?.teachers?.map((i: any) => {
@@ -138,7 +139,7 @@ const Classroom: React.FC = () => {
   ];
   const setTeacher = async (record: any) => {
     if (record?.school?.id) {
-      teacherListBySchool(record?.school?.id).then((res: any) => {
+      allTeacher({ schoolId: record?.school?.id }).then((res: any) => {
         res.data.map((i: any) => {
           i.name = i.user.name;
           return i;

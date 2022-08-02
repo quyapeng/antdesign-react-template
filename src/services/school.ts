@@ -87,7 +87,7 @@ export async function handleClassroom(method: string, options?: { [key: string]:
     ...(options || {}),
   });
 }
-
+const teacher_url = 'school/teacher';
 export async function getTeacherList(
   params: {
     // query
@@ -98,7 +98,7 @@ export async function getTeacherList(
   },
   options?: { [key: string]: any },
 ) {
-  return request(`school/teacher`, {
+  return request(`${teacher_url}`, {
     method: 'GET',
     params: {
       ...params,
@@ -111,9 +111,20 @@ export async function handleTeacher(method: string, options?: { [key: string]: a
   const ID = method == 'POST' ? '' : `/${options?.id}`;
   const PWD = options?.pwd ? `/password/${options?.pwd}` : '';
   // /school/teacher/1/password/1'
-  return request(`school/teacher${ID}${PWD}`, {
+  return request(`${teacher_url}${ID}${PWD}`, {
     method,
     data: options,
+    ...(options || {}),
+  });
+}
+
+// allTeacher
+export async function allTeacher(options?: { [key: string]: any }) {
+  return request(`${teacher_url}s`, {
+    method: 'GET',
+    params: {
+      ...options,
+    },
     ...(options || {}),
   });
 }
@@ -165,9 +176,13 @@ export async function handleOrder(method: string, options?: { [key: string]: any
   });
 }
 
-export async function allClassroom(id: string | number) {
-  return request(`school/${id}/classsroom`, {
+export async function allClassroom(options?: { [key: string]: any }) {
+  return request(`school/classsrooms`, {
     method: 'GET',
+    params: {
+      ...options,
+    },
+    ...(options || {}),
   });
 }
 
@@ -275,6 +290,7 @@ export async function classList(
     ...(options || {}),
   });
 }
+// schoolId
 
 export async function handleClass(options?: { [key: string]: any }) {
   return request(`school/classsroom/${options?.id}`, {
@@ -290,8 +306,31 @@ export async function getCalendarDetail(id: string | number, month: string) {
   });
 }
 //
-export async function teacherListBySchool(id: string | number) {
-  return request(`school/${id}/teacher`, {
+export async function allMeals() {
+  return request(`recipe/meals`, {
+    method: 'GET',
+  });
+}
+//
+
+export async function setMeal(options?: { [key: string]: any }) {
+  return request(`school/recipe/${options?.id}/meal`, {
+    method: 'POST',
+    data: options,
+    ...(options || {}),
+  });
+}
+
+//
+export async function allRecipe() {
+  return request(`recipe`, {
+    method: 'GET',
+  });
+}
+
+//
+export async function getRecipeDetail(id: string | number) {
+  return request(`school/recipe/${id}/wall`, {
     method: 'GET',
   });
 }

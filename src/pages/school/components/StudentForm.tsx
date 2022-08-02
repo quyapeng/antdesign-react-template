@@ -10,7 +10,6 @@ import type { ProFormInstance } from '@ant-design/pro-form';
 import { SEX } from '@/constant';
 import { Form, Input, Space } from 'antd';
 import dayjs from 'dayjs';
-import { NUMBER_RULES } from '@/constant/common';
 
 export type UpdateProps = {
   type: string;

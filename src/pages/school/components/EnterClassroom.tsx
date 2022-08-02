@@ -23,7 +23,7 @@ const EnterClassroom: React.FC<UpdateProps> = ({
   const [classData, setClassData] = useState([]);
 
   const getClassroom = async (id: string | number) => {
-    allClassroom(id).then((res) => {
+    allClassroom({ schoolId: id }).then((res) => {
       console.log(res);
       setClassData(res.data || []);
     });

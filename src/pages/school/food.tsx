@@ -6,12 +6,16 @@ import { useRequest, history } from 'umi';
 import { commonRequestList } from '@/utils/index';
 import { pagination } from '@/constant/index';
 
-import { getFoodList, allSchool } from '@/services/school';
+import { getFoodList, allSchool, allMeals, setMeal } from '@/services/school';
+import SetMealsTimes from './components/SetMealsTimes';
+import { message } from 'antd';
+import { Message } from '@/constant/common';
 
 const Food: React.FC = () => {
   const formRef = useRef<ProFormInstance>();
   const actionRef = useRef<ActionType>();
-
+  const [currentRow, setCurrentRow]: any = useState();
+  const [setModalVisible, handleModalVisible] = useState<boolean>(false);
   const { run, data, loading } = useRequest(getFoodList, {
     manual: true,
   });
@@ -19,10 +23,32 @@ const Food: React.FC = () => {
   const { run: runSchool, data: schoolData } = useRequest(allSchool, {
     manual: true,
   });
+
+  // allMeals
+  const { run: runMeals, data: mealData } = useRequest(allMeals, {
+    manual: true,
+  });
   useEffect(() => {
     runSchool();
+    runMeals();
   }, []);
 
+  const setMeals = async (value: any) => {
+    console.log(value);
+    try {
+      const success = await setMeal(value);
+      if (success) {
+        message.success({
+          content: Message.Set,
+        });
+        handleModalVisible(false);
+        setCurrentRow(undefined);
+        if (actionRef.current) actionRef.current.reload();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const columns: ProColumns[] = [
     {
       title: '园所名称',
@@ -53,7 +79,13 @@ const Food: React.FC = () => {
         <a
           key="config"
           onClick={() => {
-            // ('设置餐次');
+            // ('设置餐次');meals
+            const mealIds = record?.meals?.map((i: any) => {
+              return i.id;
+            });
+            record.mealIds = mealIds;
+            setCurrentRow(record);
+            handleModalVisible(true);
           }}
         >
           设置餐次
@@ -61,7 +93,7 @@ const Food: React.FC = () => {
         <a
           key="food"
           onClick={() => {
-            history.push(``);
+            history.push(`/business/foodDetail/${record.id}`);
           }}
         >
           设置食谱
@@ -90,6 +122,19 @@ const Food: React.FC = () => {
           actions: [],
           settings: [],
         }}
+      />
+      <SetMealsTimes
+        title={'设置餐次'}
+        values={currentRow || {}}
+        visible={setModalVisible}
+        onSubmit={async (value: any) => {
+          setMeals(value);
+        }}
+        onCancel={() => {
+          handleModalVisible(false);
+          setCurrentRow({});
+        }}
+        mealData={mealData}
       />
     </div>
   );

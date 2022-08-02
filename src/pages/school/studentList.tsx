@@ -29,7 +29,7 @@ const studentList: React.FC = () => {
   const columns: ProColumns[] = [
     {
       title: '序号',
-      dataIndex: 'index',
+      dataIndex: 'id',
       hideInSearch: true,
     },
     {

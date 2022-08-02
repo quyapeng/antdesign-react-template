@@ -98,11 +98,12 @@ const TableMeal: React.FC<UpdateProps> = ({ onCancel, onSubmit, values, columns,
     return <td {...restProps}>{childNode}</td>;
   };
 
-  const handleSave = (row: any) => {
+  const handleSave = async (row: any) => {
     const newData = [...dataSource];
-    const index = newData.findIndex((item) => row.key === item.key);
+    const index = newData.findIndex((item) => row.id === item.id);
     const item = newData[index];
     newData.splice(index, 1, { ...item, ...row });
+    console.log('newData', index, { ...item, ...row });
     setDataSource(newData);
   };
   const columnsData = columns.map((col: any) => {

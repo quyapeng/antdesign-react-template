@@ -5,27 +5,20 @@ import ProTable, { ProColumns } from '@ant-design/pro-table';
 import { commonRequestList } from '@/utils/index';
 import { Message } from '@/constant/common';
 
-import { allRecipe, getRecipeDetail } from '@/services/school';
+import { getRecipeDetail } from '@/services/school';
 import { useParams, useRequest } from 'umi';
-import ProForm, { ProFormSelect } from '@ant-design/pro-form';
 import TabPane from '@ant-design/pro-card/lib/components/TabPane';
 import TableMeal from './components/TableMeal';
 
-const foodDetail: React.FC = () => {
+const mealDetail: React.FC = () => {
   const [currentRow, setCurrentRow]: any = useState();
-
-  const { run: runRecipe, data: recipeData } = useRequest(allRecipe, {
-    manual: true,
-  });
 
   const params: any = useParams();
   useEffect(() => {
-    console.log('foodDetail');
+    console.log('mealDetail');
     getRecipeDetail(params.id).then((res) => {
-      console.log('ddd', res);
       setCurrentRow(res.data);
-    }); // recipe
-    runRecipe();
+    });
   }, [params]);
 
   const columns: ProColumns & { editable?: boolean }[] = [
@@ -80,22 +73,10 @@ const foodDetail: React.FC = () => {
   ];
   return (
     <div>
-      <ProFormSelect
-        label="食谱模版"
-        placeholder="请选择食谱模版"
-        fieldProps={{
-          fieldNames: {
-            label: 'name',
-            value: 'id',
-          },
-          options: recipeData,
-        }}
-        width="md"
-      />
       {currentRow?.year}年
       <Tabs defaultActiveKey="1" tabPosition="left">
         {currentRow?.details?.map((i: any) => (
-          <TabPane tab={`第${i.week}周`} key={i.week}>
+          <TabPane tab={`第${i.week}周`} key={i.week} style={{ height: '600px', overflow: 'auto' }}>
             <TableMeal
               columns={columns}
               data={i.schoolRecipes}
@@ -112,4 +93,4 @@ const foodDetail: React.FC = () => {
   );
 };
 
-export default foodDetail;
+export default mealDetail;

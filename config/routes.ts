@@ -135,9 +135,9 @@
         component: './school/detailCalendar',
       },
       {
-        path: '/business/foodDetail/:id',
+        path: '/business/mealDetail/:id',
         name: '配置食谱',
-        component: './school/foodDetail',
+        component: './school/mealDetail',
       },
       {
         path: '/business/studentList/:id',

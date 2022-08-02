@@ -70,6 +70,12 @@ const Food: React.FC = () => {
       hideInSearch: false,
     },
     {
+      title: '食谱模版',
+      dataIndex: 'recipe',
+      hideInSearch: false,
+      render: (_, record) => <>{record?.recipe?.name}</>,
+    },
+    {
       title: '操作',
       dataIndex: 'option',
       valueType: 'option',
@@ -79,7 +85,6 @@ const Food: React.FC = () => {
         <a
           key="config"
           onClick={() => {
-            // ('设置餐次');meals
             const mealIds = record?.meals?.map((i: any) => {
               return i.id;
             });
@@ -93,7 +98,7 @@ const Food: React.FC = () => {
         <a
           key="food"
           onClick={() => {
-            history.push(`/business/foodDetail/${record.id}`);
+            history.push(`/business/mealDetail/${record.id}`);
           }}
         >
           设置食谱

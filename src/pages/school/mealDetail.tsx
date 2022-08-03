@@ -1,26 +1,60 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Form, message, Tabs } from 'antd';
 import React, { useEffect, useState } from 'react';
-import ProTable, { ProColumns } from '@ant-design/pro-table';
-import { commonRequestList } from '@/utils/index';
+import { ProColumns } from '@ant-design/pro-table';
 import { Message } from '@/constant/common';
 
-import { getRecipeDetail } from '@/services/school';
-import { useParams, useRequest } from 'umi';
+import { getRecipeDetail, setRecipeWall } from '@/services/school';
 import TabPane from '@ant-design/pro-card/lib/components/TabPane';
 import TableMeal from './components/TableMeal';
+import { message, Tabs } from 'antd';
+import { useParams, history } from 'umi';
 
 const mealDetail: React.FC = () => {
   const [currentRow, setCurrentRow]: any = useState();
 
   const params: any = useParams();
   useEffect(() => {
-    console.log('mealDetail');
+    console.log('history', history);
     getRecipeDetail(params.id).then((res) => {
       setCurrentRow(res.data);
     });
   }, [params]);
 
+  const submit = async (param: any, data: []) => {
+    param.recipeId = params?.id;
+    param.data = formatData(data);
+    //
+    try {
+      const success = await setRecipeWall(param);
+      if (success) {
+        message.success({
+          content: Message.Edit,
+        });
+        // history.
+      } else {
+        console.log(success);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const formatData = (data: []) => {
+    return [
+      ...data?.map(
+        ({ mondayData, tuesdayData, wednesdayData, thursdayData, fridayData, meal }: any) => {
+          return {
+            mealId: meal.id,
+            mondayData,
+            tuesdayData,
+            wednesdayData,
+            thursdayData,
+            fridayData,
+          };
+        },
+      ),
+    ];
+  };
   const columns: ProColumns & { editable?: boolean }[] = [
     {
       title: '餐次',
@@ -73,23 +107,42 @@ const mealDetail: React.FC = () => {
   ];
   return (
     <div>
-      {currentRow?.year}年
-      <Tabs defaultActiveKey="1" tabPosition="left">
-        {currentRow?.details?.map((i: any) => (
-          <TabPane tab={`第${i.week}周`} key={i.week} style={{ height: '600px', overflow: 'auto' }}>
-            <TableMeal
-              columns={columns}
-              data={i.schoolRecipes}
-              values={i}
-              onSubmit={async (value: any) => {
-                console.log(value);
-              }}
-              onCancel={() => {}}
-            />
+      <h2>{currentRow && currentRow[0]?.year ? `${currentRow[0]?.year}年` : '暂无数据'}</h2>
+      <Tabs key={'month'} tabPosition="top">
+        {currentRow?.map((i: any) => (
+          <TabPane tab={` ${i.month}月 `} key={i.month}>
+            {child(i.details, columns, i.month, submit)}
           </TabPane>
         ))}
       </Tabs>
     </div>
+  );
+};
+
+const child = (i: any, columns: any, month: string | number, onSubmit: any) => {
+  return i && i.length > 0 ? (
+    <Tabs tabPosition="left" key={'week'}>
+      {i?.map((j: any) => (
+        <TabPane tab={`第${j.week}周`} key={j.week} style={{ height: '600px', overflow: 'auto' }}>
+          <h2>{`${month}月 第${j.week}周`}</h2>
+          <h2>
+            {j.fromDate} ~ {j.endDate}
+          </h2>
+          <TableMeal
+            columns={columns}
+            data={j.schoolRecipes}
+            month={month}
+            values={j}
+            onSubmit={async (month: string | number, values: any, data: []) => {
+              let param = { month, week: values.week };
+              onSubmit(param, data);
+            }}
+          />
+        </TabPane>
+      ))}
+    </Tabs>
+  ) : (
+    '暂无数据'
   );
 };
 

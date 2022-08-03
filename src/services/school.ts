@@ -328,9 +328,16 @@ export async function allRecipe() {
   });
 }
 
-//
 export async function getRecipeDetail(id: string | number) {
   return request(`school/recipe/${id}/wall`, {
     method: 'GET',
+  });
+}
+//
+export async function setRecipeWall(options?: { [key: string]: any }) {
+  const { recipeId, month, week }: any = options;
+  return request(`recipe/wall/recipe/${recipeId}/month/${month}/week/${week}`, {
+    method: 'PATCH',
+    data: options?.data,
   });
 }

@@ -1,20 +1,18 @@
-import React, { useEffect, useRef, memo, useState, useContext } from 'react';
+import React, { useEffect, useRef, memo, useState, useContext, Fragment } from 'react';
 import type { ProFormInstance } from '@ant-design/pro-form';
-import ProTable from '@ant-design/pro-table';
-import { Button, Form, Input, Table } from 'antd';
+import { Button, Form, Input, Space, Table } from 'antd';
 
 export type UpdateProps = {
-  onCancel: (flag?: boolean, formVals?: FormValueType) => void;
-  onSubmit: (values: any) => Promise<void>;
+  onSubmit: (month: string | number, values: any, data: []) => Promise<void>;
   values: Partial<any>;
   columns: any;
+  month: string | number;
   data: [];
 };
 
 export type FormValueType = {};
 
-const TableMeal: React.FC<UpdateProps> = ({ onCancel, onSubmit, values, columns, data }: any) => {
-  const formRef = useRef<ProFormInstance>();
+const TableMeal: React.FC<UpdateProps> = ({ onSubmit, values, columns, data, month }: any) => {
   const [dataSource, setDataSource] = useState(data);
 
   const EditableContext: any = React.createContext(null);
@@ -80,13 +78,18 @@ const TableMeal: React.FC<UpdateProps> = ({ onCancel, onSubmit, values, columns,
             },
           ]}
         >
-          <Input.TextArea ref={inputRef} onPressEnter={save} onBlur={save} />
+          <Input.TextArea
+            ref={inputRef}
+            onPressEnter={save}
+            onBlur={save}
+            style={{ padding: '0' }}
+          />
         </Form.Item>
       ) : (
         <div
           className="editable-cell-value-wrap"
           style={{
-            paddingRight: 24,
+            paddingRight: 6,
           }}
           onClick={toggleEdit}
         >
@@ -103,8 +106,12 @@ const TableMeal: React.FC<UpdateProps> = ({ onCancel, onSubmit, values, columns,
     const index = newData.findIndex((item) => row.id === item.id);
     const item = newData[index];
     newData.splice(index, 1, { ...item, ...row });
-    console.log('newData', index, { ...item, ...row });
+    // console.log('newData', index, { ...item, ...row });
     setDataSource(newData);
+  };
+
+  const clearData = async () => {
+    setDataSource([]);
   };
   const columnsData = columns.map((col: any) => {
     if (!col.editable) {
@@ -129,6 +136,7 @@ const TableMeal: React.FC<UpdateProps> = ({ onCancel, onSubmit, values, columns,
       cell: EditableCell,
     },
   };
+
   return (
     <>
       <Table
@@ -140,15 +148,14 @@ const TableMeal: React.FC<UpdateProps> = ({ onCancel, onSubmit, values, columns,
         columns={columnsData}
         pagination={false}
       />
-      <Button
-        onClick={() => console.log('123', dataSource)}
-        type="primary"
-        style={{
-          marginBottom: 16,
-        }}
-      >
-        保存
-      </Button>
+      <Space size="middle" style={{ float: 'right', marginTop: '20px' }}>
+        <Button onClick={() => clearData()} type="default">
+          清空
+        </Button>
+        <Button onClick={() => onSubmit(month, values, dataSource)} type="primary">
+          保存
+        </Button>
+      </Space>
     </>
   );
 };

@@ -9,7 +9,7 @@ import { commonRequestList } from '@/utils/index';
 import { pagination } from '@/constant/index';
 import { Message, NOTICE_TYPE, TEACHER_TYPE } from '@/constant/common';
 
-import { getSuspenseList, allSchool, handleSuspense } from '@/services/school';
+import { getSuspenseList, allSchool, handleSuspense, allClassroom } from '@/services/school';
 
 import SuspensionForm from './components/SuspensionForm';
 
@@ -28,8 +28,12 @@ const Suspension: React.FC = () => {
   const { run: runSchool, data: schoolData } = useRequest(allSchool, {
     manual: true,
   });
-
-  //
+  const [classData, setClassData] = useState([]);
+  const getClassroom = async (id: string | number) => {
+    allClassroom({ schoolId: id }).then((res) => {
+      setClassData(res.data || []);
+    });
+  };
 
   useEffect(() => {
     runSchool();
@@ -47,20 +51,33 @@ const Suspension: React.FC = () => {
           label: 'name',
           value: 'id',
         },
+        onChange: (e: string) => {
+          if (e) {
+            getClassroom(e);
+          } else {
+            setClassData([]);
+          }
+        },
       },
       render: (_, record) => <>{record?.school?.name}</>,
     },
     {
       title: '停课对象',
       dataIndex: 'classrooms',
+      valueType: 'select',
+      fieldProps: {
+        fieldNames: {
+          label: 'name',
+          value: 'id',
+        },
+        options: classData,
+      },
       hideInSearch: false,
       render: (_, record) => (
         <>
-          [
           {record?.classrooms?.map((i: any) => {
             return `${i.name},`;
           })}
-          ]
         </>
       ),
     },
@@ -104,7 +121,6 @@ const Suspension: React.FC = () => {
       Modal.confirm({
         title: `确定要进行删除操作吗`,
         onOk() {
-          console.log('ok');
           const { id } = detail;
           if (id) {
             const params = status ? { id, status } : { id };

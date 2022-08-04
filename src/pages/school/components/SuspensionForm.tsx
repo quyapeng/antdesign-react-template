@@ -24,15 +24,12 @@ export type UpdateProps = {
 export type FormValueType = {};
 
 const SuspensionForm: React.FC<UpdateProps> = ({
-  type,
   title,
   visible,
   onCancel,
   onSubmit,
   values,
   schoolData,
-  categoryData,
-  foodTemData,
 }: any) => {
   const formRef = useRef<ProFormInstance>();
   //
@@ -43,10 +40,11 @@ const SuspensionForm: React.FC<UpdateProps> = ({
       setClassData(res.data || []);
     });
   };
-  useEffect(() => {}, [visible]);
+  useEffect(() => {
+    formRef.current?.resetFields();
+  }, [visible]);
 
   const onChange = (e: any) => {
-    console.log(e);
     if (e) {
       getClassroom(e);
     } else {

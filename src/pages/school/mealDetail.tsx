@@ -1,4 +1,3 @@
-import { PlusOutlined } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
 import { ProColumns } from '@ant-design/pro-table';
 import { Message } from '@/constant/common';
@@ -12,25 +11,27 @@ import { useParams, history } from 'umi';
 const mealDetail: React.FC = () => {
   const [currentRow, setCurrentRow]: any = useState();
 
-  const params: any = useParams();
+  const params: { id: string | undefined } = useParams();
   useEffect(() => {
     console.log('history', history);
-    getRecipeDetail(params.id).then((res) => {
-      setCurrentRow(res.data);
-    });
+    getDetail(params.id);
   }, [params]);
 
+  const getDetail = async (id: string | undefined) => {
+    getRecipeDetail(id).then((res) => {
+      setCurrentRow(res.data);
+    });
+  };
   const submit = async (param: any, data: []) => {
     param.recipeId = params?.id;
     param.data = formatData(data);
-    //
     try {
       const success = await setRecipeWall(param);
       if (success) {
         message.success({
           content: Message.Edit,
         });
-        // history.
+        getDetail(params.id);
       } else {
         console.log(success);
       }

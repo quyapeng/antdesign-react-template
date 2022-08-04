@@ -265,15 +265,6 @@ export async function handleCalendar(options?: { [key: string]: any }) {
   });
 }
 
-export async function teacherList(options?: { [key: string]: any }) {
-  return request(``, {
-    method: 'GET',
-    params: {
-      ...options,
-    },
-    ...(options || {}),
-  });
-}
 const class_url = 'school/classroom';
 export async function classList(
   params: {
@@ -328,7 +319,7 @@ export async function allRecipe() {
   });
 }
 
-export async function getRecipeDetail(id: string | number) {
+export async function getRecipeDetail(id: string | undefined) {
   return request(`school/recipe/${id}/wall`, {
     method: 'GET',
   });
@@ -339,5 +330,34 @@ export async function setRecipeWall(options?: { [key: string]: any }) {
   return request(`recipe/wall/recipe/${recipeId}/month/${month}/week/${week}`, {
     method: 'PATCH',
     data: options?.data,
+  });
+}
+
+//
+const sus_url = 'school/suspension';
+export async function getSuspenseList(
+  params: {
+    // query
+    page?: number;
+    size?: number;
+  },
+  options?: { [key: string]: any },
+) {
+  return request(sus_url, {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
+export async function handleSuspense(method: string, options?: { [key: string]: any }) {
+  const ID = method == 'POST' ? '' : `/${options?.id}`;
+
+  return request(`${sus_url}${ID}`, {
+    method,
+    data: options,
+    ...(options || {}),
   });
 }

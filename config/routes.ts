@@ -144,6 +144,11 @@
         name: '学生名单',
         component: './school/studentList',
       },
+      {
+        path: '/business/suspension',
+        name: '停课管理',
+        component: './school/suspension',
+      },
     ],
   },
   {

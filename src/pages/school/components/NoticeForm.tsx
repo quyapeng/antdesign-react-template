@@ -1,16 +1,6 @@
 import React, { useEffect, useRef, memo, useState } from 'react';
-import {
-  ModalForm,
-  ProFormDatePicker,
-  ProFormRadio,
-  ProFormSelect,
-  ProFormText,
-  ProFormTextArea,
-} from '@ant-design/pro-form';
+import { ModalForm, ProFormSelect, ProFormText, ProFormTextArea } from '@ant-design/pro-form';
 import type { ProFormInstance } from '@ant-design/pro-form';
-import { SEX } from '@/constant';
-import { Form, Input, Space } from 'antd';
-import dayjs from 'dayjs';
 
 export type UpdateProps = {
   type: string;

@@ -150,6 +150,7 @@ const Student: React.FC = () => {
         <a
           key="enter"
           onClick={() => {
+            if (record.type == 'GRADUATE') return;
             setType('enter');
             setTitle('进班');
             setCurrentRow({
@@ -173,6 +174,7 @@ const Student: React.FC = () => {
         <a
           key="delete"
           onClick={() => {
+            if (record.actived) return;
             deleteStudent(record);
           }}
           style={record.actived ? DIS_STYLE : {}}

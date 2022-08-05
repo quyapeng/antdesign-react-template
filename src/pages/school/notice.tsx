@@ -7,9 +7,9 @@ import { ProFormInstance } from '@ant-design/pro-form';
 import { useRequest } from 'umi';
 import { commonRequestList } from '@/utils/index';
 import { pagination } from '@/constant/index';
-import { Message, NOTICE_TYPE, TEACHER_TYPE } from '@/constant/common';
+import { Message, NOTICE_TYPE, DIS_STYLE } from '@/constant/common';
 
-import { getNoticeList, allSchool, handleNotice } from '@/services/school';
+import { getNoticeList, allSchool, handleNotice, allClassroom } from '@/services/school';
 import NoticeForm from './components/NoticeForm';
 
 const Notice: React.FC = () => {
@@ -27,11 +27,15 @@ const Notice: React.FC = () => {
   const { run: runSchool, data: schoolData } = useRequest(allSchool, {
     manual: true,
   });
+  const { run: runClassroom, data: classroomData } = useRequest(allClassroom, {
+    manual: true,
+  });
 
   //
 
   useEffect(() => {
     runSchool();
+    runClassroom();
   }, []);
 
   const columns: ProColumns[] = [
@@ -51,9 +55,23 @@ const Notice: React.FC = () => {
     },
     {
       title: '通知对象',
-      dataIndex: 'teacherName',
+      dataIndex: 'classroomId',
+      valueType: 'select',
       hideInSearch: false,
-      render: (_, record) => <>{record?.user?.name}</>,
+      fieldProps: {
+        options: classroomData,
+        fieldNames: {
+          label: 'name',
+          value: 'id',
+        },
+      },
+      render: (_, record) => (
+        <>
+          {record?.classrooms?.map((i: any) => {
+            return `${i.name},`;
+          })}
+        </>
+      ),
     },
 
     {
@@ -69,16 +87,16 @@ const Notice: React.FC = () => {
     },
     {
       title: '发布时间',
-      dataIndex: 'classroom',
+      dataIndex: 'createdAt',
       hideInSearch: true,
-      render: (_, record) => <>{record?.classroom?.name}</>,
+      render: (_, record) => <>{record?.createdAt}</>,
     },
     {
       title: '发布状态',
-      hideInSearch: true,
+      hideInSearch: false,
       dataIndex: 'status',
-      // valueType: 'select',
-      // valueEnum: TEACHER_TYPE,
+      valueType: 'select',
+      valueEnum: NOTICE_TYPE,
       render: (_, record) => (
         <Tag color={record.status == 'PUBLISHED' ? 'green' : 'red'}>
           {NOTICE_TYPE[record.status]?.text}
@@ -94,13 +112,17 @@ const Notice: React.FC = () => {
       render: (_, record) => [
         <a
           key="config"
+          style={record.status == 'DRAFT' ? {} : DIS_STYLE}
           onClick={() => {
-            setType('edit');
-            setTitle('编辑通知');
-            setCurrentRow({
-              ...record,
-            });
-            handleModalVisible(true);
+            if (record.status == 'DRAFT') {
+              setType('edit');
+              setTitle('编辑通知');
+              setCurrentRow({
+                ...record,
+                schoolId: record.school.id,
+              });
+              handleModalVisible(true);
+            }
           }}
         >
           编辑
@@ -184,7 +206,6 @@ const Notice: React.FC = () => {
   return (
     <div>
       <ProTable<any, API.PageParams>
-        scroll={{ x: 900 }}
         rowKey="id"
         loading={loading}
         search={{

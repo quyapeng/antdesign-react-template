@@ -45,7 +45,7 @@ export async function sourceList(options?: { [key: string]: any }) {
 }
 
 //
-const operation = '/operation/account';
+const operation = 'operation/account';
 export async function operationList(
   params: {
     // query

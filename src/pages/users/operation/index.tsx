@@ -11,7 +11,7 @@ import { pagination } from '@/constant/index';
 import { Message, STATUS_USER } from '@/constant/common';
 
 import { useRequest } from 'umi';
-import { operationList, handleUser } from '@/services/user';
+import { operationList, handleUser, roleOperationList } from '@/services/user';
 import AddUserForm from '../components/AddUserForm';
 
 const Operation: React.FC = () => {
@@ -22,12 +22,12 @@ const Operation: React.FC = () => {
   const [title, setTitle] = useState('');
   const [type, setType] = useState('new');
 
-  const {
-    run: typeList,
-    loading,
-    refresh,
-  } = useRequest(operationList, {
+  const { run: typeList, loading } = useRequest(operationList, {
     manual: true,
+  });
+
+  const { data: rolesData } = useRequest(roleOperationList, {
+    manual: false,
   });
   const freeze = (detail: any) => {
     try {
@@ -86,7 +86,7 @@ const Operation: React.FC = () => {
     {
       title: '账号',
       dataIndex: 'login',
-      hideInSearch: true,
+      hideInSearch: false,
     },
     {
       title: '姓名',
@@ -96,21 +96,27 @@ const Operation: React.FC = () => {
     {
       title: '手机号',
       dataIndex: 'mobile',
-      hideInSearch: true,
+      hideInSearch: false,
     },
     {
       title: '角色',
-      dataIndex: 'role',
-      hideInSearch: true,
+      dataIndex: 'roleId',
+      hideInSearch: false,
+      valueType: 'select',
+      fieldProps: {
+        fieldNames: {
+          label: 'title',
+          value: 'id',
+        },
+        options: rolesData,
+      },
       render: (_, record) => <>{record?.role?.title}</>,
     },
     {
       title: '状态',
-      hideInSearch: true,
+      hideInSearch: false,
       dataIndex: 'status',
-      valueEnum: {
-        STATUS_USER,
-      },
+      valueEnum: STATUS_USER,
       render: (_, record) => (
         <Tag color={record.status == 'NORMAL' ? 'green' : 'red'}>
           {STATUS_USER[record.status].text}

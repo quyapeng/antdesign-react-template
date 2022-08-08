@@ -140,8 +140,11 @@ const Notice: React.FC = () => {
         </a>,
         <a
           key="delete"
+          style={record.status == 'DRAFT' ? {} : DIS_STYLE}
           onClick={() => {
-            deleteNotice(record, 'DELETE');
+            if (record.status == 'DRAFT') {
+              deleteNotice(record, 'DELETE');
+            }
           }}
         >
           删除
@@ -153,17 +156,16 @@ const Notice: React.FC = () => {
   const deleteNotice = (detail: any, method: string) => {
     const opt = {
       DELETE: '删除',
-      DRAFT: '发布',
-      PUBLISHED: '撤回',
+      DRAFT: '撤回',
+      PUBLISHED: '发布',
     };
     let status = '';
     if (method !== 'DELETE') {
       status = detail.status == 'DRAFT' ? 'PUBLISHED' : 'DRAFT';
     }
-    console.log(opt[method]);
     try {
       Modal.confirm({
-        title: `确定要进行${opt[method]}操作吗`,
+        title: `确定要进行${opt[status]}操作吗`,
         onOk() {
           console.log('ok');
           const { id } = detail;

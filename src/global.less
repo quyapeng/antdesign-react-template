@@ -58,12 +58,22 @@ ol {
 
 .ant-pro-table {
   .ant-pro-table-search {
-    padding:0 !important;
+    padding: 0 !important;
   }
-  .ant-pro-card-body{
-    padding:0;
+  .ant-pro-card-body {
+    padding: 0;
   }
 }
 .ant-pro-page-container-children-content {
   margin: 12px 12px 0;
+}
+.ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner,
+.ant-picker-cell-in-view.ant-picker-cell-range-start .ant-picker-cell-inner,
+.ant-picker-cell-in-view.ant-picker-cell-range-end .ant-picker-cell-inner {
+  &.mycalendar {
+    color: #1890fb;
+  }
+}
+.ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before {
+  border: none;
 }

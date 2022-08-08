@@ -291,7 +291,7 @@ export async function handleClass(options?: { [key: string]: any }) {
   });
 }
 
-export async function getCalendarDetail(id: string | number, month: string) {
+export async function getCalendarDetail(id: string | number, month: string | number) {
   return request(`school/calendar/holiday/schoolcalendar/${id}/month/${month}`, {
     method: 'GET',
   });
@@ -360,4 +360,16 @@ export async function handleSuspense(method: string, options?: { [key: string]: 
     data: options,
     ...(options || {}),
   });
+}
+
+//
+export async function handleHoliday(options: { [key: string]: any }) {
+  return request(
+    `school/calendar/holiday/schoolcalendar/${options.schoolCalendarId}/date/${options.date}`,
+    {
+      method: 'PUT',
+      data: options,
+      ...(options || {}),
+    },
+  );
 }

@@ -87,7 +87,9 @@ const Source: React.FC = () => {
   const onChange = (e: any, type: string, form: any) => {
     console.log(e, type, form);
     setId(e);
-    form.setFieldsValue('activityId', e ? e : undefined);
+    form.setFieldsValue({
+      activityId: e || undefined,
+    });
   };
 
   const onSubmit = (value: any) => {

@@ -1,5 +1,4 @@
-import React, { useEffect, useRef, memo, useState, useContext, Fragment } from 'react';
-import type { ProFormInstance } from '@ant-design/pro-form';
+import React, { useEffect, useRef, memo, useState, useContext } from 'react';
 import { Button, Form, Input, Space, Table } from 'antd';
 
 export type UpdateProps = {

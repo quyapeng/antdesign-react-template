@@ -1,11 +1,5 @@
 import React, { useEffect, useRef, memo, useState } from 'react';
-import {
-  ModalForm,
-  ProFormText,
-  ProFormSelect,
-  ProFormTextArea,
-  // ProFormCascader,
-} from '@ant-design/pro-form';
+import { ModalForm, ProFormText, ProFormSelect, ProFormTextArea } from '@ant-design/pro-form';
 import type { ProFormInstance } from '@ant-design/pro-form';
 
 import { SCHOOL_TYPE, FRANCH_TYPE } from '@/constant/common';
@@ -41,7 +35,6 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
   areaData,
 }: any) => {
   const formRef = useRef<ProFormInstance>();
-  const [options, setOptions] = useState<API.Option[]>(areaData);
   const [sub, subData] = useState<API.Option[]>([]);
   const [subNext, subNextData] = useState<API.Option[]>([]);
   const [areaCode, setAreaCode] = useState<any>(null);
@@ -312,7 +305,8 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
         valueEnum={FRANCH_TYPE}
         width="md"
       />
-      {franchiseType == 'THIRD_PARTY' ? (<ProFormSelect
+      {franchiseType == 'THIRD_PARTY' ? (
+        <ProFormSelect
           label="代理商"
           name="agentId"
           request={async () => agentData}
@@ -330,7 +324,6 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
           }}
           width="md"
         />
-        
       ) : null}
 
       <ProFormText

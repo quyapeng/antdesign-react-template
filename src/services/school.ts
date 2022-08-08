@@ -281,7 +281,6 @@ export async function classList(
     ...(options || {}),
   });
 }
-// schoolId
 
 export async function handleClass(options?: { [key: string]: any }) {
   return request(`school/classsroom/${options?.id}`, {
@@ -296,13 +295,12 @@ export async function getCalendarDetail(id: string | number, month: string | num
     method: 'GET',
   });
 }
-//
+
 export async function allMeals() {
   return request(`recipe/meals`, {
     method: 'GET',
   });
 }
-//
 
 export async function setMeal(options?: { [key: string]: any }) {
   return request(`school/recipe/${options?.id}/meal`, {
@@ -312,7 +310,6 @@ export async function setMeal(options?: { [key: string]: any }) {
   });
 }
 
-//
 export async function allRecipe() {
   return request(`recipe`, {
     method: 'GET',

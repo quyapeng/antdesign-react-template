@@ -1,4 +1,4 @@
-import { Badge, Card, Col, message, Radio, Row, Select } from 'antd';
+import { Card, Col, message, Radio, Row, Select } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { Calendar } from 'antd';
 import type { CalendarMode } from 'antd/es/calendar/generateCalendar';

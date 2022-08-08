@@ -2,14 +2,12 @@ import React, { useEffect, useRef, memo, useState } from 'react';
 import {
   ModalForm,
   ProFormDateRangePicker,
-  ProFormRadio,
   ProFormSelect,
   ProFormText,
 } from '@ant-design/pro-form';
 import type { ProFormInstance } from '@ant-design/pro-form';
-import { STATUS } from '@/constant';
 
-import { allClassroom, getMonitor } from '@/services/school';
+import { allClassroom } from '@/services/school';
 
 export type UpdateProps = {
   type: string;

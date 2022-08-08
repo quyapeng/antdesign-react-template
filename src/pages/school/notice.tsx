@@ -8,7 +8,6 @@ import { useRequest } from 'umi';
 import { commonRequestList } from '@/utils/index';
 import { pagination } from '@/constant/index';
 import { Message, NOTICE_TYPE, DIS_STYLE } from '@/constant/common';
-
 import { getNoticeList, allSchool, handleNotice, allClassroom } from '@/services/school';
 import NoticeForm from './components/NoticeForm';
 

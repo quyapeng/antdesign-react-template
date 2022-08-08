@@ -22,7 +22,7 @@ const Operation: React.FC = () => {
   const [title, setTitle] = useState('');
   const [type, setType] = useState('new');
 
-  const { run: typeList, loading } = useRequest(operationList, {
+  const { run, loading } = useRequest(operationList, {
     manual: true,
   });
 

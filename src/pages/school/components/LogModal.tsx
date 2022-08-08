@@ -1,4 +1,3 @@
-import { ModalForm } from '@ant-design/pro-form';
 import ProTable, { ProColumns } from '@ant-design/pro-table';
 import { Modal } from 'antd';
 import React, { memo } from 'react';

@@ -19,10 +19,10 @@ const Classroom: React.FC = () => {
   const [currentRow, setCurrentRow]: any = useState();
   const [setModalVisible, handleModalVisible] = useState<boolean>(false);
   const [title, setTitle] = useState('新增');
-  const [type, setType] = useState('new');
+  const [, setType] = useState('new');
   const [teacherData, setTeacherData]: any = useState([]);
 
-  const { run, loading } = useRequest(classList, {
+  const { loading } = useRequest(classList, {
     manual: true,
   });
 

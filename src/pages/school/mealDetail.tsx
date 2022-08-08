@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ProColumns } from '@ant-design/pro-table';
 import { Message } from '@/constant/common';
-
 import { getRecipeDetail, setRecipeWall } from '@/services/school';
 import TabPane from '@ant-design/pro-card/lib/components/TabPane';
 import TableMeal from './components/TableMeal';
@@ -10,7 +9,6 @@ import { useParams, history } from 'umi';
 
 const mealDetail: React.FC = () => {
   const [currentRow, setCurrentRow]: any = useState();
-
   const params: { id: string | undefined } = useParams();
   useEffect(() => {
     console.log('history', history);

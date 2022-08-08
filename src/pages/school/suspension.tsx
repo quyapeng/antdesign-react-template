@@ -1,5 +1,5 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, message, Modal, Tag } from 'antd';
+import { Button, message, Modal } from 'antd';
 import React, { useState, useRef, useEffect } from 'react';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
@@ -7,10 +7,8 @@ import { ProFormInstance } from '@ant-design/pro-form';
 import { useRequest } from 'umi';
 import { commonRequestList } from '@/utils/index';
 import { pagination } from '@/constant/index';
-import { Message, NOTICE_TYPE, TEACHER_TYPE } from '@/constant/common';
-
+import { Message } from '@/constant/common';
 import { getSuspenseList, allSchool, handleSuspense, allClassroom } from '@/services/school';
-
 import SuspensionForm from './components/SuspensionForm';
 
 const Suspension: React.FC = () => {
@@ -20,15 +18,14 @@ const Suspension: React.FC = () => {
   const [setModalVisible, handleModalVisible] = useState<boolean>(false);
   const [title, setTitle] = useState('新增');
   const [type, setType] = useState('new');
-
-  const { run, loading } = useRequest(getSuspenseList, {
+  const { loading } = useRequest(getSuspenseList, {
     manual: true,
   });
-
   const { run: runSchool, data: schoolData } = useRequest(allSchool, {
     manual: true,
   });
   const [classData, setClassData] = useState([]);
+
   const getClassroom = async (id: string | number) => {
     allClassroom({ schoolId: id }).then((res) => {
       setClassData(res.data || []);

@@ -12,7 +12,7 @@ const studentList: React.FC = () => {
   const formRef = useRef<any>();
   const actionRef = useRef<any>();
 
-  const { run, loading, data } = useRequest(getStudentList, {
+  const { loading } = useRequest(getStudentList, {
     manual: true,
   });
   const formatData = (data: any, name: any, code: any) => {

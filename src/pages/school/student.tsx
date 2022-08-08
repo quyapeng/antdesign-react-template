@@ -29,7 +29,7 @@ const Student: React.FC = () => {
   const [title, setTitle] = useState('新增');
   const [type, setType] = useState('new');
 
-  const { run, loading } = useRequest(getStudentList, {
+  const { loading } = useRequest(getStudentList, {
     manual: true,
   });
 

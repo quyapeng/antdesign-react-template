@@ -2,7 +2,6 @@ import React, { useEffect, useRef, memo, useState } from 'react';
 import { ModalForm, ProFormRadio, ProFormSelect, ProFormText } from '@ant-design/pro-form';
 import type { ProFormInstance } from '@ant-design/pro-form';
 import { STATUS } from '@/constant';
-
 import { getMonitor } from '@/services/school';
 
 export type UpdateProps = {

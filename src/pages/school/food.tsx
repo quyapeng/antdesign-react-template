@@ -16,7 +16,7 @@ const Food: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const [currentRow, setCurrentRow]: any = useState();
   const [setModalVisible, handleModalVisible] = useState<boolean>(false);
-  const { run, data, loading } = useRequest(getFoodList, {
+  const { loading } = useRequest(getFoodList, {
     manual: true,
   });
 

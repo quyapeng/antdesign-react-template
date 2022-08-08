@@ -1,6 +1,6 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, message, Modal, Select, Tag, TreeSelect } from 'antd';
-import React, { useState, useRef, useEffect, Fragment } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { ProFormInstance } from '@ant-design/pro-form';
@@ -23,7 +23,7 @@ const Source: React.FC = () => {
 
   const [categoryData, setData] = useState({});
   const [activityData, setActivityData] = useState({});
-  const [activitySub, setActivitySub] = useState({});
+  const [, setActivitySub] = useState({});
   const [activityId, setId] = useState();
 
   const { run, data } = useRequest(categoryList, {

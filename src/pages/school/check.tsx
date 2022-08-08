@@ -14,7 +14,7 @@ const Check: React.FC = () => {
   const formRef = useRef<ProFormInstance>();
   const actionRef = useRef<ActionType>();
 
-  const { run, loading, data } = useRequest(getAttendance, {
+  const { loading } = useRequest(getAttendance, {
     manual: true,
   });
 

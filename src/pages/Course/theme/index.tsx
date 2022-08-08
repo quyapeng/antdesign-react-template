@@ -5,7 +5,7 @@ import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import AddModelForm from '../components/AddModelForm';
 
-import { type, addType, updateType } from '@/services/type';
+import { addType, updateType } from '@/services/type';
 import { commonRequestList } from '@/utils/index';
 import { pagination } from '@/constant/index';
 import { Message } from '@/constant/common';

@@ -17,7 +17,7 @@ const Calendar: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const [setModalVisible, handleModalVisible] = useState<boolean>(false);
 
-  const { run, loading } = useRequest(getCalendarList, {
+  const { loading } = useRequest(getCalendarList, {
     manual: true,
   });
 

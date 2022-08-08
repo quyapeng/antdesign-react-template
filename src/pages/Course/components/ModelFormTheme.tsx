@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, memo } from 'react';
-import ProForm, { ModalForm, ProFormText, ProFormRadio, ProFormSelect } from '@ant-design/pro-form';
+import ProForm, { ModalForm, ProFormText, ProFormSelect } from '@ant-design/pro-form';
 import type { ProFormInstance } from '@ant-design/pro-form';
 
 export type UpdateFormProps = {

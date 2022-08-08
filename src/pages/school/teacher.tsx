@@ -22,7 +22,7 @@ const Teacher: React.FC = () => {
   const [type, setType] = useState('new');
   const [pwdVisible, pwdModalVisible] = useState<boolean>(false);
 
-  const { run, loading } = useRequest(getTeacherList, {
+  const { loading } = useRequest(getTeacherList, {
     manual: true,
   });
 

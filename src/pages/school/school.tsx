@@ -26,7 +26,7 @@ const School: React.FC = () => {
   const [detailVisible, handleDetailVisible] = useState<boolean>(false);
   const [pwdVisible, handlePWDVisible] = useState<boolean>(false);
 
-  const { run, loading } = useRequest(getList, {
+  const { loading } = useRequest(getList, {
     manual: true,
   });
   const { run: runAgent, data: agentData } = useRequest(getAgent, {

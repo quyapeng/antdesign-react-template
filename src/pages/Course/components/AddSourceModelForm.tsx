@@ -10,7 +10,7 @@ import {
   ProFormDateRangePicker,
 } from '@ant-design/pro-form';
 import type { ProFormInstance } from '@ant-design/pro-form';
-import { TreeSelect, UploadFile, UploadProps } from 'antd';
+import { TreeSelect } from 'antd';
 import moment from 'moment';
 
 import { STATUS } from '@/constant/index';

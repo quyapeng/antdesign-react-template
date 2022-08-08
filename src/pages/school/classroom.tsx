@@ -22,7 +22,7 @@ const Classroom: React.FC = () => {
   const [title, setTitle] = useState('新增');
   const [type, setType] = useState('new');
 
-  const { run, loading } = useRequest(classroomList, {
+  const { loading } = useRequest(classroomList, {
     manual: true,
   });
 

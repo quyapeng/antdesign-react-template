@@ -8,6 +8,7 @@ import { Button, Form, Input, Select, Space, Upload } from 'antd';
 import { UPLOAD } from '@/constant/common';
 import UploadService from '@/services/upload';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { CityFlags } from '@/constant/flag';
 
 export type UpdateFormProps = {
   title: string;
@@ -77,7 +78,6 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
   useEffect(() => {
     if (visible) {
       if (values.id) {
-        // setOptions(areaData);
         formRef?.current?.setFieldsValue(values);
         let list: any = [];
         if (!!values.contractPapers && values.contractPapers.indexOf(',') > -1) {
@@ -97,31 +97,13 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
             areaId: values?.areaId,
           });
           if (values?.area?.parent?.parent?.id) {
-            // console.log('333', values);
-            // onChange(values.area.parent.parent.id, 'province');
-            // onChange(values.area.parent.id, 'city');
-            // onChange(values.areaId, 'area');
             onChangeList(values.area.parent.parent.id, values.area.parent.id, values.area.id);
-            // [
-            //   { name: 'province', value: values.area.parent.parent.id },
-            //   {
-            //     name: 'city',
-            //     value: values.area.parent.id,
-            //   },
-            //   {
-            //     name: 'area',
-            //     value: values.area.id,
-            //   },
-            // ]
           } else {
             onChangeList(values?.area?.parent?.id, values?.area?.id);
-            // onChange(values?.area?.parent?.id, 'province');
-            // onChange(values.areaId, 'city');
           }
         }
 
         values.areaId ? setAreaCode(values.areaId) : null;
-        console.log('setAreaCode', values.areaId);
       } else {
         formRef?.current?.resetFields();
         setCityCode(null);
@@ -136,7 +118,7 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
   const onChange = async (value: any, code: string) => {
     if (value) {
       switch (code) {
-        case 'province':
+        case CityFlags.PROVINCE:
           setProv(value);
           getAreaList(value, (res: any) => {
             subData(res);
@@ -145,14 +127,14 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
             setAreaCode(null);
           });
           break;
-        case 'city':
+        case CityFlags.CITY:
           setCityCode(value);
           getAreaList(value, (res: any) => {
             subNextData(res);
             setAreaCode(null);
           });
           break;
-        case 'area':
+        case CityFlags.AREA:
           setAreaCode(value);
           break;
         default:
@@ -295,7 +277,7 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
           placeholder="请选择省份"
           value={provinceCode}
           defaultValue={provinceCode}
-          onChange={(e) => onChange(e, 'province')}
+          onChange={(e) => onChange(e, CityFlags.PROVINCE)}
           style={Object.assign(style, { marginRight: '15px' })}
         >
           {areaData?.map((i: any) => {
@@ -310,7 +292,7 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
           placeholder="请选择市"
           value={cityCode}
           defaultValue={cityCode}
-          onChange={(e) => onChange(e, 'city')}
+          onChange={(e) => onChange(e, CityFlags.CITY)}
           style={Object.assign(style, { marginRight: '15px' })}
         >
           {sub?.map((i: any) => {
@@ -326,7 +308,7 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
             placeholder="请选择区"
             value={areaCode}
             defaultValue={areaCode}
-            onChange={(e) => onChange(e, 'area')}
+            onChange={(e) => onChange(e, CityFlags.AREA)}
             style={style}
           >
             {subNext?.map((i: any) => {

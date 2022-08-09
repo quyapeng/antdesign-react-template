@@ -1,10 +1,10 @@
 import React, { memo, useState, useEffect } from 'react';
 import { Pagination } from 'antd';
-import { Pages } from '@/services';
 import styles from './index.less';
+import classnames from 'classnames';
 
 interface iProp {
-  page: Pick<Pages, 'pageNum' | 'totalRows'>;
+  page: Pick<any, 'pageNum' | 'totalRows'>;
   run: (...params: any[]) => void;
   params: any[];
   className?: string;

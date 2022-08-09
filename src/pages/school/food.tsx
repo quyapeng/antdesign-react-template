@@ -72,7 +72,7 @@ const Food: React.FC = () => {
     {
       title: '食谱模版',
       dataIndex: 'recipe',
-      hideInSearch: false,
+      hideInSearch: true,
       render: (_, record) => <>{record?.recipe?.name}</>,
     },
     {

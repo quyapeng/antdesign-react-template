@@ -16,7 +16,7 @@ import {
   DIS_STYLE,
 } from '@/constant/common';
 import { productAll } from '@/services/product';
-import { getStudentList, allSchool, handleStudent } from '@/services/school';
+import { getStudentList, allSchool, handleStudent, allClassroom } from '@/services/school';
 import StudentForm from './components/StudentForm';
 import EnterClassroom from './components/EnterClassroom';
 
@@ -39,12 +39,15 @@ const Student: React.FC = () => {
   const { run: runProduct, data: productData } = useRequest(productAll, {
     manual: true,
   });
-
   //
+  const { run: runClassroom, data: classroomData } = useRequest(allClassroom, {
+    manual: true,
+  });
 
   useEffect(() => {
     runSchool();
     runProduct();
+    runClassroom();
   }, []);
 
   const columns: ProColumns[] = [
@@ -68,11 +71,10 @@ const Student: React.FC = () => {
       hideInSearch: false,
       render: (_, record) => <>{record?.user?.name}</>,
     },
-
     {
       title: '家长手机号',
-      dataIndex: 'parents',
-      hideInSearch: true,
+      dataIndex: 'mobile',
+      hideInSearch: false,
       render: (_, record) => [
         record?.user?.parents?.map((i: any) => {
           return i.mobile;
@@ -82,7 +84,15 @@ const Student: React.FC = () => {
     {
       title: '所在班级',
       dataIndex: 'classroomId',
-      hideInSearch: true,
+      hideInSearch: false,
+      valueType: 'select',
+      fieldProps: {
+        fieldNames: {
+          label: 'name',
+          value: 'id',
+        },
+        options: classroomData,
+      },
       render: (_, record) => <>{record?.classroom?.name}</>,
     },
     {
@@ -94,13 +104,17 @@ const Student: React.FC = () => {
     {
       title: '学生类型',
       dataIndex: 'type',
-      hideInSearch: true,
+      hideInSearch: false,
+      valueType: 'select',
+      valueEnum: STUDENT_TYPE,
       render: (_, record) => <>{STUDENT_TYPE[record?.type].text}</>,
     },
     {
       title: '就读状态',
       dataIndex: 'status',
-      hideInSearch: true,
+      hideInSearch: false,
+      valueType: 'select',
+      valueEnum: STUDENT_STATUS,
       render: (_, record) => <>{STUDENT_STATUS[record?.status].text}</>,
     },
     {
@@ -114,6 +128,13 @@ const Student: React.FC = () => {
           {ACTIVED_STATUS[record.actived ? 1 : 0]?.text}
         </Tag>
       ),
+    },
+    {
+      title: '计费月份',
+      hideInSearch: false,
+      dataIndex: 'date',
+      valueType: 'dateMonth',
+      hideInTable: true,
     },
     {
       title: '操作',

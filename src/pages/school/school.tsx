@@ -1,5 +1,5 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, message, Modal, Tag } from 'antd';
+import { Button, message, Modal, Tag, Typography } from 'antd';
 import React, { useState, useRef, Fragment, useEffect } from 'react';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
@@ -14,6 +14,7 @@ import { areaList, salesList } from '@/services/common';
 import AddSchoolForm from './components/AddSchoolForm';
 import SchoolDetail from './components/SchoolDetail';
 import ChangePWD from './components/ChangePWD';
+const { Paragraph } = Typography;
 
 const School: React.FC = () => {
   const formRef = useRef<ProFormInstance>();
@@ -245,7 +246,12 @@ const School: React.FC = () => {
       title: '园所管理员账号',
       dataIndex: 'lastLoginTime',
       hideInSearch: true,
-      render: (_, record) => <>{record?.administrator?.login}</>,
+      width: '200px',
+      render: (_, record) => (
+        <Paragraph copyable={{ text: record?.administrator?.login }}>
+          {record?.administrator?.login}
+        </Paragraph>
+      ),
     },
     {
       title: '操作',
@@ -332,7 +338,7 @@ const School: React.FC = () => {
   return (
     <div>
       <ProTable<any, API.PageParams>
-        scroll={{ x: 1600 }}
+        scroll={{ x: 1800 }}
         rowKey="id"
         loading={loading}
         search={{

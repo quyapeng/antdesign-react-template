@@ -38,6 +38,10 @@ const Classroom: React.FC = () => {
     manual: true,
   });
 
+  // const { run: runClassroom, data: classroomData } = useRequest(allClassroom, {
+  //   manual: true,
+  // });
+
   //
   useEffect(() => {
     console.log('data', data);
@@ -52,6 +56,7 @@ const Classroom: React.FC = () => {
     runSchool();
     runCategory();
     runTeacherTemplate();
+    // runClassroom();
   }, []);
 
   const columns: ProColumns[] = [
@@ -73,6 +78,14 @@ const Classroom: React.FC = () => {
       title: '教室名称',
       dataIndex: 'name',
       hideInSearch: false,
+      // valueType: 'select',
+      // fieldProps: {
+      //   fieldNames: {
+      //     label: 'name',
+      //     value: 'id',
+      //   },
+      //   options: classroomData,
+      // },
     },
     {
       title: '课程分类',

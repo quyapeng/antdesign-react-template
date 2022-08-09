@@ -24,6 +24,9 @@ const Suspension: React.FC = () => {
   const { run: runSchool, data: schoolData } = useRequest(allSchool, {
     manual: true,
   });
+  const { run: runClassroom, data: classroomData } = useRequest(allClassroom, {
+    manual: true,
+  });
   const [classData, setClassData] = useState([]);
 
   const getClassroom = async (id: string | number) => {
@@ -34,6 +37,7 @@ const Suspension: React.FC = () => {
 
   useEffect(() => {
     runSchool();
+    runClassroom();
   }, []);
 
   const columns: ProColumns[] = [
@@ -60,14 +64,14 @@ const Suspension: React.FC = () => {
     },
     {
       title: '停课对象',
-      dataIndex: 'classrooms',
+      dataIndex: 'classroomId',
       valueType: 'select',
       fieldProps: {
         fieldNames: {
           label: 'name',
           value: 'id',
         },
-        options: classData,
+        options: classroomData,
       },
       hideInSearch: false,
       render: (_, record) => (
@@ -78,7 +82,6 @@ const Suspension: React.FC = () => {
         </>
       ),
     },
-
     {
       title: '停课原因',
       dataIndex: 'reason',
@@ -99,7 +102,7 @@ const Suspension: React.FC = () => {
       dataIndex: 'option',
       valueType: 'option',
       fixed: 'right',
-      width: 160,
+      width: 80,
       render: (_, record) => [
         <a
           key="delete"
@@ -158,7 +161,6 @@ const Suspension: React.FC = () => {
   return (
     <div>
       <ProTable<any, API.PageParams>
-        scroll={{ x: 900 }}
         rowKey="id"
         loading={loading}
         search={{

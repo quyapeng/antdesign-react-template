@@ -75,44 +75,126 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
   };
 
   useEffect(() => {
-    if (values.id) {
-      // setOptions(areaData);
-      formRef?.current?.setFieldsValue(values);
-      let list: any = [];
-      console.log(values.contractPapers, '222222');
-      if (!!values.contractPapers && values.contractPapers.indexOf(',') > -1) {
-        values.contractPapers?.split(',').map((i: any) => {
-          list.push({ url: i });
-        });
-      } else if (values.contractPapers == '') {
-        list = [];
-      } else {
-        list.push({ url: values.contractPapers });
-      }
-      setFileList(list);
-      formRef?.current?.setFieldsValue({ contractPapers: list });
-      setFType(values.franchiseType);
-      if (values.areaId) {
-        formRef?.current?.setFieldsValue({
-          areaId: values?.areaId,
-        });
-        setTimeout(() => {
+    if (visible) {
+      if (values.id) {
+        // setOptions(areaData);
+        formRef?.current?.setFieldsValue(values);
+        let list: any = [];
+        if (!!values.contractPapers && values.contractPapers.indexOf(',') > -1) {
+          values.contractPapers?.split(',').map((i: any) => {
+            list.push({ url: i });
+          });
+        } else if (values.contractPapers == '') {
+          list = [];
+        } else {
+          list.push({ url: values.contractPapers });
+        }
+        setFileList(list);
+        formRef?.current?.setFieldsValue({ contractPapers: list });
+        setFType(values.franchiseType);
+        if (values.areaId) {
+          formRef?.current?.setFieldsValue({
+            areaId: values?.areaId,
+          });
           if (values?.area?.parent?.parent?.id) {
-            // 3
-            onChange(values.area.parent.parent.id, 'province');
-            onChange(values.area.parent.id, 'city');
-            onChange(values.areaId, 'area');
+            // console.log('333', values);
+            // onChange(values.area.parent.parent.id, 'province');
+            // onChange(values.area.parent.id, 'city');
+            // onChange(values.areaId, 'area');
+            onChangeList(values.area.parent.parent.id, values.area.parent.id, values.area.id);
+            // [
+            //   { name: 'province', value: values.area.parent.parent.id },
+            //   {
+            //     name: 'city',
+            //     value: values.area.parent.id,
+            //   },
+            //   {
+            //     name: 'area',
+            //     value: values.area.id,
+            //   },
+            // ]
           } else {
-            onChange(values?.area?.parent?.id, 'province');
-            onChange(values.areaId, 'city');
+            onChangeList(values?.area?.parent?.id, values?.area?.id);
+            // onChange(values?.area?.parent?.id, 'province');
+            // onChange(values.areaId, 'city');
           }
-        }, 0);
+        }
+
+        values.areaId ? setAreaCode(values.areaId) : null;
+        console.log('setAreaCode', values.areaId);
+      } else {
+        formRef?.current?.resetFields();
+        setCityCode(null);
+        setAreaCode(null);
+        setProv(null);
+        subNextData([]);
+        subData([]);
       }
-    } else {
-      formRef?.current?.resetFields();
     }
   }, [visible]);
 
+  const onChange = async (value: any, code: string) => {
+    if (value) {
+      switch (code) {
+        case 'province':
+          setProv(value);
+          getAreaList(value, (res: any) => {
+            subData(res);
+            subNextData([]);
+            setCityCode(null);
+            setAreaCode(null);
+          });
+          break;
+        case 'city':
+          setCityCode(value);
+          getAreaList(value, (res: any) => {
+            subNextData(res);
+            setAreaCode(null);
+          });
+          break;
+        case 'area':
+          setAreaCode(value);
+          break;
+        default:
+          break;
+      }
+    } else {
+      console.log(value, code);
+    }
+  };
+  const onChangeList = async (
+    province: string | number,
+    city: string | number,
+    area?: string | number,
+  ) => {
+    console.log('data', province, city, area);
+    setProv(province);
+    getAreaList(province, (res: any) => {
+      console.log(res);
+      subData(res);
+      setCityCode(city);
+      getAreaList(city, (res: any) => {
+        subNextData(res);
+        setAreaCode(area);
+      });
+    });
+  };
+
+  // 地区
+  const getAreaList = async (id: string | number, callback: any) => {
+    console.log(id);
+    if (id) {
+      areaList(id).then((res) => {
+        callback && callback(res);
+      });
+    } else {
+      //
+    }
+  };
+
+  const changeType = (value: any) => {
+    setFType(value);
+  };
   const beforeUpload = async (e: any) => {
     const { name } = e;
     const {
@@ -130,38 +212,6 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
     };
     setFile(params);
     return e;
-  };
-
-  const onChange = (value: any, code: string) => {
-    getAreaList(value, code);
-  };
-
-  // 地区
-  const getAreaList = (id: string | number, type?: string) => {
-    areaList(id).then((res) => {
-      if (type == 'province') {
-        // 一级
-        setProv(id);
-        subData(res);
-        subNextData([]);
-        setCityCode(null);
-        setAreaCode(null);
-        formRef?.current?.setFieldsValue({ areaId: null });
-      } else if (type == 'city') {
-        setCityCode(id);
-        subNextData(res);
-        setAreaCode(null);
-        formRef?.current?.setFieldsValue({ areaId: res && res.length == 0 ? id : null });
-      } else if (type == 'area') {
-        setAreaCode(id);
-        console.log('area', id);
-        formRef?.current?.setFieldsValue({ areaId: id });
-      }
-    });
-  };
-
-  const changeType = (value: any) => {
-    setFType(value);
   };
 
   return (
@@ -183,7 +233,7 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
         value.areaId = areaCode || cityCode;
         console.log('value', value, areaCode, cityCode);
 
-        onSubmit(value);
+        // onSubmit(value);
       }}
       modalProps={{
         onCancel: () => onCancel(),
@@ -244,6 +294,7 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
         <Select
           placeholder="请选择省份"
           value={provinceCode}
+          defaultValue={provinceCode}
           onChange={(e) => onChange(e, 'province')}
           style={Object.assign(style, { marginRight: '15px' })}
         >
@@ -258,6 +309,7 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
         <Select
           placeholder="请选择市"
           value={cityCode}
+          defaultValue={cityCode}
           onChange={(e) => onChange(e, 'city')}
           style={Object.assign(style, { marginRight: '15px' })}
         >
@@ -273,6 +325,7 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
           <Select
             placeholder="请选择区"
             value={areaCode}
+            defaultValue={areaCode}
             onChange={(e) => onChange(e, 'area')}
             style={style}
           >

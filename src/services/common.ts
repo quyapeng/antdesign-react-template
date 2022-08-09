@@ -12,7 +12,7 @@ export async function uploadConfig() {
   });
 }
 
-export async function areaList(parentId?: string | number) {
+export async function areaList(parentId?: string | number | undefined) {
   return request(area, {
     method: 'GET',
     params: { parentId },

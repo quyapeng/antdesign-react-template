@@ -215,7 +215,7 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
         value.areaId = areaCode || cityCode;
         console.log('value', value, areaCode, cityCode);
 
-        // onSubmit(value);
+        onSubmit(value);
       }}
       modalProps={{
         onCancel: () => onCancel(),

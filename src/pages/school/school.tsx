@@ -7,13 +7,14 @@ import { ProFormInstance } from '@ant-design/pro-form';
 import { useRequest } from 'umi';
 import { commonRequestList } from '@/utils/index';
 import { pagination } from '@/constant/index';
-import { Message, STATUS_SCHOOL, SCHOOL_TYPE, FRANCH_TYPE } from '@/constant/common';
+import { Message, STATUS_SCHOOL, SCHOOL_TYPE, FRANCH_TYPE, DIS_STYLE } from '@/constant/common';
 import { getList, handleSchool, changePWD } from '@/services/school';
 import { getAgent } from '@/services/agent';
 import { areaList, salesList } from '@/services/common';
 import AddSchoolForm from './components/AddSchoolForm';
 import SchoolDetail from './components/SchoolDetail';
 import ChangePWD from './components/ChangePWD';
+import City from './components/City';
 const { Paragraph } = Typography;
 
 const School: React.FC = () => {
@@ -33,11 +34,8 @@ const School: React.FC = () => {
   const { run: runAgent, data: agentData } = useRequest(getAgent, {
     manual: true,
   });
-  // const { run: runArea, data }: any = useRequest(areaList, {
-  //   manual: true,
-  // });
+
   const getAreaList = (id?: string | number) => {
-    //
     areaList(id).then((res) => {
       setAreaData(res);
     });
@@ -48,7 +46,6 @@ const School: React.FC = () => {
   });
   useEffect(() => {
     runAgent({ status: 'ENABLED' });
-    // runArea();
     getAreaList();
     runSales();
   }, []);
@@ -137,16 +134,15 @@ const School: React.FC = () => {
   };
 
   const handlePWD = (values: any) => {
-    console.log(values);
     const { id, pwd }: any = values;
     try {
       changePWD({
         id,
         pwd,
-      }).then((res: any) => {
-        const { status } = res;
+      }).then(({ status }: any) => {
         if (status == 200) {
           message.success(Message.Options);
+          handlePWDVisible(false);
           if (actionRef.current) {
             actionRef.current.reload();
           }
@@ -160,7 +156,7 @@ const School: React.FC = () => {
     {
       title: '园所编号',
       dataIndex: 'code',
-      hideInSearch: true,
+      hideInSearch: false,
     },
     {
       title: '园所名称',
@@ -177,15 +173,27 @@ const School: React.FC = () => {
     },
     {
       title: '所在省市区',
-      dataIndex: 'area',
+      key: 'areaId',
+      dataIndex: 'areaId',
       hideInSearch: false,
-      // areaData
       render: (_, record) => (
         <>
           {record?.area?.parent?.parent?.name ? `${record?.area?.parent?.parent?.name}-` : ''}
           {`${record?.area?.parent?.name}-${record?.area?.name}`}
         </>
       ),
+      renderFormItem: (_: any, { type, defaultRender, ...rest }: any, form: any) => {
+        return (
+          <City
+            {...rest}
+            state={{ type }}
+            provinceData={areaData}
+            onChangeSub={(e: any) => {
+              form.setFieldsValue({ areaId: e });
+            }}
+          />
+        );
+      },
     },
     {
       title: '业务员',
@@ -211,7 +219,7 @@ const School: React.FC = () => {
     },
     {
       title: '代理商',
-      dataIndex: 'agent',
+      dataIndex: 'agentId',
       hideInSearch: false,
       valueType: 'select',
       request: async () => agentData,
@@ -231,11 +239,9 @@ const School: React.FC = () => {
     },
     {
       title: '状态',
-      hideInSearch: true,
+      hideInSearch: false,
       dataIndex: 'status',
-      valueEnum: {
-        STATUS_SCHOOL,
-      },
+      valueEnum: STATUS_SCHOOL,
       render: (_, record) => (
         <Tag color={record.status == 'NORMAL' ? 'green' : 'red'}>
           {STATUS_SCHOOL[record.status].text}
@@ -244,7 +250,7 @@ const School: React.FC = () => {
     },
     {
       title: '园所管理员账号',
-      dataIndex: 'lastLoginTime',
+      dataIndex: 'administrator',
       hideInSearch: true,
       width: '200px',
       render: (_, record) => (
@@ -279,7 +285,9 @@ const School: React.FC = () => {
         </a>,
         <a
           key="check"
+          style={record.status == 'NORMAL' ? DIS_STYLE : {}}
           onClick={() => {
+            if (record.status == 'NORMAL') return;
             setType('check');
             setTitle('审批');
             setCurrentRow({
@@ -297,7 +305,6 @@ const School: React.FC = () => {
         <a
           key="details"
           onClick={() => {
-            //
             setType('details');
             setTitle('详情');
             setCurrentRow({
@@ -314,7 +321,9 @@ const School: React.FC = () => {
         </a>,
         <a
           key="delete"
+          style={record.status == 'NORMAL' ? DIS_STYLE : {}}
           onClick={() => {
+            if (record.status == 'NORMAL') return;
             deleteSchool(record);
           }}
         >
@@ -323,7 +332,6 @@ const School: React.FC = () => {
         <a
           key="password"
           onClick={() => {
-            //
             setTitle('修改密码');
             setCurrentRow(record);
             handlePWDVisible(true);
@@ -342,7 +350,7 @@ const School: React.FC = () => {
         rowKey="id"
         loading={loading}
         search={{
-          labelWidth: 120,
+          labelWidth: 80,
         }}
         request={(params) => commonRequestList(getList, params)}
         columns={columns}
@@ -378,7 +386,11 @@ const School: React.FC = () => {
         onSubmit={async (value) => {
           console.log('onSubmit', currentRow, value);
           const method = type == 'new' ? 'POST' : 'PATCH';
-          submitSchool(value, method);
+          let url = Array.isArray(value.contractPapers)
+            ? value.contractPapers.map((i: any) => i.url).join(',')
+            : value.contractPapers;
+          value.contractPapers = url;
+          submitSchool(Object.assign(value, { contractPapers: url }), method);
         }}
         onCancel={() => {
           handleModalVisible(false);
@@ -393,8 +405,7 @@ const School: React.FC = () => {
         values={currentRow || {}}
         visible={detailVisible}
         onSubmit={async (id: any) => {
-          console.log('onSubmit', id);
-          // type == check
+          // console.log('onSubmit', id);
           if (type == 'check') {
             handleCheck(id);
           } else {
@@ -414,7 +425,7 @@ const School: React.FC = () => {
         values={currentRow || {}}
         visible={pwdVisible}
         onSubmit={async (values: any) => {
-          console.log('onSubmit', values);
+          // console.log('onSubmit', values);
           handlePWD(values);
         }}
         onCancel={() => {

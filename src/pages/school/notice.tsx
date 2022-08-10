@@ -158,7 +158,7 @@ const Notice: React.FC = () => {
       DRAFT: '撤回',
       PUBLISHED: '发布',
     };
-    let status = '';
+    let status = 'DELETE';
     if (method !== 'DELETE') {
       status = detail.status == 'DRAFT' ? 'PUBLISHED' : 'DRAFT';
     }

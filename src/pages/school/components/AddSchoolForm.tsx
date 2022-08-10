@@ -23,6 +23,11 @@ export type UpdateFormProps = {
 };
 
 export type FormValueType = {};
+export type StringOrNumber = string | number | undefined;
+//  {
+//   [key: string]: string | number;
+
+// }
 
 const AddSchoolForm: React.FC<UpdateFormProps> = ({
   title,
@@ -38,9 +43,9 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
   const formRef = useRef<ProFormInstance>();
   const [sub, subData] = useState<API.Option[]>([]);
   const [subNext, subNextData] = useState<API.Option[]>([]);
-  const [areaCode, setAreaCode] = useState<any>(null);
-  const [cityCode, setCityCode] = useState<any>(null);
-  const [provinceCode, setProv] = useState<any>(null);
+  const [areaCode, setAreaCode] = useState<StringOrNumber>(undefined);
+  const [cityCode, setCityCode] = useState<StringOrNumber>(undefined);
+  const [provinceCode, setProv] = useState<StringOrNumber>(undefined);
 
   const [franchiseType, setFType] = useState<string>('');
   // file
@@ -79,6 +84,7 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
     if (visible) {
       if (values.id) {
         formRef?.current?.setFieldsValue(values);
+
         let list: any = [];
         if (!!values.contractPapers && values.contractPapers.indexOf(',') > -1) {
           values.contractPapers?.split(',').map((i: any) => {
@@ -106,9 +112,10 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
         values.areaId ? setAreaCode(values.areaId) : null;
       } else {
         formRef?.current?.resetFields();
-        setCityCode(null);
-        setAreaCode(null);
-        setProv(null);
+        setFileList([]);
+        setCityCode(undefined);
+        setAreaCode(undefined);
+        setProv(undefined);
         subNextData([]);
         subData([]);
       }
@@ -123,15 +130,15 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
           getAreaList(value, (res: any) => {
             subData(res);
             subNextData([]);
-            setCityCode(null);
-            setAreaCode(null);
+            setCityCode(undefined);
+            setAreaCode(undefined);
           });
           break;
         case CityFlags.CITY:
           setCityCode(value);
           getAreaList(value, (res: any) => {
             subNextData(res);
-            setAreaCode(null);
+            setAreaCode(undefined);
           });
           break;
         case CityFlags.AREA:
@@ -145,9 +152,9 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
     }
   };
   const onChangeList = async (
-    province: string | number,
-    city: string | number,
-    area?: string | number,
+    province: StringOrNumber,
+    city: StringOrNumber,
+    area?: StringOrNumber,
   ) => {
     console.log('data', province, city, area);
     setProv(province);
@@ -163,7 +170,7 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
   };
 
   // 地区
-  const getAreaList = async (id: string | number, callback: any) => {
+  const getAreaList = async (id: StringOrNumber, callback: any) => {
     console.log(id);
     if (id) {
       areaList(id).then((res) => {
@@ -213,8 +220,6 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
           value.id = values.id;
         }
         value.areaId = areaCode || cityCode;
-        console.log('value', value, areaCode, cityCode);
-
         onSubmit(value);
       }}
       modalProps={{
@@ -340,6 +345,7 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
         valueEnum={FRANCH_TYPE}
         width="md"
       />
+
       {franchiseType == 'THIRD_PARTY' ? (
         <ProFormSelect
           label="代理商"

@@ -19,6 +19,9 @@ const errorHandler = (error: any) => {
     content: `请求错误 ${status}: ${text || errortext}`,
   });
 };
+
+const { REACT_APP_ENV } = process.env;
+console.log('REACT_APP_ENV', REACT_APP_ENV, process.env);
 const request = extend({
   errorHandler, // 默认错误处理
   prefix: 'https://dev-api.qlion.com/struggle/',

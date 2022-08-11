@@ -10,14 +10,12 @@ export type UpdateFormProps = {
   title: string;
   type: string;
   visible: boolean;
-  onCancel: (flag?: boolean, formVals?: FormValueType) => void;
+  onCancel: (flag?: boolean) => void;
   onSubmit: (values: any) => Promise<void>;
   values: Partial<any>;
   salesData: [];
   agentData: [];
 };
-
-export type FormValueType = {};
 
 const SchoolDetail: React.FC<UpdateFormProps> = ({
   title,
@@ -30,10 +28,7 @@ const SchoolDetail: React.FC<UpdateFormProps> = ({
   agentData,
 }: any) => {
   const formRef = useRef<ProFormInstance>();
-  const [provinceCode, setProv] = useState<any>(null);
   const [franchiseType, setFType] = useState<string>('');
-  // file
-  const [fileData, setFile] = useState({});
   const [defaultFileList, setFileList]: any = useState([]);
   const style = {
     width: '100px',
@@ -196,7 +191,6 @@ const SchoolDetail: React.FC<UpdateFormProps> = ({
           accept=".pdf,.jpg,.png"
           defaultFileList={defaultFileList}
           fileList={defaultFileList}
-          data={fileData}
           onChange={handleChange}
           disabled
         ></Upload>

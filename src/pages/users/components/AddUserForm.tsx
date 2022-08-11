@@ -11,8 +11,8 @@ export type UpdateFormProps = {
   title: string;
   type: string;
   visible: boolean;
-  onCancel: (flag?: boolean, formVals?: FormValueType) => void;
-  onSubmit: (values: any) => Promise<void>;
+  onCancel: (flag?: boolean) => void;
+  onSubmit: (values: FormValueType) => Promise<void>;
   values: Partial<API.UserItem>;
 };
 

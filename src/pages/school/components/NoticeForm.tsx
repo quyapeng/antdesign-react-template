@@ -6,13 +6,11 @@ export type UpdateProps = {
   type: string;
   title: string;
   visible: boolean;
-  onCancel: (flag?: boolean, formVals?: FormValueType) => void;
+  onCancel: (flag?: boolean) => void;
   onSubmit: (values: any) => Promise<void>;
   values: Partial<any>;
   schoolData: [];
 };
-
-export type FormValueType = {};
 
 const NoticeForm: React.FC<UpdateProps> = ({
   type,

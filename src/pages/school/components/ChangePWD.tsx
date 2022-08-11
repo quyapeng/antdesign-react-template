@@ -5,12 +5,10 @@ import type { ProFormInstance } from '@ant-design/pro-form';
 export type UpdateProps = {
   title: string;
   visible: boolean;
-  onCancel: (flag?: boolean, formVals?: FormValueType) => void;
+  onCancel: (flag?: boolean) => void;
   onSubmit: (values: any) => Promise<void>;
   values: Partial<any>;
 };
-
-export type FormValueType = {};
 
 const ChangePWD: React.FC<UpdateProps> = ({ title, visible, onCancel, onSubmit, values }: any) => {
   const formRef = useRef<ProFormInstance>();

@@ -9,12 +9,17 @@ export type CityFormProps = {
   onChangeSub: any;
 };
 
-export type FormValueType = {};
+export type DataValueType = {
+  id: number;
+  name: string;
+};
+
+export type Code = string | number | undefined;
 
 const City: React.FC<CityFormProps> = ({ provinceData, onChangeSub }: any) => {
-  const [province, setCode] = useState<any>();
-  const [city, setCity] = useState<any>();
-  const [area, setArea] = useState<any>();
+  const [province, setCode] = useState<Code>(undefined);
+  const [city, setCity] = useState<Code>(undefined);
+  const [area, setArea] = useState<Code>(undefined);
 
   // const [provinceData, setProvData] = useState<[]>([]);
   const [cityData, setCityData] = useState<[]>([]);
@@ -24,20 +29,24 @@ const City: React.FC<CityFormProps> = ({ provinceData, onChangeSub }: any) => {
     width: '90px',
     display: 'inline-block',
   };
-  const getList = (id: string | number, type: string) => {
+  const getList = (id: Code, type: string) => {
     areaList(id).then((res) => {
       switch (type) {
         case 'province':
+          setCode(id);
           setCity(undefined);
           setArea(undefined);
           setCityData(res);
           setAreaData([]);
+          console.log('city', city);
           break;
         case 'city':
           setArea(undefined);
+          setCity(id);
           setAreaData(res);
           break;
         case 'area':
+          setArea(id);
           break;
         default:
           break;
@@ -45,26 +54,23 @@ const City: React.FC<CityFormProps> = ({ provinceData, onChangeSub }: any) => {
     });
   };
 
-  const onChange = (e: string | number, type: string) => {
+  const onChange = (e: Code, type: string) => {
     if (e) {
       getList(e, type);
       onChangeSub(e);
     }
-    // if (type == 'province') {
-    //   setCity(undefined);
-    //   setArea(undefined);
-    // }
   };
 
   return (
     <>
       <Select
         placeholder="请选择省份"
+        defaultValue={province}
         value={province}
         onChange={(e) => onChange(e, 'province')}
         style={Object.assign(style, { marginRight: '8px' })}
       >
-        {provinceData?.map((i: any) => {
+        {provinceData?.map((i: DataValueType) => {
           return (
             <Select.Option value={i.id} key={i.id}>
               {i.name}
@@ -74,11 +80,12 @@ const City: React.FC<CityFormProps> = ({ provinceData, onChangeSub }: any) => {
       </Select>
       <Select
         placeholder="请选择市"
+        defaultValue={city}
         value={city}
         onChange={(e) => onChange(e, 'city')}
         style={Object.assign(style, { marginRight: '8px' })}
       >
-        {cityData?.map((i: any) => {
+        {cityData?.map((i: DataValueType) => {
           return (
             <Select.Option value={i.id} key={i.id}>
               {i.name}
@@ -89,11 +96,12 @@ const City: React.FC<CityFormProps> = ({ provinceData, onChangeSub }: any) => {
       {areaData && areaData.length > 0 ? (
         <Select
           placeholder="请选择区"
+          defaultValue={area}
           value={area}
           style={style}
           onChange={(e) => onChange(e, 'area')}
         >
-          {areaData?.map((i: any) => {
+          {areaData?.map((i: DataValueType) => {
             return (
               <Select.Option value={i.id} key={i.id}>
                 {i.name}

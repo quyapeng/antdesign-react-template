@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 export type UpdateProps = {
   title: string;
   visible: boolean;
-  onCancel: (flag?: boolean, formVals?: any) => void;
+  onCancel: (flag?: boolean) => void;
   onSubmit: (values: any) => Promise<void>;
   values: Partial<any>;
 };

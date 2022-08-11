@@ -15,14 +15,12 @@ export type UpdateProps = {
   type: string;
   title: string;
   visible: boolean;
-  onCancel: (flag?: boolean, formVals?: FormValueType) => void;
+  onCancel: (flag?: boolean) => void;
   onSubmit: (values: any) => Promise<void>;
   values: Partial<any>;
   schoolData: [];
   productData: [];
 };
-
-export type FormValueType = {};
 
 const styleH = { marginBottom: '0', height: '32px' };
 const styleT = { transform: 'translateX(142px)' };

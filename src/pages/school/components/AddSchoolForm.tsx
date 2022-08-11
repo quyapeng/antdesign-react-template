@@ -4,7 +4,7 @@ import type { ProFormInstance } from '@ant-design/pro-form';
 
 import { SCHOOL_TYPE, FRANCH_TYPE } from '@/constant/common';
 import { areaList } from '@/services/common';
-import { Button, Form, Input, Select, Space, Upload } from 'antd';
+import { Button, Form, Input, message, Select, Space, Upload } from 'antd';
 import { UPLOAD } from '@/constant/common';
 import UploadService from '@/services/upload';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
@@ -14,7 +14,7 @@ export type UpdateFormProps = {
   title: string;
   type: string;
   visible: boolean;
-  onCancel: (flag?: boolean, formVals?: FormValueType) => void;
+  onCancel: (flag?: boolean) => void;
   onSubmit: (values: any) => Promise<void>;
   values: Partial<any>;
   agentData: [];
@@ -22,12 +22,7 @@ export type UpdateFormProps = {
   areaData: [];
 };
 
-export type FormValueType = {};
 export type StringOrNumber = string | number | undefined;
-//  {
-//   [key: string]: string | number;
-
-// }
 
 const AddSchoolForm: React.FC<UpdateFormProps> = ({
   title,
@@ -219,7 +214,12 @@ const AddSchoolForm: React.FC<UpdateFormProps> = ({
         if (values.id) {
           value.id = values.id;
         }
-        value.areaId = areaCode || cityCode;
+        let areaId = areaCode || cityCode;
+        if ((!areaCode && subNext.length > 0) || !areaId) {
+          message.error('请补充所在地区');
+          return;
+        }
+        value.areaId = areaId;
         onSubmit(value);
       }}
       modalProps={{

@@ -1,15 +1,15 @@
 import React, { useEffect, useRef, memo, useState, useContext } from 'react';
-import { Button, Form, Input, Space, Table } from 'antd';
+import { Button, Form, FormInstance, Input, InputRef, Space, Table } from 'antd';
+import { ColumnsType } from 'antd/lib/table';
 
+export type stringOrNumber = string | number;
 export type UpdateProps = {
-  onSubmit: (month: string | number, values: any, data: []) => Promise<void>;
+  onSubmit: (month: stringOrNumber, values: any, data: []) => Promise<void>;
   values: Partial<any>;
-  columns: any;
-  month: string | number;
+  columns: ColumnsType;
+  month: stringOrNumber;
   data: [];
 };
-
-export type FormValueType = {};
 
 const TableMeal: React.FC<UpdateProps> = ({ onSubmit, values, columns, data, month }: any) => {
   const [dataSource, setDataSource] = useState(data);
@@ -36,11 +36,11 @@ const TableMeal: React.FC<UpdateProps> = ({ onSubmit, values, columns, data, mon
     ...restProps
   }: any) => {
     const [editing, setEditing] = useState(false);
-    const inputRef: any = useRef(null);
-    const form: any = useContext(EditableContext);
+    const inputRef = useRef<InputRef>(null);
+    const form = useContext<FormInstance>(EditableContext);
     useEffect(() => {
       if (editing) {
-        inputRef.current.focus();
+        inputRef?.current?.focus();
       }
     }, [editing]);
 

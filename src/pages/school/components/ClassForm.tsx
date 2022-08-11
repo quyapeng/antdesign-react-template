@@ -5,7 +5,7 @@ import type { ProFormInstance } from '@ant-design/pro-form';
 export type UpdateProps = {
   title: string;
   visible: boolean;
-  onCancel: (flag?: boolean, formVals?: any) => void;
+  onCancel: (flag?: boolean) => void;
   onSubmit: (values: any) => Promise<void>;
   values: Partial<any>;
   teacherData: [];

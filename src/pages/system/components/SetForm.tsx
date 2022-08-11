@@ -16,7 +16,7 @@ export type UpdateFormProps = {
   visible: boolean;
   values: any;
   menu: [];
-  onCancel: (flag?: boolean, formVals?: FormValueType) => void;
+  onCancel: (flag?: boolean) => void;
   onSubmit: ([]) => Promise<void>;
 
   // values: Partial<API.RuleListItem>;
@@ -102,6 +102,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
         checkable
         checkStrictly
         defaultExpandAll
+        // checkedKeysValue={checkedKeys}
         onCheck={onCheck}
         checkedKeys={checkedKeys}
         onSelect={onSelect}

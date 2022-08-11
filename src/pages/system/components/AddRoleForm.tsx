@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, memo } from 'react';
-import { ModalForm, ProFormText, ProFormRadio, ProFormTextArea } from '@ant-design/pro-form';
+import { ModalForm, ProFormText, ProFormRadio } from '@ant-design/pro-form';
 import type { ProFormInstance } from '@ant-design/pro-form';
-import { STATUS_CODE, ROLE_CODE } from '@/constant/index';
+import { ROLE_CODE } from '@/constant/index';
 
 export type UpdateFormProps = {
   title: string;
   visible: boolean;
-  onCancel: (flag?: boolean, formVals?: FormValueType) => void;
+  onCancel: (flag?: boolean) => void;
   onSubmit: (values: FormValueType) => Promise<void>;
   type: string;
   values: Partial<API.RoleItem>;

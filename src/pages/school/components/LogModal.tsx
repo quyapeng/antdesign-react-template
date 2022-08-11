@@ -6,7 +6,7 @@ export type CityFormProps = {
   type: string;
   title: string;
   visible: boolean;
-  onCancel: (flag?: boolean, formVals?: any) => void;
+  onCancel: (flag?: boolean) => void;
   onSubmit: (values: any) => Promise<void>;
   values: Partial<any>;
 };
